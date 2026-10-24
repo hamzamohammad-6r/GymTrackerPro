@@ -1,0 +1,41 @@
+package com.example.gymtrackerpro;
+
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Update;
+
+import java.util.List;
+
+@Dao
+public interface WorkoutDao {
+
+    // CREATE: Insert a new workout
+    @Insert
+    long insertWorkout(Workout workout);
+
+    // READ: Retrieve all workouts
+    @Query("SELECT * FROM workouts ORDER BY workoutDate DESC")
+    List<Workout> getAllWorkouts();
+
+    // READ: Retrieve a workout by its ID
+    @Query("SELECT * FROM workouts WHERE workoutId = :workoutId LIMIT 1")
+    Workout getWorkoutById(int workoutId);
+
+    // READ: Retrieve workouts belonging to a user
+    @Query("SELECT * FROM workouts WHERE userId = :userId ORDER BY workoutDate DESC")
+    List<Workout> getWorkoutsForUser(int userId);
+
+    // UPDATE: Modify an existing workout
+    @Update
+    int updateWorkout(Workout workout);
+
+    // DELETE: Remove a workout
+    @Delete
+    int deleteWorkout(Workout workout);
+
+    // DELETE: Remove all workouts belonging to a user
+    @Query("DELETE FROM workouts WHERE userId = :userId")
+    int deleteWorkoutsForUser(int userId);
+}
