@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- App Title -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GymTrackerPro"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="#222222"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Track. Train. Improve."
+            android:textSize="16sp"
+            android:textColor="#666666"
+            android:layout_marginTop="4dp"/>
+
+        <!-- Welcome -->
+
+        <TextView
+            android:id="@+id/txtWelcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Welcome!"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#222222"
+            android:layout_marginTop="30dp"/>
+
+        <!-- Start Workout -->
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Start Workout"
+                    android:textSize="21sp"
+                    android:textStyle="bold"
+                    android:textColor="#222222"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Create and record a new workout"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:layout_marginTop="5dp"/>
+
+                <Button
+                    android:id="@+id/btnStartWorkout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="START WORKOUT"
+                    android:layout_marginTop="15dp"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Workout History -->
+
+        <Button
+            android:id="@+id/btnWorkoutHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="WORKOUT HISTORY"
+            android:layout_marginTop="15dp"/>
+
+        <!-- Progress -->
+
+        <Button
+            android:id="@+id/btnProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MY PROGRESS"
+            android:layout_marginTop="10dp"/>
+
+        <!-- Goals -->
+
+        <Button
+            android:id="@+id/btnGoals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MY GOALS"
+            android:layout_marginTop="10dp"/>
+
+        <!-- Profile -->
+
+        <Button
+            android:id="@+id/btnProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MY PROFILE"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+</ScrollView>
