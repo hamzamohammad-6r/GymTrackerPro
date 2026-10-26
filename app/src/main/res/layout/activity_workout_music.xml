@@ -94,6 +94,36 @@
             android:text="Refresh Playlist" />
 
 
+        <TextView
+            android:id="@+id/textPlaybackStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:padding="12dp"
+            android:text="Playback status: Stopped"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/textPlaybackTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="00:00 / 00:00"
+            android:textSize="14sp"
+            android:gravity="center" />
+
+        <SeekBar
+            android:id="@+id/seekBarPlayback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="1000"
+            android:progress="0"
+            android:enabled="false" />
+
+
+
         <Button
             android:id="@+id/buttonDeleteSong"
             android:layout_width="match_parent"
@@ -109,6 +139,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Play Selected Song" />
+
+
+        <Button
+            android:id="@+id/buttonPauseResumeSong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Pause Song"
+            android:enabled="false" />
+
 
         <Button
             android:id="@+id/buttonStopSong"
