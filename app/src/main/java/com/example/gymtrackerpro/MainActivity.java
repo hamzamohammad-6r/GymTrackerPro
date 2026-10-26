@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     private GymTrackerDatabase database;
 
-    // Executes database work away from the main UI thread
+    // Background thread for database operations
     private final ExecutorService databaseExecutor =
             Executors.newSingleThreadExecutor();
 
@@ -26,24 +26,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Obtain the shared Room database instance
+        // Connect to the Room database
         database = GymTrackerDatabase.getDatabase(
                 getApplicationContext()
         );
 
-        // Test the database on a background thread
+        // Test the database connection
         testDatabaseConnection();
+
+        // Set up home screen card click listeners
+        setupHomeScreenClickListeners();
     }
 
+    // Test Room by inserting and reading a sample user
     private void testDatabaseConnection() {
 
         databaseExecutor.execute(() -> {
 
             try {
-                // Check whether a user already exists
-                List<User> users = database.userDao().getAllUsers();
+                // Get all existing users
+                List<User> users =
+                        database.userDao().getAllUsers();
 
-                // Insert a sample user only if the table is empty
+                // Insert a sample user if the table is empty
                 if (users.isEmpty()) {
 
                     User sampleUser = new User(
@@ -58,10 +63,11 @@ public class MainActivity extends AppCompatActivity {
                     long userId =
                             database.userDao().insertUser(sampleUser);
 
-                    Log.d(TAG, "Sample user inserted. ID: " + userId);
+                    Log.d(TAG,
+                            "Sample user inserted. ID: " + userId);
                 }
 
-                // Read the users from the database
+                // Read users from the database
                 List<User> savedUsers =
                         database.userDao().getAllUsers();
 
@@ -70,10 +76,10 @@ public class MainActivity extends AppCompatActivity {
                         + savedUsers.size());
 
                 for (User user : savedUsers) {
-                    Log.d(TAG, "Saved user: " + user.getName());
+                    Log.d(TAG,
+                            "Saved user: " + user.getName());
                 }
 
-                // Show the result on the main UI thread
                 runOnUiThread(() ->
                         Toast.makeText(
                                 MainActivity.this,
@@ -97,11 +103,55 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // Make the four dashboard cards respond to taps
+    private void setupHomeScreenClickListeners() {
+
+        // My Workouts card
+        findViewById(R.id.cardWorkouts).setOnClickListener(v -> {
+            android.content.Intent intent =
+                    new android.content.Intent(
+                            MainActivity.this,
+                            WorkoutsActivity.class
+                    );
+
+            startActivity(intent);
+        });
+
+        // Exercises card
+        findViewById(R.id.cardExercises).setOnClickListener(v -> {
+            android.content.Intent intent =
+                    new android.content.Intent(
+                            MainActivity.this,
+                            ExercisesActivity.class
+                    );
+
+            startActivity(intent);
+        });
+
+        // My Fitness Goals card
+        findViewById(R.id.cardGoals).setOnClickListener(v ->
+                Toast.makeText(
+                        MainActivity.this,
+                        "My Fitness Goals selected",
+                        Toast.LENGTH_SHORT
+                ).show()
+        );
+
+        // My Profile card
+        findViewById(R.id.cardProfile).setOnClickListener(v ->
+                Toast.makeText(
+                        MainActivity.this,
+                        "My Profile selected",
+                        Toast.LENGTH_SHORT
+                ).show()
+        );
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        // Stop accepting new tasks when this activity is destroyed
+        // Stop accepting new database tasks
         databaseExecutor.shutdown();
     }
 }

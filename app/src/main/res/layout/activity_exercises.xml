@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F7FA"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="My Exercises"
+            android:textColor="#172554"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add and manage your gym exercises."
+            android:textColor="#64748B"
+            android:textSize="15sp"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Exercise name"
+            android:textColor="#1E293B"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <EditText
+            android:id="@+id/editExerciseName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g. Bench Press"
+            android:inputType="textCapWords"
+            android:padding="12dp"
+            android:backgroundTint="#2563EB" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Muscle group"
+            android:textColor="#1E293B"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="6dp" />
+
+        <Spinner
+            android:id="@+id/spinnerMuscleGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:backgroundTint="#2563EB" />
+
+        <Button
+            android:id="@+id/buttonSaveExercise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Exercise"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Saved Exercises"
+            android:textColor="#172554"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:id="@+id/textExerciseList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:padding="16dp"
+            android:text="Your saved exercises will appear here."
+            android:textColor="#334155"
+            android:textSize="16sp"
+            android:lineSpacingExtra="6dp" />
+
+        <Button
+            android:id="@+id/buttonBackHome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back Home"
+            android:layout_marginTop="20dp" />
+
+    </LinearLayout>
+
+</ScrollView>

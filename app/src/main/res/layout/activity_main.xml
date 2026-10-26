@@ -87,6 +87,7 @@
 
         <!-- Workouts card -->
         <LinearLayout
+            android:id="@+id/cardWorkouts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -113,6 +114,7 @@
 
         <!-- Exercises card -->
         <LinearLayout
+            android:id="@+id/cardExercises"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -139,6 +141,7 @@
 
         <!-- Goals card -->
         <LinearLayout
+            android:id="@+id/cardGoals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -165,6 +168,7 @@
 
         <!-- Profile card -->
         <LinearLayout
+            android:id="@+id/cardProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"

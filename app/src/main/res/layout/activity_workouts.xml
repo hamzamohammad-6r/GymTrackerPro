@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F6FA"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Workouts"
+            android:textColor="#172554"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Plan your training and keep track of your sessions."
+            android:textColor="#64748B"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/editWorkoutName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="Workout name (e.g. Back and Biceps)"
+            android:inputType="textCapSentences"
+            android:minHeight="52dp"
+            android:padding="12dp"
+            android:backgroundTint="#172554" />
+
+        <EditText
+            android:id="@+id/editWorkoutDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Select workout date"
+            android:focusable="false"
+            android:clickable="true"
+            android:cursorVisible="false"
+            android:inputType="none"
+            android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+            android:padding="12dp" />
+
+        <Button
+            android:id="@+id/buttonSaveWorkout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Save Workout"
+            android:textAllCaps="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Saved Workouts"
+            android:textColor="#172554"
+            android:textSize="21sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textWorkoutList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="#FFFFFF"
+            android:padding="16dp"
+            android:text="Your saved workouts will appear here."
+            android:textColor="#334155"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/buttonBackHome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="Back to Home"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
+</ScrollView>
