@@ -146,6 +146,18 @@ public class MainActivity extends AppCompatActivity {
                         android.widget.Toast.LENGTH_SHORT
                 ).show()
         );
+
+
+        findViewById(R.id.cardWorkoutExercises).setOnClickListener(v -> {
+            android.content.Intent intent =
+                    new android.content.Intent(
+                            MainActivity.this,
+                            WorkoutExercisesActivity.class
+                    );
+
+            startActivity(intent);
+        });
+
     }
 
 
