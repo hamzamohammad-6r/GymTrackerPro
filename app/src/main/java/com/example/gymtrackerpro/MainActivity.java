@@ -130,13 +130,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // My Fitness Goals card
-        findViewById(R.id.cardGoals).setOnClickListener(v ->
-                android.widget.Toast.makeText(
-                        MainActivity.this,
-                        "My Fitness Goals selected",
-                        android.widget.Toast.LENGTH_SHORT
-                ).show()
-        );
+        findViewById(R.id.cardGoals).setOnClickListener(v -> {
+            android.content.Intent intent =
+                    new android.content.Intent(
+                            MainActivity.this,
+                            GoalsActivity.class
+                    );
+            startActivity(intent);
+        });
 
         // My Profile card
         findViewById(R.id.cardProfile).setOnClickListener(v ->

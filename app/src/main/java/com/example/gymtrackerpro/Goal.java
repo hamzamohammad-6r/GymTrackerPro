@@ -23,10 +23,10 @@ public class Goal {
     private int goalId;
 
     private int userId;
-    private String goalType;
-    private double targetValue;
-    private double currentValue;
-    private String targetDate;
+    public String goalType;
+    public double targetValue;
+    public double currentValue;
+    public String targetDate;
 
     // Constructor
     public Goal(
