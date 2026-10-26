@@ -25,6 +25,7 @@ public class Workout {
     private int userId;
     private String workoutName;
     private String workoutDate;
+    private String dayOfWeek;
 
     public Workout(int userId, String workoutName, String workoutDate) {
         this.userId = userId;
@@ -62,5 +63,13 @@ public class Workout {
 
     public void setWorkoutDate(String workoutDate) {
         this.workoutDate = workoutDate;
+    }
+
+    public String getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(String dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 }

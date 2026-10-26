@@ -19,7 +19,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
                 Goal.class,
                 WorkoutMusic.class
         },
-        version = 2,
+        version = 3,
         exportSchema = false
 )
 public abstract class GymTrackerDatabase extends RoomDatabase {
@@ -47,6 +47,16 @@ public abstract class GymTrackerDatabase extends RoomDatabase {
             );
         }
     };
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(
+                @NonNull SupportSQLiteDatabase database
+        ) {
+            database.execSQL(
+                    "ALTER TABLE workouts ADD COLUMN dayOfWeek TEXT"
+            );
+        }
+    };
 
     public abstract UserDao userDao();
 
@@ -71,7 +81,7 @@ public abstract class GymTrackerDatabase extends RoomDatabase {
                                     GymTrackerDatabase.class,
                                     "gymtracker_database"
                             )
-                            .addMigrations(MIGRATION_1_2)
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                             .build();
                 }
             }
