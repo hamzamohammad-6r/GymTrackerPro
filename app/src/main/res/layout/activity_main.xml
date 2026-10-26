@@ -48,6 +48,66 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
+
+                <!-- Workout Statistics Card -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardWorkoutStatistics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Workout Statistics"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textTotalWorkouts"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Total Workouts: 0"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/textCompletedWorkouts"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Completed Workouts: 0"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/textPlannedWorkouts"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Planned Workouts: 0"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/textCompletionRate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Completion Rate: 0%"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

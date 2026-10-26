@@ -1,16 +1,20 @@
 
 package com.example.gymtrackerpro;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -19,19 +23,42 @@ import java.util.concurrent.Executors;
 
 public class WorkoutsActivity extends AppCompatActivity {
 
-    private static final String TAG = "GymTrackerPro";
-
+    private static final String TAG = "WorkoutsActivity";
     private static final String LOCAL_USER_EMAIL =
             "gymtrackerpro@local.test";
 
     private GymTrackerDatabase database;
+    private ExecutorService databaseExecutor;
 
     private EditText editWorkoutName;
     private EditText editWorkoutDate;
+
+    private Spinner spinnerWorkoutDay;
+    private Spinner spinnerSelectWorkout;
+
     private TextView textWorkoutList;
 
-    private final ExecutorService databaseExecutor =
-            Executors.newSingleThreadExecutor();
+    private Button buttonSaveWorkout;
+    private Button buttonBackHome;
+    private Button buttonEditWorkout;
+    private Button buttonDeleteWorkout;
+    private Button buttonToggleCompletion;
+
+    private final String[] daysOfWeek = {
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+    };
+
+    private final List<Workout> selectableWorkouts =
+            new ArrayList<>();
+
+    private boolean editingWorkout = false;
+    private int editingWorkoutId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,177 +66,244 @@ public class WorkoutsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_workouts);
 
         database = GymTrackerDatabase.getDatabase(
-                getApplicationContext()
-        );
+                getApplicationContext());
+
+        databaseExecutor = Executors.newSingleThreadExecutor();
 
         editWorkoutName = findViewById(R.id.editWorkoutName);
         editWorkoutDate = findViewById(R.id.editWorkoutDate);
+
+        spinnerWorkoutDay = findViewById(R.id.spinnerWorkoutDay);
+        spinnerSelectWorkout = findViewById(R.id.spinnerSelectWorkout);
+
         textWorkoutList = findViewById(R.id.textWorkoutList);
 
-        Button buttonSaveWorkout =
-                findViewById(R.id.buttonSaveWorkout);
+        buttonSaveWorkout = findViewById(R.id.buttonSaveWorkout);
+        buttonBackHome = findViewById(R.id.buttonBackHome);
+        buttonEditWorkout = findViewById(R.id.buttonEditWorkout);
+        buttonDeleteWorkout = findViewById(R.id.buttonDeleteWorkout);
+        buttonToggleCompletion =
+                findViewById(R.id.buttonToggleCompletion);
 
-        Button buttonBackHome =
-                findViewById(R.id.buttonBackHome);
+        // Set up weekday spinner.
+        ArrayAdapter<String> dayAdapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                daysOfWeek);
 
-        // Open the calendar when the date field is tapped.
+        dayAdapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item);
+
+        spinnerWorkoutDay.setAdapter(dayAdapter);
+
+        // Date picker.
+        editWorkoutDate.setFocusable(false);
+        editWorkoutDate.setClickable(true);
         editWorkoutDate.setOnClickListener(v -> showDatePicker());
 
-        // Save a new workout.
+        // Buttons.
         buttonSaveWorkout.setOnClickListener(v -> saveWorkout());
 
-        // Return to the home screen.
+        buttonEditWorkout.setOnClickListener(
+                v -> editSelectedWorkout());
+
+        buttonDeleteWorkout.setOnClickListener(
+                v -> confirmDeleteWorkout());
+
+        buttonToggleCompletion.setOnClickListener(
+                v -> toggleWorkoutCompletion());
+
         buttonBackHome.setOnClickListener(v -> finish());
 
-        // Display previously saved workouts.
+        spinnerSelectWorkout.setOnItemSelectedListener(
+                new android.widget.AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(
+                            android.widget.AdapterView<?> parent,
+                            android.view.View view,
+                            int position,
+                            long id) {
+                        updateCompletionButton();
+                    }
+
+                    @Override
+                    public void onNothingSelected(
+                            android.widget.AdapterView<?> parent) {
+                        buttonToggleCompletion.setText(
+                                "Mark as Completed");
+                    }
+                });
+
         loadWorkouts();
     }
 
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
 
-        // Use the currently selected date if one exists.
-        String currentDate = editWorkoutDate.getText()
-                .toString().trim();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        if (currentDate.matches("\\d{4}-\\d{2}-\\d{2}")) {
+        String existingDate =
+                editWorkoutDate.getText().toString().trim();
+
+        if (existingDate.matches("\\d{4}-\\d{2}-\\d{2}")) {
             try {
-                int year = Integer.parseInt(
-                        currentDate.substring(0, 4)
-                );
-                int month = Integer.parseInt(
-                        currentDate.substring(5, 7)
-                ) - 1;
-                int day = Integer.parseInt(
-                        currentDate.substring(8, 10)
-                );
-
-                calendar.set(year, month, day);
+                String[] parts = existingDate.split("-");
+                year = Integer.parseInt(parts[0]);
+                month = Integer.parseInt(parts[1]) - 1;
+                day = Integer.parseInt(parts[2]);
             } catch (NumberFormatException e) {
-                Log.w(TAG, "Could not read selected date", e);
+                Log.w(TAG, "Could not parse date", e);
             }
         }
 
-        DatePickerDialog datePickerDialog =
-                new DatePickerDialog(
-                        this,
-                        (view, year, month, dayOfMonth) -> {
-                            String selectedDate = String.format(
-                                    Locale.US,
-                                    "%04d-%02d-%02d",
-                                    year,
-                                    month + 1,
-                                    dayOfMonth
-                            );
+        DatePickerDialog picker = new DatePickerDialog(
+                this,
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    String date = String.format(
+                            Locale.US,
+                            "%04d-%02d-%02d",
+                            selectedYear,
+                            selectedMonth + 1,
+                            selectedDay);
 
-                            editWorkoutDate.setText(selectedDate);
-                            editWorkoutDate.setError(null);
-                        },
-                        calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)
-                );
+                    editWorkoutDate.setText(date);
+                },
+                year,
+                month,
+                day);
 
-        datePickerDialog.show();
+        picker.show();
     }
 
     private int getOrCreateUserId() {
         User user = database.userDao()
                 .getUserByEmail(LOCAL_USER_EMAIL);
 
-        if (user == null) {
-            User newUser = new User(
-                    "GymTrackerPro User",
-                    LOCAL_USER_EMAIL,
-                    0,
-                    0.0,
-                    0.0,
-                    "General fitness"
-            );
-
-            long newUserId =
-                    database.userDao().insertUser(newUser);
-
-            return (int) newUserId;
+        if (user != null) {
+            return user.getUserId();
         }
 
-        return user.getUserId();
+        User newUser = new User(
+                "GymTrackerPro User",
+                LOCAL_USER_EMAIL,
+                0,
+                0.0,
+                0.0,
+                "General fitness");
+
+        return (int) database.userDao().insertUser(newUser);
     }
 
     private void saveWorkout() {
-        String workoutName =
-                editWorkoutName.getText().toString().trim();
+        String name = editWorkoutName.getText()
+                .toString().trim();
 
-        String workoutDate =
-                editWorkoutDate.getText().toString().trim();
+        String date = editWorkoutDate.getText()
+                .toString().trim();
 
-        if (workoutName.isEmpty()) {
-            editWorkoutName.setError(
-                    "Enter a workout name"
-            );
+        Object dayObject = spinnerWorkoutDay.getSelectedItem();
+
+        if (name.isEmpty()) {
+            editWorkoutName.setError("Enter a workout name");
             editWorkoutName.requestFocus();
             return;
         }
 
-        if (workoutDate.isEmpty()
-                || !workoutDate.matches(
-                "\\d{4}-\\d{2}-\\d{2}"
-        )) {
-            editWorkoutDate.setError(
-                    "Please select a date from the calendar"
-            );
-            Toast.makeText(
-                    this,
-                    "Select a workout date first",
-                    Toast.LENGTH_SHORT
-            ).show();
+        if (date.isEmpty()) {
+            editWorkoutDate.setError("Select a workout date");
+            editWorkoutDate.requestFocus();
             return;
         }
 
+        if (dayObject == null) {
+            Toast.makeText(this,
+                    "Select a weekday.",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String day = dayObject.toString();
+
+        boolean updating = editingWorkout;
+        int selectedId = editingWorkoutId;
+
+        buttonSaveWorkout.setEnabled(false);
+
         databaseExecutor.execute(() -> {
+            boolean success = false;
+            String error = null;
+
             try {
-                int userId = getOrCreateUserId();
+                if (updating) {
+                    Workout workout = database.workoutDao()
+                            .getWorkoutById(selectedId);
 
-                Workout workout = new Workout(
-                        userId,
-                        workoutName,
-                        workoutDate
-                );
+                    if (workout != null) {
+                        workout.setWorkoutName(name);
+                        workout.setWorkoutDate(date);
+                        workout.setDayOfWeek(day);
 
-                database.workoutDao().insertWorkout(workout);
-
-                runOnUiThread(() -> {
-                    if (isFinishing() || isDestroyed()) {
-                        return;
+                        success = database.workoutDao()
+                                .updateWorkout(workout) > 0;
+                    } else {
+                        error = "Workout not found.";
                     }
+                } else {
+                    int userId = getOrCreateUserId();
+
+                    Workout workout = new Workout(
+                            userId, name, date);
+
+                    workout.setDayOfWeek(day);
+                    workout.setCompleted(false);
+
+                    success = database.workoutDao()
+                            .insertWorkout(workout) > 0;
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Unable to save workout", e);
+                error = "Database error while saving workout.";
+            }
+
+            final boolean saved = success;
+            final String errorMessage = error;
+
+            runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) {
+                    return;
+                }
+
+                buttonSaveWorkout.setEnabled(true);
+
+                if (saved) {
+                    editingWorkout = false;
+                    editingWorkoutId = -1;
+
+                    buttonSaveWorkout.setText("Save Workout");
 
                     editWorkoutName.setText("");
                     editWorkoutDate.setText("");
+                    spinnerWorkoutDay.setSelection(0);
 
                     Toast.makeText(
-                            WorkoutsActivity.this,
-                            "Workout saved successfully!",
-                            Toast.LENGTH_SHORT
-                    ).show();
+                            this,
+                            updating
+                                    ? "Workout updated."
+                                    : "Workout saved.",
+                            Toast.LENGTH_SHORT).show();
 
                     loadWorkouts();
-                });
-
-            } catch (Exception e) {
-                Log.e(TAG, "Unable to save workout", e);
-
-                runOnUiThread(() -> {
-                    if (isFinishing() || isDestroyed()) {
-                        return;
-                    }
-
+                } else {
                     Toast.makeText(
-                            WorkoutsActivity.this,
-                            "Could not save workout. Check Logcat.",
-                            Toast.LENGTH_LONG
-                    ).show();
-                });
-            }
+                            this,
+                            errorMessage != null
+                                    ? errorMessage
+                                    : "Could not save workout.",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
         });
     }
 
@@ -219,31 +313,114 @@ public class WorkoutsActivity extends AppCompatActivity {
                 List<Workout> workouts =
                         database.workoutDao().getAllWorkouts();
 
-                StringBuilder displayText = new StringBuilder();
+                StringBuilder display = new StringBuilder();
 
                 if (workouts.isEmpty()) {
-                    displayText.append(
-                            "No workouts saved yet. "
-                                    + "Add your first workout above."
-                    );
+                    display.append("No workouts saved yet.\n")
+                            .append("Add your first workout above.");
                 } else {
+                    for (String day : daysOfWeek) {
+                        boolean headingAdded = false;
+
+                        for (Workout workout : workouts) {
+                            String workoutDay =
+                                    workout.getDayOfWeek();
+
+                            if (workoutDay != null
+                                    && workoutDay.equalsIgnoreCase(day)) {
+
+                                if (!headingAdded) {
+                                    display.append(day)
+                                            .append("\n")
+                                            .append("--------------------")
+                                            .append("\n");
+
+                                    headingAdded = true;
+                                }
+
+                                appendWorkout(display, workout);
+                            }
+                        }
+                    }
+
+                    boolean unassignedHeadingAdded = false;
+
                     for (Workout workout : workouts) {
-                        displayText
-                                .append(workout.getWorkoutName())
-                                .append("\nDate: ")
-                                .append(workout.getWorkoutDate())
-                                .append("\n\n");
+                        String day = workout.getDayOfWeek();
+
+                        if (day == null || day.trim().isEmpty()) {
+                            if (!unassignedHeadingAdded) {
+                                display.append("No day assigned")
+                                        .append("\n")
+                                        .append("--------------------")
+                                        .append("\n");
+
+                                unassignedHeadingAdded = true;
+                            }
+
+                            appendWorkout(display, workout);
+                        }
                     }
                 }
-
-                String result = displayText.toString();
 
                 runOnUiThread(() -> {
                     if (isFinishing() || isDestroyed()) {
                         return;
                     }
 
-                    textWorkoutList.setText(result);
+                    textWorkoutList.setText(display.toString());
+
+                    selectableWorkouts.clear();
+                    selectableWorkouts.addAll(workouts);
+
+                    List<String> labels = new ArrayList<>();
+
+                    for (Workout workout : workouts) {
+                        String day = workout.getDayOfWeek();
+
+                        if (day == null || day.trim().isEmpty()) {
+                            day = "No day assigned";
+                        }
+
+                        String status = workout.isCompleted()
+                                ? "Completed"
+                                : "Planned";
+
+                        labels.add(
+                                status + " - " + day + " - "
+                                        + workout.getWorkoutName()
+                                        + " (" + workout.getWorkoutDate()
+                                        + ")");
+                    }
+
+                    ArrayAdapter<String> adapter =
+                            new ArrayAdapter<>(
+                                    WorkoutsActivity.this,
+                                    android.R.layout.simple_spinner_item,
+                                    labels);
+
+                    adapter.setDropDownViewResource(
+                            android.R.layout.simple_spinner_dropdown_item);
+
+                    spinnerSelectWorkout.setAdapter(adapter);
+
+                    boolean editingStillExists = false;
+
+                    for (Workout workout : workouts) {
+                        if (workout.getWorkoutId()
+                                == editingWorkoutId) {
+                            editingStillExists = true;
+                            break;
+                        }
+                    }
+
+                    if (editingWorkout && !editingStillExists) {
+                        editingWorkout = false;
+                        editingWorkoutId = -1;
+                        buttonSaveWorkout.setText("Save Workout");
+                    }
+
+                    updateCompletionButton();
                 });
 
             } catch (Exception e) {
@@ -255,17 +432,235 @@ public class WorkoutsActivity extends AppCompatActivity {
                     }
 
                     textWorkoutList.setText(
-                            "Could not load workouts. "
-                                    + "Check Logcat."
-                    );
+                            "Could not load workouts. Check Logcat.");
                 });
             }
+        });
+    }
+
+    private void appendWorkout(
+            StringBuilder display, Workout workout) {
+
+        display.append(workout.isCompleted()
+                        ? "✓ COMPLETED\n"
+                        : "○ PLANNED\n")
+                .append("• ")
+                .append(workout.getWorkoutName())
+                .append("\nDate: ")
+                .append(workout.getWorkoutDate())
+                .append("\n\n");
+    }
+
+    private Workout getSelectedWorkout() {
+        int position =
+                spinnerSelectWorkout.getSelectedItemPosition();
+
+        if (position < 0
+                || position >= selectableWorkouts.size()) {
+            Toast.makeText(this,
+                    "Please select a workout first.",
+                    Toast.LENGTH_SHORT).show();
+            return null;
+        }
+
+        return selectableWorkouts.get(position);
+    }
+
+    private void updateCompletionButton() {
+        if (buttonToggleCompletion == null) {
+            return;
+        }
+
+        Workout workout = getSelectedWorkoutWithoutToast();
+
+        if (workout == null) {
+            buttonToggleCompletion.setText("Mark as Completed");
+            buttonToggleCompletion.setEnabled(false);
+            return;
+        }
+
+        buttonToggleCompletion.setEnabled(true);
+
+        buttonToggleCompletion.setText(
+                workout.isCompleted()
+                        ? "Mark as Planned"
+                        : "Mark as Completed");
+    }
+
+    private Workout getSelectedWorkoutWithoutToast() {
+        int position =
+                spinnerSelectWorkout.getSelectedItemPosition();
+
+        if (position < 0
+                || position >= selectableWorkouts.size()) {
+            return null;
+        }
+
+        return selectableWorkouts.get(position);
+    }
+
+    private void editSelectedWorkout() {
+        Workout workout = getSelectedWorkout();
+
+        if (workout == null) {
+            return;
+        }
+
+        editingWorkout = true;
+        editingWorkoutId = workout.getWorkoutId();
+
+        editWorkoutName.setText(workout.getWorkoutName());
+        editWorkoutDate.setText(workout.getWorkoutDate());
+
+        String savedDay = workout.getDayOfWeek();
+        int position = 0;
+
+        if (savedDay != null) {
+            for (int i = 0; i < daysOfWeek.length; i++) {
+                if (daysOfWeek[i].equalsIgnoreCase(savedDay)) {
+                    position = i;
+                    break;
+                }
+            }
+        }
+
+        spinnerWorkoutDay.setSelection(position);
+        buttonSaveWorkout.setText("Save Changes");
+
+        Toast.makeText(this,
+                "Edit the fields, then tap Save Changes.",
+                Toast.LENGTH_LONG).show();
+    }
+
+    private void confirmDeleteWorkout() {
+        Workout workout = getSelectedWorkout();
+
+        if (workout == null) {
+            return;
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Workout")
+                .setMessage(
+                        "Delete \"" + workout.getWorkoutName()
+                                + "\"?\n\nThis cannot be undone. "
+                                + "Assigned music may also be deleted.")
+                .setNegativeButton("Cancel",
+                        (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("Delete",
+                        (dialog, which) -> deleteWorkout(workout))
+                .show();
+    }
+
+    private void deleteWorkout(Workout workout) {
+        databaseExecutor.execute(() -> {
+            boolean deleted = false;
+
+            try {
+                deleted = database.workoutDao()
+                        .deleteWorkout(workout) > 0;
+            } catch (Exception e) {
+                Log.e(TAG, "Unable to delete workout", e);
+            }
+
+            final boolean success = deleted;
+
+            runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) {
+                    return;
+                }
+
+                if (success) {
+                    if (editingWorkoutId
+                            == workout.getWorkoutId()) {
+                        editingWorkout = false;
+                        editingWorkoutId = -1;
+
+                        buttonSaveWorkout.setText("Save Workout");
+                        editWorkoutName.setText("");
+                        editWorkoutDate.setText("");
+                        spinnerWorkoutDay.setSelection(0);
+                    }
+
+                    Toast.makeText(this,
+                            "Workout deleted.",
+                            Toast.LENGTH_SHORT).show();
+
+                    loadWorkouts();
+                } else {
+                    Toast.makeText(this,
+                            "Could not delete workout.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+    }
+
+    private void toggleWorkoutCompletion() {
+        Workout workout = getSelectedWorkout();
+
+        if (workout == null) {
+            return;
+        }
+
+        int workoutId = workout.getWorkoutId();
+        boolean newStatus = !workout.isCompleted();
+
+        buttonToggleCompletion.setEnabled(false);
+
+        databaseExecutor.execute(() -> {
+            boolean updated = false;
+
+            try {
+                Workout savedWorkout = database.workoutDao()
+                        .getWorkoutById(workoutId);
+
+                if (savedWorkout != null) {
+                    savedWorkout.setCompleted(newStatus);
+
+                    updated = database.workoutDao()
+                            .updateWorkout(savedWorkout) > 0;
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Unable to update completion status", e);
+            }
+
+            final boolean success = updated;
+
+            runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) {
+                    return;
+                }
+
+                buttonToggleCompletion.setEnabled(true);
+
+                if (success) {
+                    Toast.makeText(
+                            this,
+                            newStatus
+                                    ? "Workout marked completed!"
+                                    : "Workout marked as planned.",
+                            Toast.LENGTH_SHORT).show();
+
+                    loadWorkouts();
+                } else {
+                    Toast.makeText(
+                            this,
+                            "Could not update workout status.",
+                            Toast.LENGTH_SHORT).show();
+
+                    updateCompletionButton();
+                }
+            });
         });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        databaseExecutor.shutdown();
+
+        if (databaseExecutor != null) {
+            databaseExecutor.shutdown();
+        }
     }
 }

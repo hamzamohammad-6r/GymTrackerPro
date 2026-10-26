@@ -1,22 +1,9 @@
 package com.example.gymtrackerpro;
 
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(
-        tableName = "workouts",
-        foreignKeys = {
-                @ForeignKey(
-                        entity = User.class,
-                        parentColumns = "userId",
-                        childColumns = "userId",
-                        onDelete = ForeignKey.CASCADE
-                )
-        },
-        indices = {@Index("userId")}
-)
+@Entity(tableName = "workouts")
 public class Workout {
 
     @PrimaryKey(autoGenerate = true)
@@ -27,10 +14,15 @@ public class Workout {
     private String workoutDate;
     private String dayOfWeek;
 
-    public Workout(int userId, String workoutName, String workoutDate) {
+    // false = planned, true = completed
+    private boolean completed = false;
+
+    public Workout(int userId, String workoutName,
+                   String workoutDate) {
         this.userId = userId;
         this.workoutName = workoutName;
         this.workoutDate = workoutDate;
+        this.completed = false;
     }
 
     public int getWorkoutId() {
@@ -71,5 +63,13 @@ public class Workout {
 
     public void setDayOfWeek(String dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 }

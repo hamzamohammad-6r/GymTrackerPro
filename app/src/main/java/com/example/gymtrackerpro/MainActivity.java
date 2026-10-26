@@ -4,6 +4,7 @@ package com.example.gymtrackerpro;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +17,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "GymTrackerPro";
 
     private GymTrackerDatabase database;
+    private android.widget.TextView textTotalWorkouts;
+    private android.widget.TextView textCompletedWorkouts;
+    private android.widget.TextView textPlannedWorkouts;
+    private android.widget.TextView textCompletionRate;
 
     // Background thread for database operations
     private final ExecutorService databaseExecutor =
@@ -25,6 +30,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        textTotalWorkouts = findViewById(R.id.textTotalWorkouts);
+        textCompletedWorkouts = findViewById(R.id.textCompletedWorkouts);
+        textPlannedWorkouts = findViewById(R.id.textPlannedWorkouts);
+        textCompletionRate = findViewById(R.id.textCompletionRate);
+        androidx.cardview.widget.CardView cardWorkoutExercises =
+                findViewById(R.id.cardWorkoutExercises);
+
+        cardWorkoutExercises.setOnClickListener(v -> {
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    WorkoutExercisesActivity.class
+            );
+            startActivity(intent);
+        });
 
         findViewById(R.id.cardWorkoutMusic).setOnClickListener(v -> {
             android.content.Intent intent =
@@ -173,6 +192,66 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+    }
+
+    private void loadWorkoutStatistics() {
+        databaseExecutor.execute(() -> {
+            try {
+                List<Workout> workouts =
+                        database.workoutDao().getAllWorkouts();
+
+                int total = workouts.size();
+                int completed = 0;
+
+                for (Workout workout : workouts) {
+                    if (workout.isCompleted()) {
+                        completed++;
+                    }
+                }
+
+                int planned = total - completed;
+
+                int completionRate = total == 0
+                        ? 0
+                        : (completed * 100) / total;
+
+                final int finalTotal = total;
+                final int finalCompleted = completed;
+                final int finalPlanned = planned;
+                final int finalCompletionRate = completionRate;
+
+                runOnUiThread(() -> {
+                    textTotalWorkouts.setText(
+                            "Total Workouts: " + finalTotal);
+
+                    textCompletedWorkouts.setText(
+                            "Completed Workouts: " + finalCompleted);
+
+                    textPlannedWorkouts.setText(
+                            "Planned Workouts: " + finalPlanned);
+
+                    textCompletionRate.setText(
+                            "Completion Rate: " + finalCompletionRate + "%");
+                });
+
+
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to load workout statistics", e);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (database != null
+                && textTotalWorkouts != null
+                && textCompletedWorkouts != null
+                && textPlannedWorkouts != null
+                && textCompletionRate != null) {
+            loadWorkoutStatistics();
+        }
     }
 
 

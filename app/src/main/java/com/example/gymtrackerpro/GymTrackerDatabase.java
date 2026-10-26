@@ -58,6 +58,20 @@ public abstract class GymTrackerDatabase extends RoomDatabase {
         }
     };
 
+    static final Migration MIGRATION_3_4 =
+            new Migration(3, 4) {
+                @Override
+                public void migrate(
+                        SupportSQLiteDatabase database) {
+
+                    database.execSQL(
+                            "ALTER TABLE workouts "
+                                    + "ADD COLUMN completed INTEGER "
+                                    + "NOT NULL DEFAULT 0"
+                    );
+                }
+            };
+
     public abstract UserDao userDao();
 
     public abstract WorkoutDao workoutDao();
@@ -81,7 +95,7 @@ public abstract class GymTrackerDatabase extends RoomDatabase {
                                     GymTrackerDatabase.class,
                                     "gymtracker_database"
                             )
-                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                             .build();
                 }
             }
