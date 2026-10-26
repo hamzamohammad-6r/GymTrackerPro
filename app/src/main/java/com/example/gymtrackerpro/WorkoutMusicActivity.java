@@ -27,6 +27,7 @@ public class WorkoutMusicActivity extends AppCompatActivity {
     private Button buttonChooseSong;
     private Button buttonPlaySong;
     private Button buttonStopSong;
+    private Button buttonRefreshSongs;
     private Button buttonDeleteSong;
     private TextView textSelectedSong;
     private TextView textAssignedSongs;
@@ -51,9 +52,11 @@ public class WorkoutMusicActivity extends AppCompatActivity {
         buttonDeleteSong = findViewById(R.id.buttonDeleteSong);
         buttonPlaySong = findViewById(R.id.buttonPlaySong);
         buttonStopSong = findViewById(R.id.buttonStopSong);
+        buttonRefreshSongs = findViewById(R.id.buttonRefreshSongs);
         textSelectedSong = findViewById(R.id.textSelectedSong);
         textAssignedSongs = findViewById(R.id.textAssignedSongs);
         spinnerSongs = findViewById(R.id.spinnerSongs);
+
 
         database = GymTrackerDatabase.getDatabase(this);
 
@@ -82,6 +85,7 @@ public class WorkoutMusicActivity extends AppCompatActivity {
         buttonDeleteSong.setOnClickListener(v -> deleteLatestSong());
         buttonPlaySong.setOnClickListener(v -> playSelectedSong());
         buttonStopSong.setOnClickListener(v -> stopMusic());
+        buttonRefreshSongs.setOnClickListener(v -> loadAssignedSongs());
 
         spinnerWorkouts.setOnItemSelectedListener(
                 new android.widget.AdapterView.OnItemSelectedListener() {
