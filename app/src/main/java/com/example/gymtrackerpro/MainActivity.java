@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Make the four dashboard cards respond to taps
+
     private void setupHomeScreenClickListeners() {
 
         // My Workouts card
@@ -130,22 +131,23 @@ public class MainActivity extends AppCompatActivity {
 
         // My Fitness Goals card
         findViewById(R.id.cardGoals).setOnClickListener(v ->
-                Toast.makeText(
+                android.widget.Toast.makeText(
                         MainActivity.this,
                         "My Fitness Goals selected",
-                        Toast.LENGTH_SHORT
+                        android.widget.Toast.LENGTH_SHORT
                 ).show()
         );
 
         // My Profile card
         findViewById(R.id.cardProfile).setOnClickListener(v ->
-                Toast.makeText(
+                android.widget.Toast.makeText(
                         MainActivity.this,
                         "My Profile selected",
-                        Toast.LENGTH_SHORT
+                        android.widget.Toast.LENGTH_SHORT
                 ).show()
         );
     }
+
 
     @Override
     protected void onDestroy() {

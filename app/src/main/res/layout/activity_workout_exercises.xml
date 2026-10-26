@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F7FA"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Workout Exercises"
+            android:textColor="#172554"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose a workout and add exercises to it."
+            android:textColor="#64748B"
+            android:textSize="15sp"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select workout"
+            android:textStyle="bold"
+            android:textColor="#1E293B" />
+
+        <Spinner
+            android:id="@+id/spinnerWorkouts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select exercise"
+            android:textStyle="bold"
+            android:textColor="#1E293B" />
+
+        <Spinner
+            android:id="@+id/spinnerExercises"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Number of sets"
+            android:textStyle="bold"
+            android:textColor="#1E293B" />
+
+        <EditText
+            android:id="@+id/editSets"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g. 3"
+            android:inputType="number"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Repetitions per set"
+            android:textStyle="bold"
+            android:textColor="#1E293B" />
+
+        <EditText
+            android:id="@+id/editRepetitions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g. 12"
+            android:inputType="number"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Weight (kg)"
+            android:textStyle="bold"
+            android:textColor="#1E293B" />
+
+        <EditText
+            android:id="@+id/editWeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g. 40"
+            android:inputType="numberDecimal"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Notes (optional)"
+            android:textStyle="bold"
+            android:textColor="#1E293B" />
+
+        <EditText
+            android:id="@+id/editExerciseNotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g. Use controlled movements"
+            android:inputType="textCapSentences|textMultiLine"
+            android:minLines="2"
+            android:gravity="top"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="20dp" />
+
+        <Button
+            android:id="@+id/buttonAddExerciseToWorkout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Exercise to Workout" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Assigned Exercises"
+            android:textColor="#172554"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:id="@+id/textAssignedExercises"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:padding="16dp"
+            android:text="Assigned exercises will appear here."
+            android:textColor="#334155"
+            android:textSize="16sp"
+            android:lineSpacingExtra="6dp" />
+
+        <Button
+            android:id="@+id/buttonBackHome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:layout_marginTop="20dp" />
+
+    </LinearLayout>
+
+</ScrollView>
