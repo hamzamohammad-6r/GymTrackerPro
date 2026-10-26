@@ -26,6 +26,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        findViewById(R.id.cardWorkoutMusic).setOnClickListener(v -> {
+            android.content.Intent intent =
+                    new android.content.Intent(
+                            MainActivity.this,
+                            WorkoutMusicActivity.class
+                    );
+
+            startActivity(intent);
+        });
+
         // Connect to the Room database
         database = GymTrackerDatabase.getDatabase(
                 getApplicationContext()
