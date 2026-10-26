@@ -158,6 +158,68 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
+
+        <!-- Weekly Progress Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardWeeklyProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Weekly Progress"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textWeeklyWorkoutCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Workouts this week: 0"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textWeeklyCompletedCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Completed this week: 0"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textWeeklyTarget"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Weekly target: 0 / 5"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <ProgressBar
+                    android:id="@+id/progressWeeklyWorkouts"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="12dp"
+                    android:max="5"
+                    android:progress="0"
+                    android:progressTint="#4CAF50" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
         <!-- Workout Exercises Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardWorkoutExercises"

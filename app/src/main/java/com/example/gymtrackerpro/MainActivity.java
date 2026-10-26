@@ -11,6 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +25,12 @@ public class MainActivity extends AppCompatActivity {
     private android.widget.TextView textCompletedWorkouts;
     private android.widget.TextView textPlannedWorkouts;
     private android.widget.TextView textCompletionRate;
+    private android.widget.TextView textWeeklyWorkoutCount;
+    private android.widget.TextView textWeeklyCompletedCount;
+    private android.widget.TextView textWeeklyTarget;
+    private android.widget.ProgressBar progressWeeklyWorkouts;
+
+    private static final int WEEKLY_WORKOUT_TARGET = 5;
 
     // Background thread for database operations
     private final ExecutorService databaseExecutor =
@@ -34,8 +44,11 @@ public class MainActivity extends AppCompatActivity {
         textCompletedWorkouts = findViewById(R.id.textCompletedWorkouts);
         textPlannedWorkouts = findViewById(R.id.textPlannedWorkouts);
         textCompletionRate = findViewById(R.id.textCompletionRate);
-        androidx.cardview.widget.CardView cardWorkoutExercises =
-                findViewById(R.id.cardWorkoutExercises);
+        androidx.cardview.widget.CardView cardWorkoutExercises = findViewById(R.id.cardWorkoutExercises);
+        textWeeklyWorkoutCount = findViewById(R.id.textWeeklyWorkoutCount);
+        textWeeklyCompletedCount = findViewById(R.id.textWeeklyCompletedCount);
+        textWeeklyTarget = findViewById(R.id.textWeeklyTarget);
+        progressWeeklyWorkouts = findViewById(R.id.progressWeeklyWorkouts);
 
         cardWorkoutExercises.setOnClickListener(v -> {
             Intent intent = new Intent(
@@ -251,8 +264,91 @@ public class MainActivity extends AppCompatActivity {
                 && textPlannedWorkouts != null
                 && textCompletionRate != null) {
             loadWorkoutStatistics();
+            loadWeeklyProgress();
         }
     }
+
+
+    private void loadWeeklyProgress() {
+        databaseExecutor.execute(() -> {
+            try {
+                List<Workout> workouts =
+                        database.workoutDao().getAllWorkouts();
+
+                Calendar calendar = Calendar.getInstance();
+                int daysSinceMonday =
+                        (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7;
+                calendar.add(Calendar.DAY_OF_YEAR, -daysSinceMonday);
+
+                // Find Monday of the current week.
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+
+                Date monday = calendar.getTime();
+
+                // Find next Monday (exclusive end date).
+                calendar.add(Calendar.DAY_OF_YEAR, 7);
+                Date nextMonday = calendar.getTime();
+
+                SimpleDateFormat dateFormat =
+                        new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+                int weeklyTotal = 0;
+                int weeklyCompleted = 0;
+
+                for (Workout workout : workouts) {
+                    String workoutDate = workout.getWorkoutDate();
+
+                    if (workoutDate == null || workoutDate.trim().isEmpty()) {
+                        continue;
+                    }
+
+                    try {
+                        Date date = dateFormat.parse(workoutDate);
+
+                        if (date != null
+                                && !date.before(monday)
+                                && date.before(nextMonday)) {
+                            weeklyTotal++;
+
+                            if (workout.isCompleted()) {
+                                weeklyCompleted++;
+                            }
+                        }
+                    } catch (java.text.ParseException ignored) {
+                        Log.w(TAG, "Skipping invalid workout date: " + workoutDate);
+                    }
+                }
+
+                final int finalWeeklyTotal = weeklyTotal;
+                final int finalWeeklyCompleted = weeklyCompleted;
+
+                runOnUiThread(() -> {
+                    textWeeklyWorkoutCount.setText(
+                            "Workouts this week: " + finalWeeklyTotal);
+
+                    textWeeklyCompletedCount.setText(
+                            "Completed this week: " + finalWeeklyCompleted);
+
+                    int progress = Math.min(
+                            finalWeeklyCompleted, WEEKLY_WORKOUT_TARGET);
+
+                    textWeeklyTarget.setText(
+                            "Weekly target: " + progress + " / "
+                                    + WEEKLY_WORKOUT_TARGET);
+
+                    progressWeeklyWorkouts.setMax(WEEKLY_WORKOUT_TARGET);
+                    progressWeeklyWorkouts.setProgress(progress);
+                });
+
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to load weekly progress", e);
+            }
+        });
+    }
+
 
 
     @Override
