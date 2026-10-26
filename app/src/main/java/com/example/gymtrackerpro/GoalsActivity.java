@@ -13,12 +13,17 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import android.app.DatePickerDialog;
+import java.util.Calendar;
+import java.util.Locale;
+
 public class GoalsActivity extends AppCompatActivity {
 
     private EditText editGoalType;
     private EditText editTargetValue;
     private EditText editCurrentValue;
-    private EditText editTargetDate;
+    private Button buttonSelectDate;
+    private String selectedTargetDate = "";
     private TextView textGoalsList;
 
     private GymTrackerDatabase database;
@@ -37,7 +42,9 @@ public class GoalsActivity extends AppCompatActivity {
         editGoalType = findViewById(R.id.editGoalType);
         editTargetValue = findViewById(R.id.editTargetValue);
         editCurrentValue = findViewById(R.id.editCurrentValue);
-        editTargetDate = findViewById(R.id.editTargetDate);
+        buttonSelectDate = findViewById(R.id.buttonSelectDate);
+
+        buttonSelectDate.setOnClickListener(v -> showDatePicker());
         textGoalsList = findViewById(R.id.textGoalsList);
 
         Button buttonSaveGoal = findViewById(R.id.buttonSaveGoal);
@@ -50,16 +57,49 @@ public class GoalsActivity extends AppCompatActivity {
         loadGoals();
     }
 
+
+    private void showDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                GoalsActivity.this,
+                (view, year, month, dayOfMonth) -> {
+                    selectedTargetDate = String.format(
+                            Locale.US,
+                            "%04d-%02d-%02d",
+                            year,
+                            month + 1,
+                            dayOfMonth
+                    );
+
+                    buttonSelectDate.setText(selectedTargetDate);
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
+
+        datePickerDialog.getDatePicker().setMinDate(
+                System.currentTimeMillis() - 1000
+        );
+
+        datePickerDialog.show();
+    }
+
+
     private void saveGoal() {
         String goalType = editGoalType.getText().toString().trim();
         String targetText = editTargetValue.getText().toString().trim();
         String currentText = editCurrentValue.getText().toString().trim();
-        String targetDate = editTargetDate.getText().toString().trim();
+        String targetDate = selectedTargetDate;
 
-        if (goalType.isEmpty() || targetText.isEmpty()
-                || currentText.isEmpty() || targetDate.isEmpty()) {
+        if (goalType.isEmpty()
+                || targetText.isEmpty()
+                || currentText.isEmpty()
+                || targetDate.isEmpty()) {
+
             Toast.makeText(this,
-                    "Please complete all fields",
+                    "Please complete all fields and select a target date",
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -106,7 +146,8 @@ public class GoalsActivity extends AppCompatActivity {
                     editGoalType.setText("");
                     editTargetValue.setText("");
                     editCurrentValue.setText("");
-                    editTargetDate.setText("");
+                    selectedTargetDate = "";
+                    buttonSelectDate.setText("Select Target Date");
 
                     loadGoals();
                 });

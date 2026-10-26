@@ -140,13 +140,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // My Profile card
-        findViewById(R.id.cardProfile).setOnClickListener(v ->
-                android.widget.Toast.makeText(
-                        MainActivity.this,
-                        "My Profile selected",
-                        android.widget.Toast.LENGTH_SHORT
-                ).show()
-        );
+
+        findViewById(R.id.cardProfile).setOnClickListener(v -> {
+            android.content.Intent intent =
+                    new android.content.Intent(
+                            MainActivity.this,
+                            ProfileActivity.class
+                    );
+
+            startActivity(intent);
+        });
+
 
 
         findViewById(R.id.cardWorkoutExercises).setOnClickListener(v -> {
