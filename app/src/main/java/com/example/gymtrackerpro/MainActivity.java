@@ -29,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     private android.widget.TextView textWeeklyCompletedCount;
     private android.widget.TextView textWeeklyTarget;
     private android.widget.ProgressBar progressWeeklyWorkouts;
+    private android.widget.TextView textCurrentStreak;
+    private android.widget.TextView textBestStreak;
+    private android.widget.TextView textLastWorkout;
 
     private static final int WEEKLY_WORKOUT_TARGET = 5;
 
@@ -49,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
         textWeeklyCompletedCount = findViewById(R.id.textWeeklyCompletedCount);
         textWeeklyTarget = findViewById(R.id.textWeeklyTarget);
         progressWeeklyWorkouts = findViewById(R.id.progressWeeklyWorkouts);
+        textCurrentStreak = findViewById(R.id.textCurrentStreak);
+        textBestStreak = findViewById(R.id.textBestStreak);
+        textLastWorkout = findViewById(R.id.textLastWorkout);
 
         cardWorkoutExercises.setOnClickListener(v -> {
             Intent intent = new Intent(
@@ -265,6 +271,12 @@ public class MainActivity extends AppCompatActivity {
                 && textCompletionRate != null) {
             loadWorkoutStatistics();
             loadWeeklyProgress();
+
+            if (textCurrentStreak != null
+                    && textBestStreak != null
+                    && textLastWorkout != null) {
+                loadWorkoutStreak();
+            }
         }
     }
 
@@ -348,6 +360,141 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    private void loadWorkoutStreak() {
+        databaseExecutor.execute(() -> {
+            try {
+                List<Workout> workouts =
+                        database.workoutDao().getAllWorkouts();
+
+                java.text.SimpleDateFormat dateFormat =
+                        new java.text.SimpleDateFormat(
+                                "yyyy-MM-dd", java.util.Locale.US);
+
+                java.util.Set<String> completedDays =
+                        new java.util.HashSet<>();
+
+                for (Workout workout : workouts) {
+                    if (workout.isCompleted()
+                            && workout.getWorkoutDate() != null) {
+                        try {
+                            java.util.Date date =
+                                    dateFormat.parse(workout.getWorkoutDate());
+
+                            if (date != null) {
+                                completedDays.add(dateFormat.format(date));
+                            }
+                        } catch (java.text.ParseException e) {
+                            Log.w(TAG, "Skipping invalid workout date", e);
+                        }
+                    }
+                }
+
+                java.util.Calendar today =
+                        java.util.Calendar.getInstance();
+
+                today.set(java.util.Calendar.HOUR_OF_DAY, 0);
+                today.set(java.util.Calendar.MINUTE, 0);
+                today.set(java.util.Calendar.SECOND, 0);
+                today.set(java.util.Calendar.MILLISECOND, 0);
+
+                java.util.Calendar checkDay =
+                        (java.util.Calendar) today.clone();
+
+                String todayString = dateFormat.format(today.getTime());
+                boolean completedToday = completedDays.contains(todayString);
+
+                int currentStreak = 0;
+                int bestStreak = 0;
+                int runningStreak = 0;
+
+                // Calculate the longest streak by checking each day
+                // from the earliest completed workout through today.
+                if (!completedDays.isEmpty()) {
+                    java.util.Date earliestDate = null;
+
+                    for (String day : completedDays) {
+                        java.util.Date parsed = dateFormat.parse(day);
+
+                        if (earliestDate == null || parsed.before(earliestDate)) {
+                            earliestDate = parsed;
+                        }
+                    }
+
+                    java.util.Calendar cursor =
+                            java.util.Calendar.getInstance();
+
+                    cursor.setTime(earliestDate);
+                    cursor.set(java.util.Calendar.HOUR_OF_DAY, 0);
+                    cursor.set(java.util.Calendar.MINUTE, 0);
+                    cursor.set(java.util.Calendar.SECOND, 0);
+                    cursor.set(java.util.Calendar.MILLISECOND, 0);
+
+                    while (!cursor.after(today)) {
+                        String dayString = dateFormat.format(cursor.getTime());
+
+                        if (completedDays.contains(dayString)) {
+                            runningStreak++;
+                            bestStreak = Math.max(bestStreak, runningStreak);
+                        } else {
+                            runningStreak = 0;
+                        }
+
+                        cursor.add(java.util.Calendar.DAY_OF_YEAR, 1);
+                    }
+
+                    // A streak is current if the most recent completed
+                    // workout was today or yesterday.
+                    checkDay = (java.util.Calendar) today.clone();
+
+                    if (!completedToday) {
+                        checkDay.add(java.util.Calendar.DAY_OF_YEAR, -1);
+                    }
+
+                    while (completedDays.contains(
+                            dateFormat.format(checkDay.getTime()))) {
+                        currentStreak++;
+                        checkDay.add(java.util.Calendar.DAY_OF_YEAR, -1);
+                    }
+                }
+
+                final int finalCurrentStreak = currentStreak;
+                final int finalBestStreak = bestStreak;
+
+                String lastWorkout = "None yet";
+
+                if (!completedDays.isEmpty()) {
+                    String latestDay = null;
+
+                    for (String day : completedDays) {
+                        if (latestDay == null || day.compareTo(latestDay) > 0) {
+                            latestDay = day;
+                        }
+                    }
+
+                    lastWorkout = latestDay;
+                }
+
+                final String finalLastWorkout = lastWorkout;
+
+                runOnUiThread(() -> {
+                    textCurrentStreak.setText(
+                            "Current Streak: " + finalCurrentStreak + " days");
+
+                    textBestStreak.setText(
+                            "Best Streak: " + finalBestStreak + " days");
+
+                    textLastWorkout.setText(
+                            "Last Workout: " + finalLastWorkout);
+                });
+
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to load workout streak", e);
+            }
+        });
+    }
+
 
 
 
