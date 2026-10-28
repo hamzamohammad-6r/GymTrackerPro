@@ -38,4 +38,8 @@ public interface WorkoutDao {
     // DELETE: Remove all workouts belonging to a user
     @Query("DELETE FROM workouts WHERE userId = :userId")
     int deleteWorkoutsForUser(int userId);
+
+    // UPDATE: Mark a workout as completed or planned
+    @Query("UPDATE workouts SET completed = :completed WHERE workoutId = :workoutId")
+    int updateWorkoutCompletion(int workoutId, boolean completed);
 }

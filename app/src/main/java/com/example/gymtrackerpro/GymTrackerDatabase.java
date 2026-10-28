@@ -1,4 +1,3 @@
-
 package com.example.gymtrackerpro;
 
 import android.content.Context;
@@ -19,7 +18,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
                 Goal.class,
                 WorkoutMusic.class
         },
-        version = 3,
+        version = 4,
         exportSchema = false
 )
 public abstract class GymTrackerDatabase extends RoomDatabase {

@@ -74,6 +74,13 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+
+        findViewById(R.id.cardWorkoutHistory).setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, WorkoutHistoryActivity.class);
+            startActivity(intent);
+        });
+
+
         // Connect to the Room database
         database = GymTrackerDatabase.getDatabase(
                 getApplicationContext()
