@@ -42,4 +42,8 @@ public interface WorkoutExerciseDao {
     // DELETE: Remove all exercise records for one workout
     @Query("DELETE FROM workout_exercises WHERE workoutId = :workoutId")
     int deleteExercisesForWorkout(int workoutId);
+
+    // READ: How many exercises are assigned to a workout
+    @Query("SELECT COUNT(*) FROM workout_exercises WHERE workoutId = :workoutId")
+    int countExercisesForWorkout(int workoutId);
 }

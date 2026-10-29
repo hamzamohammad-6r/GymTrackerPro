@@ -42,4 +42,12 @@ public interface WorkoutDao {
     // UPDATE: Mark a workout as completed or planned
     @Query("UPDATE workouts SET completed = :completed WHERE workoutId = :workoutId")
     int updateWorkoutCompletion(int workoutId, boolean completed);
+
+    // READ: Next workout still to do. Upcoming/today first (soonest date),
+    // then overdue ones (oldest first). Dates are stored as yyyy-MM-dd.
+    @Query("SELECT * FROM workouts WHERE completed = 0 " +
+            "ORDER BY (workoutDate < :today) ASC, workoutDate ASC LIMIT 1")
+    Workout getNextPlannedWorkout(String today);
+
+
 }
