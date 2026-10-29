@@ -3,63 +3,121 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F7FA"
+    android:background="#0B1120"
     android:padding="20dp">
 
+    <!-- Header -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Workout History"
-        android:textSize="26sp"
+        android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="#172B4D"
-        android:layout_marginBottom="8dp" />
+        android:textColor="#F8FAFC"
+        android:layout_marginBottom="6dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Review your completed and planned workouts."
+        android:text="Review your completed sessions and upcoming training."
         android:textSize="14sp"
-        android:textColor="#667085"
-        android:layout_marginBottom="16dp" />
+        android:textColor="#94A3B8"
+        android:layout_marginBottom="20dp" />
 
-    <TextView
-        android:id="@+id/textHistorySummary"
+    <!-- Workout summary card -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Total: 0 | Completed: 0 | Planned: 0"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:textColor="#172B4D"
-        android:background="#FFFFFF"
-        android:padding="16dp"
-        android:elevation="2dp"
-        android:layout_marginBottom="16dp" />
+        android:orientation="vertical"
+        android:background="#151F33"
+        android:padding="18dp"
+        android:elevation="3dp"
+        android:layout_marginBottom="18dp">
 
-    <ScrollView
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="YOUR PROGRESS"
+            android:textColor="#60A5FA"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:id="@+id/textHistorySummary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total: 0 | Completed: 0 | Planned: 0"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#F8FAFC"
+            android:background="#0F172A"
+            android:padding="16dp"
+            android:lineSpacingExtra="5dp" />
+
+    </LinearLayout>
+
+    <!-- History records -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fillViewport="true">
+        android:orientation="vertical"
+        android:background="#151F33"
+        android:padding="18dp"
+        android:elevation="3dp">
 
         <TextView
-            android:id="@+id/textWorkoutHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Loading workout history..."
-            android:textSize="16sp"
-            android:textColor="#344054"
-            android:background="#FFFFFF"
-            android:padding="16dp"
-            android:lineSpacingExtra="4dp" />
+            android:text="Your sessions"
+            android:textColor="#F8FAFC"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
 
-    </ScrollView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Your saved workout history"
+            android:textColor="#94A3B8"
+            android:textSize="13sp"
+            android:layout_marginBottom="14dp" />
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:scrollbars="vertical">
+
+            <TextView
+                android:id="@+id/textWorkoutHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Loading workout history..."
+                android:textSize="15sp"
+                android:textColor="#CBD5E1"
+                android:background="#0F172A"
+                android:padding="16dp"
+                android:lineSpacingExtra="7dp" />
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <!-- Navigation -->
     <Button
         android:id="@+id/buttonHistoryBack"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:layout_marginTop="16dp" />
+        android:layout_height="52dp"
+        android:text="Back to Dashboard"
+        android:textAllCaps="false"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="#F8FAFC"
+        android:backgroundTint="#334155"
+        android:layout_marginTop="18dp" />
 
 </LinearLayout>

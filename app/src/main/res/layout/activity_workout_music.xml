@@ -2,162 +2,258 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#0B1120"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="20dp">
 
+        <!-- Screen heading -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Workout Music"
+            android:textColor="#F8FAFC"
             android:textSize="28sp"
-            android:textStyle="bold"
-            android:paddingBottom="8dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Choose a workout, then assign music from your device."
-            android:textSize="16sp"
-            android:paddingBottom="20dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select Workout"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:paddingBottom="8dp" />
-
-        <Spinner
-            android:id="@+id/spinnerWorkouts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp" />
-
-        <Button
-            android:id="@+id/buttonChooseSong"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Choose Song" />
-
-        <TextView
-            android:id="@+id/textSelectedSong"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="No song selected."
-            android:textSize="15sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:text="Songs Assigned to This Workout"
-            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textAssignedSongs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="No songs assigned yet."
-            android:textSize="16sp" />
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="22dp"
+            android:text="Your playlist. Your pace. Your progress."
+            android:textColor="#94A3B8"
+            android:textSize="14sp" />
 
-
-        <TextView
+        <!-- Workout selection card -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Select a Song"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:background="#151F33"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <Spinner
-            android:id="@+id/spinnerSongs"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ASSIGN MUSIC"
+                android:textColor="#60A5FA"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Select Workout"
+                android:textColor="#E2E8F0"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spinnerWorkouts"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="6dp"
+                android:backgroundTint="#3B82F6"
+                android:minHeight="48dp" />
+
+            <Button
+                android:id="@+id/buttonChooseSong"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="18dp"
+                android:backgroundTint="#2563EB"
+                android:text="Choose Song"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textSelectedSong"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="#0F172A"
+                android:padding="14dp"
+                android:text="No song selected."
+                android:textColor="#CBD5E1"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <!-- Assigned songs -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="48dp" />
+            android:layout_marginTop="18dp"
+            android:background="#151F33"
+            android:orientation="vertical"
+            android:padding="16dp">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Songs Assigned to This Workout"
+                android:textColor="#F8FAFC"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/buttonRefreshSongs"
+            <TextView
+                android:id="@+id/textAssignedSongs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="#0F172A"
+                android:padding="14dp"
+                android:text="No songs assigned yet."
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/buttonDeleteSong"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="#334155"
+                android:text="Delete Latest Assigned Song"
+                android:textColor="#F8FAFC"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <!-- Playlist selection -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Refresh Playlist" />
+            android:layout_marginTop="18dp"
+            android:background="#151F33"
+            android:orientation="vertical"
+            android:padding="16dp">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="YOUR PLAYLIST"
+                android:textColor="#60A5FA"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08" />
 
-        <TextView
-            android:id="@+id/textPlaybackStatus"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Select a Song"
+                android:textColor="#E2E8F0"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spinnerSongs"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="6dp"
+                android:backgroundTint="#3B82F6"
+                android:minHeight="48dp" />
+
+            <Button
+                android:id="@+id/buttonRefreshSongs"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="#334155"
+                android:text="Refresh Playlist"
+                android:textColor="#F8FAFC" />
+
+        </LinearLayout>
+
+        <!-- Music player -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:padding="12dp"
-            android:text="Playback status: Stopped"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="20dp"
+            android:background="#151F33"
+            android:orientation="vertical"
+            android:padding="16dp">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="NOW PLAYING"
+                android:textColor="#60A5FA"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08" />
 
-        <TextView
-            android:id="@+id/textPlaybackTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="00:00 / 00:00"
-            android:textSize="14sp"
-            android:gravity="center" />
+            <TextView
+                android:id="@+id/textPlaybackStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="#0F172A"
+                android:padding="14dp"
+                android:text="Playback status: Stopped"
+                android:textColor="#F8FAFC"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
-        <SeekBar
-            android:id="@+id/seekBarPlayback"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="1000"
-            android:progress="0"
-            android:enabled="false" />
+            <TextView
+                android:id="@+id/textPlaybackTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="00:00 / 00:00"
+                android:textColor="#94A3B8"
+                android:textSize="13sp" />
 
+            <SeekBar
+                android:id="@+id/seekBarPlayback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:progressTint="#3B82F6"
+                android:thumbTint="#60A5FA"
+                android:max="1000"
+                android:progress="0"
+                android:enabled="false" />
 
+            <Button
+                android:id="@+id/buttonPlaySong"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="18dp"
+                android:backgroundTint="#2563EB"
+                android:text="Play Selected Song"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/buttonDeleteSong"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Delete Latest Assigned Song" />
+            <Button
+                android:id="@+id/buttonPauseResumeSong"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#334155"
+                android:text="Pause Song"
+                android:textColor="#F8FAFC"
+                android:enabled="false" />
 
+            <Button
+                android:id="@+id/buttonStopSong"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#334155"
+                android:text="Stop Music"
+                android:textColor="#F8FAFC" />
 
-
-        <Button
-            android:id="@+id/buttonPlaySong"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Play Selected Song" />
-
-
-        <Button
-            android:id="@+id/buttonPauseResumeSong"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Pause Song"
-            android:enabled="false" />
-
-
-        <Button
-            android:id="@+id/buttonStopSong"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Stop Music" />
-
+        </LinearLayout>
 
     </LinearLayout>
-
 </ScrollView>
