@@ -48,6 +48,12 @@
             android:name=".WorkoutHistoryActivity"
             android:exported="false" />
 
+        <activity android:name=".ProgramsActivity"
+            android:exported="false" />
+
+        <activity android:name=".ProgramDetailActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

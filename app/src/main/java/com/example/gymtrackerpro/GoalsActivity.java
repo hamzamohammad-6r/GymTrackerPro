@@ -34,6 +34,7 @@ public class GoalsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goals);
+        UiFx.applyEdgeToEdge(this);
 
         database = GymTrackerDatabase.getDatabase(
                 getApplicationContext()

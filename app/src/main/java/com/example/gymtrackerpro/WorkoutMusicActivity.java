@@ -109,6 +109,7 @@ public class WorkoutMusicActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_music);
+        UiFx.applyEdgeToEdge(this);
 
         // Connect XML views.
         spinnerWorkouts = findViewById(R.id.spinnerWorkouts);

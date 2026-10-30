@@ -45,6 +45,7 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_exercises);
+        UiFx.applyEdgeToEdge(this);
 
         database = GymTrackerDatabase.getDatabase(
                 getApplicationContext()

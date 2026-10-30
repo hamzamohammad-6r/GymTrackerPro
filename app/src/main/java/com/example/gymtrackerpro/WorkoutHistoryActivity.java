@@ -27,6 +27,7 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_history);
+        UiFx.applyEdgeToEdge(this);
 
         database = GymTrackerDatabase.getDatabase(
                 getApplicationContext());
