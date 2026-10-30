@@ -373,12 +373,7 @@ public class MainActivity extends AppCompatActivity {
                             + " workouts completed. Keep going!");
         }
 
-        if (data.streak > 0) {
-            textStreak.setText("\uD83D\uDD25 " + data.streak
-                    + (data.streak == 1 ? " day" : " days"));
-        } else {
-            textStreak.setText("\uD83D\uDD25 Start a streak");
-        }
+        textStreak.setText(String.valueOf(data.streak));
 
         renderToday(data);
     }
