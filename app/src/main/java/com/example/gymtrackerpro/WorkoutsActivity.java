@@ -1,4 +1,3 @@
-
 package com.example.gymtrackerpro;
 
 import android.app.AlertDialog;
@@ -81,6 +80,8 @@ public class WorkoutsActivity extends AppCompatActivity {
 
         buttonSaveWorkout = findViewById(R.id.buttonSaveWorkout);
         buttonBackHome = findViewById(R.id.buttonBackHome);
+        TextView buttonBackArrow = findViewById(R.id.buttonBackArrow);
+        buttonBackArrow.setOnClickListener(v -> finish());
         buttonEditWorkout = findViewById(R.id.buttonEditWorkout);
         buttonDeleteWorkout = findViewById(R.id.buttonDeleteWorkout);
         buttonToggleCompletion =
