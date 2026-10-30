@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0B1120"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,18 +25,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:layout_marginBottom="22dp"
+            android:layout_marginBottom="24dp"
             android:text="Your playlist. Your pace. Your progress."
             android:textColor="#94A3B8"
             android:textSize="14sp" />
 
-        <!-- Workout selection card -->
+        <!-- Assign music card -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#151F33"
+            android:background="@drawable/bg_card"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="18dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -49,7 +50,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="18dp"
                 android:text="Select Workout"
                 android:textColor="#E2E8F0"
                 android:textSize="15sp"
@@ -86,14 +87,14 @@
 
         </LinearLayout>
 
-        <!-- Assigned songs -->
+        <!-- Assigned songs card -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:background="#151F33"
+            android:background="@drawable/bg_card"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="18dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -107,7 +108,7 @@
                 android:id="@+id/textAssignedSongs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="14dp"
                 android:background="#0F172A"
                 android:padding="14dp"
                 android:text="No songs assigned yet."
@@ -126,14 +127,14 @@
 
         </LinearLayout>
 
-        <!-- Playlist selection -->
+        <!-- Playlist card -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:background="#151F33"
+            android:background="@drawable/bg_card"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="18dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -147,7 +148,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="16dp"
                 android:text="Select a Song"
                 android:textColor="#E2E8F0"
                 android:textSize="15sp"
@@ -165,28 +166,28 @@
                 android:id="@+id/buttonRefreshSongs"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
                 android:backgroundTint="#334155"
                 android:text="Refresh Playlist"
                 android:textColor="#F8FAFC" />
 
         </LinearLayout>
 
-        <!-- Music player -->
+        <!-- Music player card -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:layout_marginBottom="20dp"
-            android:background="#151F33"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/bg_today_card"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="18dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="NOW PLAYING"
-                android:textColor="#60A5FA"
+                android:textColor="#BFDBFE"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.08" />
@@ -195,11 +196,11 @@
                 android:id="@+id/textPlaybackStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:background="#0F172A"
+                android:layout_marginTop="16dp"
+                android:background="#172554"
                 android:padding="14dp"
                 android:text="Playback status: Stopped"
-                android:textColor="#F8FAFC"
+                android:textColor="#FFFFFF"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -210,18 +211,18 @@
                 android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:text="00:00 / 00:00"
-                android:textColor="#94A3B8"
+                android:textColor="#DBEAFE"
                 android:textSize="13sp" />
 
             <SeekBar
                 android:id="@+id/seekBarPlayback"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:progressTint="#3B82F6"
-                android:thumbTint="#60A5FA"
+                android:layout_marginTop="6dp"
                 android:max="1000"
                 android:progress="0"
+                android:progressTint="#60A5FA"
+                android:thumbTint="#FFFFFF"
                 android:enabled="false" />
 
             <Button
@@ -239,9 +240,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
-                android:backgroundTint="#334155"
+                android:backgroundTint="#1E40AF"
                 android:text="Pause Song"
-                android:textColor="#F8FAFC"
+                android:textColor="#FFFFFF"
                 android:enabled="false" />
 
             <Button
@@ -249,9 +250,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
-                android:backgroundTint="#334155"
+                android:backgroundTint="#172554"
                 android:text="Stop Music"
-                android:textColor="#F8FAFC" />
+                android:textColor="#FFFFFF" />
 
         </LinearLayout>
 
