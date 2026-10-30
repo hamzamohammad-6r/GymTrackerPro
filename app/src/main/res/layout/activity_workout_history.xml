@@ -6,13 +6,13 @@
     android:background="#0B1120"
     android:padding="20dp">
 
-    <!-- Header with Back to Dashboard arrow -->
+    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="6dp">
+        android:layout_marginBottom="20dp">
 
         <TextView
             android:id="@+id/buttonBackArrow"
@@ -28,35 +28,40 @@
             android:focusable="true"
             android:contentDescription="Back to Dashboard" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="14dp"
-            android:text="Workout History"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:textColor="#F8FAFC" />
+            android:layout_weight="1"
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Workout History"
+                android:textColor="#F8FAFC"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="Your training journey, at a glance"
+                android:textColor="#94A3B8"
+                android:textSize="13sp" />
+
+        </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Review your completed sessions and upcoming training."
-        android:textSize="14sp"
-        android:textColor="#94A3B8"
-        android:layout_marginBottom="20dp" />
-
-    <!-- Workout summary card -->
+    <!-- Progress summary -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="#172B4D"
         android:orientation="vertical"
-        android:background="#151F33"
-        android:padding="18dp"
-        android:elevation="3dp"
-        android:layout_marginBottom="18dp">
+        android:padding="18dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -65,49 +70,56 @@
             android:textColor="#60A5FA"
             android:textSize="12sp"
             android:textStyle="bold"
-            android:letterSpacing="0.08"
-            android:layout_marginBottom="10dp" />
+            android:letterSpacing="0.08" />
 
         <TextView
             android:id="@+id/textHistorySummary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Total: 0 | Completed: 0 | Planned: 0"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="#F8FAFC"
+            android:layout_marginTop="12dp"
             android:background="#0F172A"
             android:padding="16dp"
+            android:text="Total: 0 | Completed: 0 | Planned: 0"
+            android:textColor="#F8FAFC"
+            android:textSize="15sp"
+            android:textStyle="bold"
             android:lineSpacingExtra="5dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Every completed session moves you forward."
+            android:textColor="#BFDBFE"
+            android:textSize="13sp" />
 
     </LinearLayout>
 
-    <!-- History records -->
+    <!-- Workout records -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@drawable/bg_card"
         android:orientation="vertical"
-        android:background="#151F33"
-        android:padding="18dp"
-        android:elevation="3dp">
+        android:padding="18dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Your sessions"
+            android:text="Training Sessions"
             android:textColor="#F8FAFC"
-            android:textSize="19sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="6dp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Your saved workout history"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="16dp"
+            android:text="Completed and planned workouts"
             android:textColor="#94A3B8"
-            android:textSize="13sp"
-            android:layout_marginBottom="14dp" />
+            android:textSize="13sp" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -120,28 +132,28 @@
                 android:id="@+id/textWorkoutHistory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Loading workout history..."
-                android:textSize="15sp"
-                android:textColor="#CBD5E1"
+                android:minHeight="100dp"
                 android:background="#0F172A"
                 android:padding="16dp"
+                android:text="Loading workout history..."
+                android:textColor="#CBD5E1"
+                android:textSize="15sp"
                 android:lineSpacingExtra="7dp" />
 
         </ScrollView>
-
     </LinearLayout>
 
-    <!-- Navigation -->
+    <!-- Existing navigation button -->
     <Button
         android:id="@+id/buttonHistoryBack"
         android:layout_width="match_parent"
         android:layout_height="52dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#2563EB"
         android:text="Back to Dashboard"
         android:textAllCaps="false"
+        android:textColor="#FFFFFF"
         android:textSize="15sp"
-        android:textStyle="bold"
-        android:textColor="#F8FAFC"
-        android:backgroundTint="#334155"
-        android:layout_marginTop="18dp" />
+        android:textStyle="bold" />
 
 </LinearLayout>

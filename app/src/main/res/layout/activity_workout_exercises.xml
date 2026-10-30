@@ -12,13 +12,13 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Header with Back to Dashboard arrow -->
+        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="6dp">
+            android:layout_marginBottom="8dp">
 
             <TextView
                 android:id="@+id/buttonBackArrow"
@@ -32,44 +32,83 @@
                 android:textStyle="bold"
                 android:clickable="true"
                 android:focusable="true"
-                android:contentDescription="Back to Dashboard" />
+                android:contentDescription="Back" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="14dp"
-                android:text="Workout Builder"
-                android:textColor="#F8FAFC"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+                android:orientation="vertical"
+                android:layout_marginStart="14dp">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Workout Builder"
+                    android:textColor="#F8FAFC"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Plan every rep. Build your progress."
+                    android:textColor="#94A3B8"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="24dp"
-            android:text="Build your session, set your targets, and track your training."
-            android:textColor="#94A3B8"
-            android:textSize="14sp" />
-
-        <!-- Workout and exercise selection -->
+        <!-- Intro banner -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="18dp"
-            android:background="#151F33"
-            android:elevation="3dp">
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="20dp"
+            android:background="#172B4D">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="01  |  Select your session"
+                android:text="YOUR TRAINING PLAN"
                 android:textColor="#60A5FA"
-                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:letterSpacing="0.08" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Train with purpose."
+                android:textColor="#F8FAFC"
+                android:textSize="23sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Choose a workout, select an exercise, and set your targets."
+                android:textColor="#CBD5E1"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Step 1: Select workout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="18dp"
+            android:background="@drawable/bg_card">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="01  ·  SELECT SESSION"
+                android:textColor="#60A5FA"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="16dp" />
 
@@ -77,8 +116,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Workout"
-                android:textStyle="bold"
                 android:textColor="#CBD5E1"
+                android:textStyle="bold"
                 android:layout_marginBottom="6dp" />
 
             <Spinner
@@ -93,9 +132,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Exercise"
-                android:textStyle="bold"
                 android:textColor="#CBD5E1"
-                android:layout_marginTop="18dp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="6dp" />
 
             <Spinner
@@ -105,29 +144,27 @@
                 android:backgroundTint="#3B82F6"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp" />
-
         </LinearLayout>
 
-        <!-- Training targets -->
+        <!-- Step 2: Training targets -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
             android:orientation="vertical"
             android:padding="18dp"
-            android:background="#151F33"
-            android:elevation="3dp">
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_card">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="02  |  Training targets"
+                android:text="02  ·  TRAINING TARGETS"
                 android:textColor="#60A5FA"
-                android:textSize="17sp"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Sets and repetitions -->
+            <!-- Sets and reps -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -160,7 +197,6 @@
                         android:backgroundTint="#3B82F6"
                         android:textColor="#F8FAFC"
                         android:textColorHint="#94A3B8" />
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -189,9 +225,7 @@
                         android:backgroundTint="#3B82F6"
                         android:textColor="#F8FAFC"
                         android:textColorHint="#94A3B8" />
-
                 </LinearLayout>
-
             </LinearLayout>
 
             <!-- Weight -->
@@ -201,7 +235,7 @@
                 android:text="Weight (kg)"
                 android:textColor="#CBD5E1"
                 android:textStyle="bold"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="6dp" />
 
             <EditText
@@ -223,7 +257,7 @@
                 android:text="Training notes (optional)"
                 android:textColor="#CBD5E1"
                 android:textStyle="bold"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="6dp" />
 
             <EditText
@@ -231,7 +265,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="90dp"
-                android:hint="e.g. Use controlled movements"
+                android:hint="Add technique tips or reminders..."
                 android:inputType="textCapSentences|textMultiLine"
                 android:minLines="2"
                 android:gravity="top|start"
@@ -244,69 +278,66 @@
                 android:id="@+id/buttonAddExerciseToWorkout"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
-                android:layout_marginTop="22dp"
-                android:text="Add Exercise to Workout"
+                android:layout_marginTop="20dp"
+                android:text="＋  Add Exercise to Workout"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:backgroundTint="#2563EB" />
-
         </LinearLayout>
 
-        <!-- Assigned exercises -->
+        <!-- Step 3: Assigned exercise plan -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
             android:orientation="vertical"
             android:padding="18dp"
-            android:background="#151F33"
-            android:elevation="3dp">
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_card">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Your exercise plan"
-                android:textColor="#F8FAFC"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="6dp" />
+                android:text="03  ·  YOUR EXERCISE PLAN"
+                android:textColor="#60A5FA"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="14dp"
                 android:text="Exercises assigned to your selected workout"
                 android:textColor="#94A3B8"
-                android:textSize="13sp"
-                android:layout_marginBottom="14dp" />
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/textAssignedExercises"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="70dp"
-                android:background="#0F172A"
+                android:minHeight="80dp"
+                android:background="#0B1120"
                 android:padding="16dp"
                 android:text="Assigned exercises will appear here."
                 android:textColor="#CBD5E1"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:lineSpacingExtra="6dp" />
-
         </LinearLayout>
 
-        <!-- Back navigation -->
+        <!-- Bottom navigation -->
         <Button
             android:id="@+id/buttonBackHome"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="22dp"
             android:layout_marginBottom="12dp"
-            android:text="Back to Dashboard"
+            android:text="←  Back to Dashboard"
             android:textAllCaps="false"
             android:textColor="#F8FAFC"
+            android:textStyle="bold"
             android:backgroundTint="#334155" />
 
     </LinearLayout>
-
 </ScrollView>

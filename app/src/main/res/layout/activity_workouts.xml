@@ -12,89 +12,124 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-
-        <!-- Screen heading with back arrow -->
+        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/buttonBackArrow"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="@drawable/bg_card"
+                android:clickable="true"
+                android:contentDescription="Back to dashboard"
+                android:focusable="true"
                 android:gravity="center"
                 android:text="←"
                 android:textColor="#60A5FA"
                 android:textSize="28sp"
-                android:textStyle="bold"
-                android:clickable="true"
-                android:focusable="true"
-                android:contentDescription="Back to dashboard" />
+                android:textStyle="bold" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="14dp"
-                android:text="Workout Planner"
-                android:textColor="#F8FAFC"
-                android:textSize="26sp"
-                android:textStyle="bold" />
+                android:orientation="vertical">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Workout Planner"
+                    android:textColor="#F8FAFC"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Organise your training week"
+                    android:textColor="#94A3B8"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
 
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="24dp"
-            android:text="Plan your training. Track your progress."
-            android:textColor="#94A3B8"
-            android:textSize="14sp" />
-
-        <!-- Create workout card -->
+        <!-- Intro banner -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="#172B4D"
             android:orientation="vertical"
-            android:padding="18dp"
-            android:background="#151F33"
-            android:elevation="3dp">
+            android:padding="20dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Create or edit workout"
+                android:text="YOUR TRAINING JOURNEY"
+                android:textColor="#60A5FA"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Plan. Train. Progress."
                 android:textColor="#F8FAFC"
-                android:textSize="18sp"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Create sessions, schedule training days, and keep track of completed workouts."
+                android:textColor="#CBD5E1"
+                android:textSize="14sp"
+                android:lineSpacingExtra="3dp" />
+        </LinearLayout>
+
+        <!-- Create or edit workout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="01  ·  CREATE YOUR WORKOUT"
+                android:textColor="#60A5FA"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Workout name"
+                android:textColor="#CBD5E1"
+                android:textStyle="bold"
+                android:layout_marginBottom="6dp" />
 
             <EditText
                 android:id="@+id/editWorkoutName"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:hint="Workout name"
+                android:layout_height="54dp"
+                android:backgroundTint="#3B82F6"
+                android:hint="e.g. Upper Body"
                 android:inputType="textCapSentences"
-                android:padding="14dp"
-                android:backgroundTint="#3B82F6"
-                android:textColor="#F8FAFC"
-                android:textColorHint="#94A3B8" />
-
-            <EditText
-                android:id="@+id/editWorkoutDate"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="12dp"
-                android:hint="Select workout date"
-                android:focusable="false"
-                android:clickable="true"
-                android:padding="14dp"
-                android:backgroundTint="#3B82F6"
+                android:padding="12dp"
+                android:singleLine="true"
                 android:textColor="#F8FAFC"
                 android:textColorHint="#94A3B8" />
 
@@ -102,16 +137,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="6dp"
+                android:text="Workout date"
+                android:textColor="#CBD5E1"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editWorkoutDate"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:backgroundTint="#3B82F6"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="Select workout date"
+                android:padding="12dp"
+                android:textColor="#F8FAFC"
+                android:textColorHint="#94A3B8" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="6dp"
                 android:text="Training day"
                 android:textColor="#CBD5E1"
-                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <Spinner
                 android:id="@+id/spinnerWorkoutDay"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="54dp"
                 android:backgroundTint="#3B82F6"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp" />
@@ -119,40 +174,48 @@
             <Button
                 android:id="@+id/buttonSaveWorkout"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="18dp"
+                android:layout_height="54dp"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="#2563EB"
+                android:elevation="0dp"
+                android:stateListAnimator="@null"
                 android:text="Save Workout"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:backgroundTint="#2563EB" />
-
+                android:textSize="15sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Existing workout selection -->
+        <!-- Manage existing workouts -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_card"
             android:orientation="vertical"
-            android:padding="18dp"
-            android:background="#151F33"
-            android:elevation="3dp">
+            android:padding="18dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Manage workouts"
-                android:textColor="#F8FAFC"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="12dp" />
+                android:text="02  ·  MANAGE WORKOUTS"
+                android:textColor="#60A5FA"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="14dp"
+                android:text="Select a saved workout to edit, mark as completed, or delete."
+                android:textColor="#94A3B8"
+                android:textSize="13sp" />
 
             <Spinner
                 android:id="@+id/spinnerSelectWorkout"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="54dp"
                 android:backgroundTint="#3B82F6"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp" />
@@ -160,85 +223,86 @@
             <Button
                 android:id="@+id/buttonEditWorkout"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="12dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="14dp"
+                android:backgroundTint="#334155"
+                android:stateListAnimator="@null"
                 android:text="Edit Selected Workout"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#334155" />
+                android:textColor="#F8FAFC"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/buttonToggleCompletion"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="8dp"
+                android:backgroundTint="#1D4ED8"
+                android:stateListAnimator="@null"
                 android:text="Toggle Completion"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:backgroundTint="#1D4ED8" />
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/buttonDeleteWorkout"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="8dp"
+                android:backgroundTint="#B91C1C"
+                android:stateListAnimator="@null"
                 android:text="Delete Selected Workout"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:backgroundTint="#B91C1C" />
-
+                android:textStyle="bold" />
         </LinearLayout>
 
-
-        <!-- Workout Schedule Card -->
+        <!-- Workout schedule -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_card"
             android:orientation="vertical"
-            android:padding="18dp"
-            android:background="@drawable/bg_card">
+            android:padding="18dp">
 
-            <!-- Card heading -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="YOUR WORKOUT SCHEDULE"
+                android:text="03  ·  YOUR SCHEDULE"
                 android:textColor="#60A5FA"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.08"
-                android:paddingBottom="8dp" />
+                android:letterSpacing="0.05" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Your exercise plan"
+                android:layout_marginTop="8dp"
+                android:text="Planned sessions"
                 android:textColor="#F8FAFC"
                 android:textSize="21sp"
-                android:textStyle="bold"
-                android:paddingBottom="6dp" />
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Review your planned training sessions below."
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="16dp"
+                android:text="Your saved workouts and training days appear here."
                 android:textColor="#94A3B8"
-                android:textSize="13sp"
-                android:paddingBottom="16dp" />
+                android:textSize="13sp" />
 
-            <!-- Divider -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#29364D" />
 
-            <!-- Existing schedule output: keep this ID -->
             <TextView
                 android:id="@+id/textWorkoutList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="80dp"
+                android:minHeight="90dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="8dp"
                 android:text="Your saved workouts will appear here."
@@ -248,27 +312,22 @@
                 android:gravity="top"
                 android:breakStrategy="simple"
                 android:hyphenationFrequency="none" />
-
         </LinearLayout>
 
-
-        <!-- Navigation -->
+        <!-- Bottom navigation -->
         <Button
             android:id="@+id/buttonBackHome"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="54dp"
             android:layout_marginTop="22dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="12dp"
             android:backgroundTint="#2563EB"
+            android:stateListAnimator="@null"
             android:text="←  Back to Dashboard"
+            android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.02"
-            android:elevation="4dp"
-            android:stateListAnimator="@null" />
-
+            android:textStyle="bold" />
 
     </LinearLayout>
-
 </ScrollView>

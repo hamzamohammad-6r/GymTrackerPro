@@ -13,83 +13,64 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Header -->
+        <!-- Centered app heading -->
         <LinearLayout
             android:id="@+id/headerRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textGreeting"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:letterSpacing="0.1"
-                    android:text="GOOD MORNING"
-                    android:textColor="#60A5FA"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="GymTracker Pro"
-                    android:textColor="#F8FAFC"
-                    android:textSize="28sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textMotivation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Progress, not perfection."
-                    android:textColor="#94A3B8"
-                    android:textSize="14sp" />
-            </LinearLayout>
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginBottom="22dp">
 
             <TextView
-                android:id="@+id/textStreak"
-                android:layout_width="wrap_content"
+                android:id="@+id/textGreeting"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#151F33"
-                android:paddingStart="12dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="8dp"
-                android:text="🔥 Start a streak"
-                android:textColor="#FBBF24"
-                android:textSize="13sp"
+                android:gravity="center"
+                android:letterSpacing="0.12"
+                android:text="GOOD MORNING"
+                android:textColor="#60A5FA"
+                android:textSize="12sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="GymTrackerPro"
+                android:textColor="#F8FAFC"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textMotivation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="Progress, not perfection."
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
         </LinearLayout>
 
-
-        <!-- Fitness Hero Image -->
+        <!-- Fitness hero image -->
         <ImageView
             android:id="@+id/ivFitnessHero"
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:layout_marginBottom="20dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/hero_fitness"
-            android:contentDescription="Gym fitness banner"
             android:background="@drawable/bg_card"
-            android:clipToOutline="true" />
+            android:clipToOutline="true"
+            android:contentDescription="Gym fitness banner"
+            android:scaleType="centerCrop"
+            android:src="@drawable/hero_fitness" />
 
-        <!-- Today card -->
+        <!-- Today's workout -->
         <LinearLayout
             android:id="@+id/cardToday"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
             android:background="@drawable/bg_today_card"
             android:clickable="true"
             android:elevation="4dp"
@@ -138,13 +119,13 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Stats card -->
+        <!-- Progress statistics -->
         <LinearLayout
             android:id="@+id/cardStats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:background="#151F33"
+            android:background="@drawable/bg_card"
             android:elevation="3dp"
             android:orientation="vertical"
             android:padding="18dp">
@@ -154,13 +135,13 @@
                 android:layout_height="wrap_content"
                 android:text="Your progress"
                 android:textColor="#F8FAFC"
-                android:textSize="18sp"
+                android:textSize="19sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -176,7 +157,7 @@
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:textColor="#F8FAFC"
-                        android:textSize="24sp"
+                        android:textSize="23sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -200,7 +181,7 @@
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:textColor="#34D399"
-                        android:textSize="24sp"
+                        android:textSize="23sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -224,7 +205,7 @@
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:textColor="#60A5FA"
-                        android:textSize="24sp"
+                        android:textSize="23sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -248,7 +229,7 @@
                         android:layout_height="wrap_content"
                         android:text="0%"
                         android:textColor="#FBBF24"
-                        android:textSize="24sp"
+                        android:textSize="23sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -282,7 +263,7 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
-        <!-- Programs section -->
+        <!-- Free programs -->
         <LinearLayout
             android:id="@+id/sectionPrograms"
             android:layout_width="match_parent"
@@ -331,7 +312,7 @@
             </HorizontalScrollView>
         </LinearLayout>
 
-        <!-- Tiles -->
+        <!-- Dashboard features -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -347,6 +328,78 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
+
+        <!-- Daily streak moved to the bottom -->
+        <LinearLayout
+            android:id="@+id/cardStreak"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bg_card"
+            android:elevation="3dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:background="#352C1B"
+                android:gravity="center"
+                android:text="🔥"
+                android:textSize="27sp"
+                android:contentDescription="Training streak" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Training streak"
+                    android:textColor="#F8FAFC"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Keep showing up and build consistency."
+                    android:textColor="#94A3B8"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textStreak"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="#FBBF24"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DAYS"
+                    android:textColor="#94A3B8"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08" />
+            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>
