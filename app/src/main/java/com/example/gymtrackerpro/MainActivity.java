@@ -55,14 +55,16 @@ public class MainActivity extends AppCompatActivity {
         final String title;
         final String subtitle;
         final int icon;
+        final int photo;
         final String color;
         final Class<? extends Activity> target;
 
-        Tile(String title, String subtitle, int icon,
+        Tile(String title, String subtitle, int icon, int photo,
              String color, Class<? extends Activity> target) {
             this.title = title;
             this.subtitle = subtitle;
             this.icon = icon;
+            this.photo = photo;
             this.color = color;
             this.target = target;
         }
@@ -175,29 +177,36 @@ public class MainActivity extends AppCompatActivity {
 
         Tile[] tiles = {
                 new Tile("Programs", "Free plans to follow",
-                        R.drawable.ic_tile_programs, "#FBBF24",
-                        ProgramsActivity.class),
+                        R.drawable.ic_tile_programs, R.drawable.photo_programs,
+                        "#FBBF24", ProgramsActivity.class),
+
                 new Tile("My Workouts", "Plan your training days",
-                        R.drawable.ic_tile_workouts, "#60A5FA",
-                        WorkoutsActivity.class),
+                        R.drawable.ic_tile_workouts, R.drawable.photo_workouts,
+                        "#60A5FA", WorkoutsActivity.class),
+
                 new Tile("Exercises", "Your exercise library",
-                        R.drawable.ic_tile_exercises, "#34D399",
-                        ExercisesActivity.class),
+                        R.drawable.ic_tile_exercises, R.drawable.photo_exercises,
+                        "#34D399", ExercisesActivity.class),
+
                 new Tile("Workout Plan", "Sets, reps and weights",
-                        R.drawable.ic_tile_plan, "#A78BFA",
-                        WorkoutExercisesActivity.class),
+                        R.drawable.ic_tile_plan, R.drawable.photo_plan,
+                        "#A78BFA", WorkoutExercisesActivity.class),
+
                 new Tile("History", "Look back at your work",
-                        R.drawable.ic_tile_history, "#38BDF8",
-                        WorkoutHistoryActivity.class),
+                        R.drawable.ic_tile_history, R.drawable.photo_history,
+                        "#38BDF8", WorkoutHistoryActivity.class),
+
                 new Tile("Music", "A playlist per workout",
-                        R.drawable.ic_tile_music, "#F472B6",
-                        WorkoutMusicActivity.class),
+                        R.drawable.ic_tile_music, R.drawable.photo_music,
+                        "#F472B6", WorkoutMusicActivity.class),
+
                 new Tile("Goals", "Set targets and hit them",
-                        R.drawable.ic_tile_goals, "#FB923C",
-                        GoalsActivity.class),
+                        R.drawable.ic_tile_goals, R.drawable.photo_goals,
+                        "#FB923C", GoalsActivity.class),
+
                 new Tile("Profile", "Your personal details",
-                        R.drawable.ic_tile_profile, "#94A3B8",
-                        ProfileActivity.class)
+                        R.drawable.ic_tile_profile, R.drawable.photo_profile,
+                        "#94A3B8", ProfileActivity.class)
         };
 
         for (int i = 0; i < tiles.length; i += 2) {
@@ -236,6 +245,10 @@ public class MainActivity extends AppCompatActivity {
                 .inflate(R.layout.item_home_tile, parent, false);
 
         int color = Color.parseColor(tile.color);
+
+        ImageView photo = view.findViewById(R.id.imageTilePhoto);
+        photo.setImageResource(tile.photo);
+        photo.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         ImageView icon = view.findViewById(R.id.imageTileIcon);
         icon.setImageResource(tile.icon);

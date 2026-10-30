@@ -3,37 +3,50 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:background="#151F33"
+    android:background="@drawable/bg_home_tile"
     android:clickable="true"
-    android:elevation="3dp"
+    android:elevation="4dp"
     android:focusable="true"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="12dp">
+
+    <ImageView
+        android:id="@+id/imageTilePhoto"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:background="@drawable/bg_tile_icon"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop" />
 
     <ImageView
         android:id="@+id/imageTileIcon"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/bg_tile_icon"
         android:contentDescription="@null"
-        android:padding="10dp" />
+        android:padding="9dp" />
 
     <TextView
         android:id="@+id/textTileTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:text="Title"
         android:textColor="#F8FAFC"
-        android:textSize="16sp"
+        android:textSize="15sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textTileSubtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="4dp"
+        android:minHeight="34dp"
+        android:gravity="top"
         android:text="Subtitle"
-        android:textColor="#94A3B8"
-        android:textSize="12sp" />
+        android:textColor="#A8B7CC"
+        android:textSize="12sp"
+        android:lineSpacingExtra="2dp" />
+
 </LinearLayout>
