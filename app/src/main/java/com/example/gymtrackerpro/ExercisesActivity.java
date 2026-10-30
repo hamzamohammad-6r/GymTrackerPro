@@ -373,6 +373,27 @@ public class ExercisesActivity extends AppCompatActivity {
         group.setText(exercise.getMuscleGroup());
         group.setTextColor(MuscleIcons.colorFor(exercise.getMuscleGroup()));
 
+        card.setOnClickListener(v -> {
+            android.content.Intent intent =
+                    new android.content.Intent(
+                            ExercisesActivity.this,
+                            ExerciseDetailActivity.class
+                    );
+
+            intent.putExtra(
+                    ExerciseDetailActivity.EXTRA_EXERCISE_NAME,
+                    exercise.getExerciseName()
+            );
+
+            intent.putExtra(
+                    ExerciseDetailActivity.EXTRA_MUSCLE_GROUP,
+                    exercise.getMuscleGroup()
+            );
+
+            startActivity(intent);
+        });
+
+
         card.setOnLongClickListener(v -> {
             confirmDelete(exercise);
             return true;
