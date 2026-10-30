@@ -71,13 +71,25 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+
+        <!-- Fitness Hero Image -->
+        <ImageView
+            android:id="@+id/imageFitnessHero"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginTop="20dp"
+            android:contentDescription="Fitness training"
+            android:scaleType="centerCrop"
+            android:src="@drawable/hero_fitness" />
+
+
         <!-- Today card -->
         <LinearLayout
             android:id="@+id/cardToday"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
-            android:background="#1E3A8A"
+            android:background="@drawable/bg_today_card"
             android:clickable="true"
             android:elevation="4dp"
             android:focusable="true"
