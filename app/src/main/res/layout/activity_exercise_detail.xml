@@ -39,48 +39,19 @@
             android:textSize="13sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:text="Exercise Demonstration"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
 
-
-        <FrameLayout
+        <ImageView
+            android:id="@+id/imageExerciseIllustration"
             android:layout_width="match_parent"
             android:layout_height="220dp"
-            android:layout_marginTop="12dp"
-            android:background="#151F33">
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_card"
+            android:padding="12dp"
+            android:scaleType="fitCenter"
+            android:contentDescription="Exercise technique illustration"
+            android:src="@drawable/exercise_placeholder" />
 
-            <VideoView
-                android:id="@+id/videoExerciseDemo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:id="@+id/textVideoPlaceholder"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:padding="20dp"
-                android:text="Exercise demonstration will load here"
-                android:textColor="#94A3B8"
-                android:textSize="16sp" />
-
-        </FrameLayout>
-
-
-        <TextView
-            android:id="@+id/textVideoDuration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Video guide • Up to 5 minutes"
-            android:textColor="#94A3B8"
-            android:textSize="13sp" />
 
         <TextView
             android:layout_width="match_parent"
