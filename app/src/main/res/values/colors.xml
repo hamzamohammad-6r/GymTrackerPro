@@ -3,28 +3,44 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Surfaces -->
+    <!-- Main surfaces -->
     <color name="gt_background">#0B1120</color>
     <color name="gt_surface">#151F33</color>
     <color name="gt_divider">#29364D</color>
     <color name="gt_ripple">#26FFFFFF</color>
 
     <!-- Text -->
+    <color name="gt_text">#F8FAFC</color>
     <color name="gt_text_primary">#F8FAFC</color>
     <color name="gt_text_section">#CBD5E1</color>
     <color name="gt_text_secondary">#94A3B8</color>
     <color name="gt_text_muted">#64748B</color>
 
-    <!-- Accents -->
+    <!-- Primary blue accents -->
+    <color name="gt_primary">#3B82F6</color>
+    <color name="gt_primary_dark">#1D4ED8</color>
     <color name="gt_blue">#60A5FA</color>
+    <color name="gt_tonal">#1E3A5F</color>
+    <color name="gt_stroke">#2F5A94</color>
+
+    <!-- Status colors -->
     <color name="gt_green">#34D399</color>
+    <color name="gt_danger">#F87171</color>
     <color name="gt_purple">#A78BFA</color>
     <color name="gt_yellow">#FBBF24</color>
     <color name="gt_pink">#F472B6</color>
     <color name="gt_sky">#38BDF8</color>
     <color name="gt_orange">#FB923C</color>
 
+    <!-- Next workout card -->
     <color name="gt_next_start">#1E3A5F</color>
     <color name="gt_next_end">#151F33</color>
     <color name="gt_next_stroke">#2F5A94</color>
+
+
+    <!-- Additional colors required by existing layouts -->
+    <color name="gt_surface_alt">#1E293B</color>
+    <color name="gt_bg">#0B1120</color>
+    <color name="gt_amber">#FBBF24</color>
+
 </resources>

@@ -25,19 +25,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="20dp"
             android:text="Build your exercise collection and organise your training."
             android:textColor="#94A3B8"
             android:textSize="14sp" />
 
-        <!-- Add exercise card -->
+        <!-- Toggle add card -->
+        <Button
+            android:id="@+id/buttonToggleAdd"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="+ Add New Exercise"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:backgroundTint="#2563EB" />
+
+        <!-- Add exercise card (hidden until toggled) -->
         <LinearLayout
+            android:id="@+id/cardAddExercise"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:orientation="vertical"
             android:padding="18dp"
             android:background="#151F33"
-            android:elevation="3dp">
+            android:elevation="3dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
@@ -121,15 +136,48 @@
                 android:layout_marginBottom="6dp" />
 
             <TextView
+                android:id="@+id/textExerciseCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Your personal exercise collection"
+                android:text="0 exercises"
                 android:textColor="#94A3B8"
                 android:textSize="13sp"
                 android:layout_marginBottom="14dp" />
 
+            <!-- Search -->
+            <EditText
+                android:id="@+id/editSearchExercise"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Search exercises"
+                android:inputType="text"
+                android:singleLine="true"
+                android:padding="12dp"
+                android:backgroundTint="#3B82F6"
+                android:textColor="#F8FAFC"
+                android:textColorHint="#94A3B8" />
+
+            <!-- Muscle group filter chips -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:scrollbars="none">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupMuscle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleLine="true"
+                    app:singleSelection="true"
+                    xmlns:app="http://schemas.android.com/apk/res-auto" />
+
+            </HorizontalScrollView>
+
+            <!-- Empty state -->
             <TextView
-                android:id="@+id/textExerciseList"
+                android:id="@+id/textExerciseEmpty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="70dp"
@@ -139,6 +187,20 @@
                 android:textColor="#CBD5E1"
                 android:textSize="15sp"
                 android:lineSpacingExtra="6dp" />
+
+            <!-- Exercise list container (rows added from Java) -->
+            <LinearLayout
+                android:id="@+id/containerExercises"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <!-- Legacy list view, kept so old references don't break. Delete if unused. -->
+            <TextView
+                android:id="@+id/textExerciseList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
         </LinearLayout>
 

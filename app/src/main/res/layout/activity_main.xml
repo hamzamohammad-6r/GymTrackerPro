@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gt_background"
+    android:background="#0B1120"
     android:fillViewport="true"
     android:scrollbars="none">
 
@@ -15,138 +14,147 @@
         android:padding="20dp">
 
         <!-- Header -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:letterSpacing="0.15"
-            android:text="GYMTRACKERPRO"
-            android:textColor="@color/gt_blue"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:fontFamily="sans-serif-medium"
-            android:text="Your Fitness Dashboard"
-            android:textColor="@color/gt_text_primary"
-            android:textSize="29sp"
-            android:textStyle="bold" />
-
-        <!-- Personalised in MainActivity (falls back to the tagline) -->
-        <TextView
-            android:id="@+id/textSubtitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:gravity="center"
-            android:lineSpacingExtra="3dp"
-            android:text="Plan your workouts. Track your progress. Reach your goals."
-            android:textColor="@color/gt_text_secondary"
-            android:textSize="14sp" />
-
-        <!-- NEW: Next workout card -->
         <LinearLayout
-            android:id="@+id/cardNextWorkout"
+            android:id="@+id/headerRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/bg_next_card"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textGreeting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.1"
+                    android:text="GOOD MORNING"
+                    android:textColor="#60A5FA"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="GymTracker Pro"
+                    android:textColor="#F8FAFC"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textMotivation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Progress, not perfection."
+                    android:textColor="#94A3B8"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textStreak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#151F33"
+                android:paddingStart="12dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="8dp"
+                android:text="🔥 Start a streak"
+                android:textColor="#FBBF24"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Today card -->
+        <LinearLayout
+            android:id="@+id/cardToday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:background="#1E3A8A"
             android:clickable="true"
+            android:elevation="4dp"
             android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
             android:orientation="vertical"
             android:padding="20dp">
 
             <TextView
-                android:id="@+id/textNextLabel"
-                android:gravity="center"
+                android:id="@+id/textTodayLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:letterSpacing="0.12"
-                android:text="UP NEXT"
-                android:textColor="@color/gt_blue"
+                android:letterSpacing="0.1"
+                android:text="TODAY'S WORKOUT"
+                android:textColor="#93C5FD"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textNextTitle"
-                android:gravity="center"
+                android:id="@+id/textTodayTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="No workout planned"
-                android:textColor="@color/gt_text_primary"
+                android:layout_marginTop="6dp"
+                android:text="Nothing planned today"
+                android:textColor="#FFFFFF"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textNextMeta"
-                android:gravity="center"
+                android:id="@+id/textTodaySub"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Tap to plan your next session"
-                android:textColor="@color/gt_text_secondary"
-                android:textSize="13sp" />
+                android:layout_marginTop="6dp"
+                android:text="Take it easy, or add a session to your week."
+                android:textColor="#CBD5E1"
+                android:textSize="14sp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonCompleteNext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <Button
+                android:id="@+id/buttonTodayAction"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
                 android:layout_marginTop="16dp"
-                android:text="Mark as completed"
-                android:textColor="@color/gt_background"
-                android:visibility="gone"
-                app:backgroundTint="@color/gt_green"
-                app:cornerRadius="12dp" />
+                android:backgroundTint="#2563EB"
+                android:text="Plan a workout"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Progress -->
-        <TextView
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:letterSpacing="0.08"
-            android:text="YOUR PROGRESS"
-            android:textColor="@color/gt_text_section"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
+        <!-- Stats card -->
         <LinearLayout
-            android:id="@+id/cardWorkoutStatistics"
+            android:id="@+id/cardStats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="28dp"
-            android:background="@drawable/bg_stats_card"
+            android:layout_marginTop="18dp"
+            android:background="#151F33"
+            android:elevation="3dp"
             android:orientation="vertical"
             android:padding="18dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp"
-                android:text="Workout Overview"
-                android:textColor="@color/gt_text_primary"
-                android:textSize="17sp"
+                android:text="Your progress"
+                android:textColor="#F8FAFC"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:baselineAligned="false"
+                android:layout_marginTop="14dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
+                    android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
@@ -154,15 +162,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:textColor="@color/gt_blue"
-                        android:textSize="28sp"
+                        android:textColor="#F8FAFC"
+                        android:textSize="24sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total workouts"
-                        android:textColor="@color/gt_text_secondary"
+                        android:text="Total"
+                        android:textColor="#94A3B8"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -170,7 +178,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
+                    android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
@@ -178,37 +186,23 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:textColor="@color/gt_green"
-                        android:textSize="28sp"
+                        android:textColor="#34D399"
+                        android:textSize="24sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Completed"
-                        android:textColor="@color/gt_text_secondary"
+                        android:text="Done"
+                        android:textColor="#94A3B8"
                         android:textSize="12sp" />
                 </LinearLayout>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="18dp"
-                android:layout_marginBottom="18dp"
-                android:background="@color/gt_divider" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
+                    android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
@@ -216,15 +210,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:textColor="@color/gt_purple"
-                        android:textSize="28sp"
+                        android:textColor="#60A5FA"
+                        android:textSize="24sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Planned"
-                        android:textColor="@color/gt_text_secondary"
+                        android:textColor="#94A3B8"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -232,7 +226,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
+                    android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
@@ -240,79 +234,106 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0%"
-                        android:textColor="@color/gt_yellow"
-                        android:textSize="28sp"
+                        android:textColor="#FBBF24"
+                        android:textSize="24sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Completion rate"
-                        android:textColor="@color/gt_text_secondary"
+                        android:text="Rate"
+                        android:textColor="#94A3B8"
                         android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- NEW: completion progress bar -->
-            <ProgressBar
+            <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/progressCompletion"
-                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:max="100"
                 android:progress="0"
-                android:progressDrawable="@drawable/progress_completion" />
+                app:indicatorColor="#3B82F6"
+                app:trackColor="#0F172A"
+                app:trackCornerRadius="4dp"
+                app:trackThickness="8dp" />
+
+            <TextView
+                android:id="@+id/textProgressCaption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Add your first workout to start tracking progress."
+                android:textColor="#94A3B8"
+                android:textSize="13sp" />
         </LinearLayout>
 
-        <!-- Training -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:letterSpacing="0.08"
-            android:text="TRAINING"
-            android:textColor="@color/gt_text_section"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
-        <!-- Rows are added from MainActivity -->
+        <!-- Programs section -->
         <LinearLayout
-            android:id="@+id/containerTraining"
+            android:id="@+id/sectionPrograms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:orientation="vertical" />
+            android:layout_marginTop="24dp"
+            android:orientation="vertical">
 
-        <!-- Personal -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Free Programs"
+                    android:textColor="#F8FAFC"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textSeeAllPrograms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="6dp"
+                    android:text="See all"
+                    android:textColor="#60A5FA"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:clipToPadding="false"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/containerPrograms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <!-- Tiles -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:letterSpacing="0.08"
-            android:text="PERSONAL"
-            android:textColor="@color/gt_text_section"
-            android:textSize="13sp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="10dp"
+            android:text="Explore"
+            android:textColor="#F8FAFC"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <LinearLayout
-            android:id="@+id/containerPersonal"
+            android:id="@+id/containerTiles"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
             android:orientation="vertical" />
-
-        <!-- Footer -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:gravity="center"
-            android:letterSpacing="0.08"
-            android:text="STAY CONSISTENT. GET STRONGER."
-            android:textColor="@color/gt_text_muted"
-            android:textSize="11sp"
-            android:textStyle="bold" />
 
     </LinearLayout>
 </ScrollView>
