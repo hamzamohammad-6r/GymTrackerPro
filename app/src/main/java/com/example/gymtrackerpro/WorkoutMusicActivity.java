@@ -109,6 +109,9 @@ public class WorkoutMusicActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout_music);
+        TextView buttonBackArrow = findViewById(R.id.buttonBackArrow);
+
+        buttonBackArrow.setOnClickListener(v -> finish());
         UiFx.applyEdgeToEdge(this);
 
         // Connect XML views.

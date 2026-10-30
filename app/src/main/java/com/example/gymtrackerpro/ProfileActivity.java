@@ -4,6 +4,7 @@ package com.example.gymtrackerpro;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +32,9 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        TextView buttonBackArrow = findViewById(R.id.buttonBackArrow);
+
+        buttonBackArrow.setOnClickListener(v -> finish());
         UiFx.applyEdgeToEdge(this);
 
         database = GymTrackerDatabase.getDatabase(

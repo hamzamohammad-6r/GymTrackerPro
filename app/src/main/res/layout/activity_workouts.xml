@@ -189,48 +189,85 @@
 
         </LinearLayout>
 
-        <!-- Workout list -->
+
+        <!-- Workout Schedule Card -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="18dp"
             android:orientation="vertical"
             android:padding="18dp"
-            android:background="#151F33"
-            android:elevation="3dp">
+            android:background="@drawable/bg_card">
+
+            <!-- Card heading -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="YOUR WORKOUT SCHEDULE"
+                android:textColor="#60A5FA"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:paddingBottom="8dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Your workout schedule"
+                android:text="Your exercise plan"
                 android:textColor="#F8FAFC"
-                android:textSize="18sp"
+                android:textSize="21sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="12dp" />
+                android:paddingBottom="6dp" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Review your planned training sessions below."
+                android:textColor="#94A3B8"
+                android:textSize="13sp"
+                android:paddingBottom="16dp" />
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#29364D" />
+
+            <!-- Existing schedule output: keep this ID -->
             <TextView
                 android:id="@+id/textWorkoutList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="60dp"
+                android:minHeight="80dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
                 android:text="Your saved workouts will appear here."
                 android:textColor="#CBD5E1"
                 android:textSize="14sp"
-                android:lineSpacingExtra="6dp" />
+                android:lineSpacingExtra="8dp"
+                android:gravity="top"
+                android:breakStrategy="simple"
+                android:hyphenationFrequency="none" />
 
         </LinearLayout>
+
 
         <!-- Navigation -->
         <Button
             android:id="@+id/buttonBackHome"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="56dp"
             android:layout_marginTop="22dp"
-            android:layout_marginBottom="12dp"
-            android:text="Back to Dashboard"
-            android:textAllCaps="false"
-            android:textColor="#F8FAFC"
-            android:backgroundTint="#334155" />
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#2563EB"
+            android:text="←  Back to Dashboard"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.02"
+            android:elevation="4dp"
+            android:stateListAnimator="@null" />
+
 
     </LinearLayout>
 
