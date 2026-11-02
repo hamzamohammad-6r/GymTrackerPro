@@ -134,6 +134,12 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.textSeeAllPrograms).setOnClickListener(v ->
                 openActivity(ProgramsActivity.class));
+
+        findViewById(R.id.textSeeAllPrograms).setOnClickListener(v ->
+                openActivity(ProgramsActivity.class));
+
+        findViewById(R.id.buttonOpenRegister).setOnClickListener(v ->
+                openActivity(RegisterActivity.class));
     }
 
     private void setGreeting() {

@@ -401,5 +401,19 @@
             </LinearLayout>
         </LinearLayout>
 
+        <Button
+            android:id="@+id/buttonOpenRegister"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="#2563EB"
+            android:text="Create Account"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
     </LinearLayout>
+
 </ScrollView>
