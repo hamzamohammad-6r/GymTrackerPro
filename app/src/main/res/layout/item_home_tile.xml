@@ -3,7 +3,7 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:background="@drawable/bg_home_tile"
+    android:background="@drawable/bg_home_tile_gold"
     android:clickable="true"
     android:elevation="4dp"
     android:focusable="true"
