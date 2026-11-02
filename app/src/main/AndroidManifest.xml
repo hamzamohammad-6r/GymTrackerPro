@@ -8,6 +8,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GymTrackerPro">
 
+        <!-- Account registration screen -->
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+
         <!-- My Workouts screen -->
         <activity
             android:name=".WorkoutsActivity"
