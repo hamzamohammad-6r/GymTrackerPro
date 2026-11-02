@@ -25,6 +25,9 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import android.content.SharedPreferences;
+import android.net.Uri;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -262,11 +265,62 @@ public class MainActivity extends AppCompatActivity {
         icon.setBackgroundTintList(ColorStateList.valueOf(
                 ColorUtils.setAlphaComponent(color, 0x26)));
 
-        ((TextView) view.findViewById(R.id.textTileTitle))
-                .setText(tile.title);
+        TextView tileTitle =
+                view.findViewById(R.id.textTileTitle);
 
-        ((TextView) view.findViewById(R.id.textTileSubtitle))
-                .setText(tile.subtitle);
+        TextView tileSubtitle =
+                view.findViewById(R.id.textTileSubtitle);
+
+        tileTitle.setText(tile.title);
+        tileSubtitle.setText(tile.subtitle);
+
+// Custom details for the Profile tile only.
+        if (tile.target == ProfileActivity.class) {
+
+            SharedPreferences preferences = getSharedPreferences(
+                    "GymTrackerProfilePrefs",
+                    MODE_PRIVATE
+            );
+
+            String savedPhoto = preferences.getString(
+                    "profile_image_uri",
+                    null
+            );
+
+            if (savedPhoto != null) {
+                try {
+                    photo.setImageURI(Uri.parse(savedPhoto));
+                } catch (Exception e) {
+                    photo.setImageResource(tile.photo);
+                }
+            }
+
+            databaseExecutor.execute(() -> {
+                try {
+                    List<User> users = database.userDao().getAllUsers();
+
+                    if (users != null && !users.isEmpty()) {
+                        User user = users.get(0);
+
+                        runOnUiThread(() -> {
+                            if (isFinishing() || isDestroyed()) {
+                                return;
+                            }
+
+                            tileTitle.setText(user.getName());
+                            tileSubtitle.setText(
+                                    user.getFitnessGoal() == null
+                                            || user.getFitnessGoal().trim().isEmpty()
+                                            ? "Your personal fitness profile"
+                                            : user.getFitnessGoal()
+                            );
+                        });
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Could not load profile tile", e);
+                }
+            });
+        }
 
         view.setOnClickListener(v -> openActivity(tile.target));
         UiFx.applyPressEffect(view);

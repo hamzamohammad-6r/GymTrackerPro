@@ -60,6 +60,7 @@
             </LinearLayout>
         </LinearLayout>
 
+
         <!-- Profile summary card -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,15 +71,15 @@
             android:orientation="horizontal"
             android:padding="18dp">
 
-            <TextView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+            <ImageView
+                android:id="@+id/imageProfilePicture"
+                android:layout_width="76dp"
+                android:layout_height="76dp"
                 android:background="#233B68"
-                android:gravity="center"
-                android:text="GT"
-                android:textColor="#60A5FA"
-                android:textSize="25sp"
-                android:textStyle="bold" />
+                android:contentDescription="Profile picture"
+                android:padding="4dp"
+                android:scaleType="centerCrop"
+                android:src="@android:drawable/ic_menu_myplaces" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -88,23 +89,36 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/textProfileDisplayName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Your fitness identity"
+                    android:text="Your Name"
                     android:textColor="#F8FAFC"
-                    android:textSize="17sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Keep your details up to date"
+                    android:text="GymTrackerPro Member"
                     android:textColor="#94A3B8"
                     android:textSize="13sp" />
 
+                <Button
+                    android:id="@+id/buttonChangeProfilePicture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="#2563EB"
+                    android:text="Change Photo"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+
             </LinearLayout>
         </LinearLayout>
+
 
         <!-- Form card -->
         <LinearLayout

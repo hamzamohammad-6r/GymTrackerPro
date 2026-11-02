@@ -1,4 +1,3 @@
-
 package com.example.gymtrackerpro;
 
 import android.os.Bundle;
@@ -12,6 +11,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.widget.ImageView;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -27,6 +34,75 @@ public class ProfileActivity extends AppCompatActivity {
             Executors.newSingleThreadExecutor();
 
     private User currentUser;
+
+    private ImageView imageProfilePicture;
+    private TextView textProfileDisplayName;
+    private Button buttonChangeProfilePicture;
+
+    private static final String PREFS_NAME = "GymTrackerProfilePrefs";
+    private static final String KEY_PROFILE_IMAGE_URI = "profile_image_uri";
+
+    private final ActivityResultLauncher<String[]> photoPicker =
+            registerForActivityResult(
+                    new ActivityResultContracts.OpenDocument(),
+                    uri -> {
+                        if (uri != null) {
+                            try {
+                                getContentResolver()
+                                        .takePersistableUriPermission(
+                                                uri,
+                                                Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                        );
+
+                                getSharedPreferences(
+                                        PREFS_NAME,
+                                        MODE_PRIVATE
+                                ).edit()
+                                        .putString(
+                                                KEY_PROFILE_IMAGE_URI,
+                                                uri.toString()
+                                        )
+                                        .apply();
+
+                                imageProfilePicture.setImageURI(uri);
+
+                                Toast.makeText(
+                                        this,
+                                        "Profile picture updated",
+                                        Toast.LENGTH_SHORT
+                                ).show();
+
+                            } catch (Exception e) {
+                                Toast.makeText(
+                                        this,
+                                        "Could not save this picture. Please try another.",
+                                        Toast.LENGTH_LONG
+                                ).show();
+                            }
+                        }
+                    }
+            );
+    private void loadSavedProfilePicture() {
+        SharedPreferences preferences = getSharedPreferences(
+                PREFS_NAME,
+                MODE_PRIVATE
+        );
+
+        String savedUri = preferences.getString(
+                KEY_PROFILE_IMAGE_URI,
+                null
+        );
+
+        if (savedUri != null) {
+            try {
+                imageProfilePicture.setImageURI(Uri.parse(savedUri));
+            } catch (Exception e) {
+                imageProfilePicture.setImageResource(
+                        android.R.drawable.ic_menu_myplaces
+                );
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +124,21 @@ public class ProfileActivity extends AppCompatActivity {
         editWeight = findViewById(R.id.editWeight);
         editFitnessGoal = findViewById(R.id.editFitnessGoal);
 
+        imageProfilePicture =
+                findViewById(R.id.imageProfilePicture);
+
+        textProfileDisplayName =
+                findViewById(R.id.textProfileDisplayName);
+
+        buttonChangeProfilePicture =
+                findViewById(R.id.buttonChangeProfilePicture);
+
+        buttonChangeProfilePicture.setOnClickListener(v ->
+                photoPicker.launch(new String[]{"image/*"})
+        );
+
+        loadSavedProfilePicture();
+
         Button buttonSaveProfile =
                 findViewById(R.id.buttonSaveProfile);
 
@@ -68,6 +159,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                     if (users != null && !users.isEmpty()) {
                         currentUser = users.get(0);
+                        textProfileDisplayName.setText(currentUser.getName());
 
                         editName.setText(currentUser.getName());
                         editEmail.setText(currentUser.getEmail());
