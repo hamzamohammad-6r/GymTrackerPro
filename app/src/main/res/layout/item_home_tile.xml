@@ -1,52 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:background="@drawable/bg_home_tile_gold"
-    android:clickable="true"
-    android:elevation="4dp"
-    android:focusable="true"
+    android:minHeight="135dp"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_home_tile_gold"
+    android:padding="16dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:elevation="3dp">
 
+    <!-- Hidden photograph: retain ID for Java compatibility -->
     <ImageView
         android:id="@+id/imageTilePhoto"
-        android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:background="@drawable/bg_tile_icon"
-        android:contentDescription="@null"
-        android:scaleType="centerCrop" />
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="gone"
+        android:contentDescription="@null" />
 
+    <!-- Icon -->
     <ImageView
         android:id="@+id/imageTileIcon"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
         android:background="@drawable/bg_tile_icon"
         android:contentDescription="@null"
-        android:padding="9dp" />
+        android:padding="12dp"
+        android:scaleType="fitCenter"
+        app:tint="#60A5FA" />
 
+    <!-- Tile name -->
     <TextView
         android:id="@+id/textTileTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         android:text="Title"
         android:textColor="#F8FAFC"
-        android:textSize="15sp"
-        android:textStyle="bold" />
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:maxLines="2"
+        android:ellipsize="end" />
 
+    <!-- Hidden subtitle: retain ID for Java compatibility -->
     <TextView
         android:id="@+id/textTileSubtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:minHeight="34dp"
-        android:gravity="top"
-        android:text="Subtitle"
-        android:textColor="#A8B7CC"
-        android:textSize="12sp"
-        android:lineSpacingExtra="2dp" />
+        android:visibility="gone"
+        android:text="Subtitle" />
 
 </LinearLayout>

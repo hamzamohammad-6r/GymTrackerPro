@@ -27,6 +27,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.widget.ScrollView;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -88,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonTodayAction;
     private View cardToday;
     private LinearProgressIndicator progressCompletion;
+
+    private ScrollView scrollHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,35 +191,35 @@ public class MainActivity extends AppCompatActivity {
         Tile[] tiles = {
                 new Tile("Programs", "Free plans to follow",
                         R.drawable.ic_tile_programs, R.drawable.photo_programs,
-                        "#FBBF24", ProgramsActivity.class),
+                        "#3B82F6", ProgramsActivity.class),
 
                 new Tile("My Workouts", "Plan your training days",
                         R.drawable.ic_tile_workouts, R.drawable.photo_workouts,
-                        "#60A5FA", WorkoutsActivity.class),
+                        "#3B82F6", WorkoutsActivity.class),
 
                 new Tile("Exercises", "Your exercise library",
                         R.drawable.ic_tile_exercises, R.drawable.photo_exercises,
-                        "#34D399", ExercisesActivity.class),
+                        "#3B82F6", ExercisesActivity.class),
 
                 new Tile("Workout Plan", "Sets, reps and weights",
                         R.drawable.ic_tile_plan, R.drawable.photo_plan,
-                        "#A78BFA", WorkoutExercisesActivity.class),
+                        "#3B82F6", WorkoutExercisesActivity.class),
 
                 new Tile("History", "Look back at your work",
                         R.drawable.ic_tile_history, R.drawable.photo_history,
-                        "#38BDF8", WorkoutHistoryActivity.class),
+                        "#3B82F6", WorkoutHistoryActivity.class),
 
                 new Tile("Music", "A playlist per workout",
                         R.drawable.ic_tile_music, R.drawable.photo_music,
-                        "#F472B6", WorkoutMusicActivity.class),
+                        "#3B82F6", WorkoutMusicActivity.class),
 
                 new Tile("Goals", "Set targets and hit them",
                         R.drawable.ic_tile_goals, R.drawable.photo_goals,
-                        "#FB923C", GoalsActivity.class),
+                        "#3B82F6", GoalsActivity.class),
 
                 new Tile("Profile", "Your personal details",
                         R.drawable.ic_tile_profile, R.drawable.photo_profile,
-                        "#94A3B8", ProfileActivity.class)
+                        "#3B82F6", ProfileActivity.class)
         };
 
         for (int i = 0; i < tiles.length; i += 2) {
@@ -252,6 +256,9 @@ public class MainActivity extends AppCompatActivity {
     private View createTile(LinearLayout parent, final Tile tile) {
         View view = getLayoutInflater()
                 .inflate(R.layout.item_home_tile, parent, false);
+
+        // Apply the new premium electric-blue tile background.
+        view.setBackgroundResource(R.drawable.bg_home_tile_gold);
 
         int color = Color.parseColor(tile.color);
 
