@@ -337,7 +337,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/bg_card"
+            android:background="@drawable/bg_training_streak"
             android:elevation="3dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
