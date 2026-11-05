@@ -1,120 +1,96 @@
 # GymTrackerPro 💪
 
-**A modern Android fitness and workout management application.**
+A modern Android fitness and workout management application.
 
-GymTrackerPro is an Android application designed to help users organise their fitness journey by managing workout schedules, tracking exercise progress, setting fitness goals and organising workout music.
+## About the Project
 
-The application features a modern **Midnight Blue** interface with electric-blue accents, designed to provide a clean and user-friendly fitness experience.
+GymTrackerPro is an Android application developed to help users organise their fitness journey. It allows users to manage workout schedules, browse exercises, track workout history, set fitness goals and organise workout music.
 
-## 📱 Features
+The application features a premium Midnight Blue interface with electric-blue accents.
 
-- **Dashboard:** View the main fitness dashboard and access application features.
-- **Workout Programs:** Explore available workout programs.
+## Features
+
+- **Dashboard:** Central hub for accessing application features.
+- **Workout Programs:** Explore workout programs.
 - **My Workouts:** Create and manage workout schedules.
-- **Exercise Library:** Browse exercises and access exercise information.
+- **Exercise Library:** Browse exercises.
 - **Workout Plans:** Manage exercises, sets and repetitions.
-- **Workout History:** Review completed workouts and monitor progress.
+- **Workout History:** Review completed workouts and progress.
 - **Workout Music:** Assign music to workouts.
-- **Fitness Goals:** Set personal fitness targets and track progress.
+- **Fitness Goals:** Set and track personal fitness targets.
 - **User Profile:** Manage personal fitness information.
 
-## 🎨 Application Design
+## Technologies Used
 
-GymTrackerPro uses a Midnight Blue design theme.
+- Java
+- XML
+- Android Studio
+- Room Persistence Library
+- SQLite
+- Gradle
 
-- Background: `#0B1120`
-- Surface: `#151F33`
-- Primary accent: `#2563EB`
-- Secondary accent: `#3B82F6`
-- Text: `#F8FAFC`
+## Application Design
 
-The interface uses modern dashboard cards, electric-blue accents and clean typography.
+The application uses a Midnight Blue theme.
 
-## 🛠️ Technologies Used
-
-| Technology | Purpose |
+| Element | Colour |
 |---|---|
-| Java | Application development |
-| XML | User interface design |
-| Android Studio | Development environment |
-| Room Database | Local database management |
-| SQLite | Data storage |
-| Gradle | Project build system |
+| Background | `#0B1120` |
+| Surface | `#151F33` |
+| Primary Blue | `#2563EB` |
+| Electric Blue | `#3B82F6` |
+| Text | `#F8FAFC` |
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```text
 GymTrackerPro/
-│
 ├── app/
 │   └── src/
 │       └── main/
 │           ├── java/
 │           │   └── com/example/gymtrackerpro/
-│           │       ├── MainActivity.java
-│           │       ├── WorkoutsActivity.java
-│           │       ├── ExercisesActivity.java
-│           │       ├── GoalsActivity.java
-│           │       ├── ProfileActivity.java
-│           │       └── ...
-│           │
 │           ├── res/
 │           │   ├── drawable/
 │           │   ├── layout/
-│           │   ├── mipmap/
 │           │   └── values/
-│           │
 │           └── AndroidManifest.xml
-│
+├── gradle/
 └── README.md
 ```
 
-## ⚙️ Installation and Setup
+## Installation
 
-1. Install [Android Studio](https://developer.android.com/studio).
-2. Clone or download this repository.
-3. Open Android Studio.
-4. Select **Open** and choose the GymTrackerPro project folder.
-5. Allow Gradle to synchronise.
-6. Connect an Android device or start an Android emulator.
-7. Click **Run** to launch the application.
+1. Install Android Studio.
+2. Clone or download the repository.
+3. Open the project in Android Studio.
+4. Allow Gradle to synchronise.
+5. Connect an Android device or launch an emulator.
+6. Build and run the application.
 
-## 💾 Database
+## Database
 
-GymTrackerPro uses Room Persistence Library with SQLite for local data storage.
+GymTrackerPro uses Room with SQLite for local data persistence. It stores information related to users, workouts, exercises, workout plans, goals and workout music.
 
-The database supports the application's fitness-related information, including users, workouts, exercises, workout plans, goals and workout music.
+## Screenshots
 
-## 🎓 Project Information
+Screenshots of the application will be added here.
 
-**Project:** GymTrackerPro  
-**Institution:** Richfield College  
-**Qualification:** Bachelor of Science in Information Technology  
-**Development Platform:** Android Studio  
-**Programming Language:** Java  
-**UI Development:** XML  
+## Project Information
 
-This project demonstrates practical application development skills, database management, object-oriented programming and Android user interface design.
+- **Project Name:** GymTrackerPro
+- **Institution:** Richfield College
+- **Qualification:** Bachelor of Science in Information Technology
+- **Platform:** Android
+- **Language:** Java
+- **Interface:** XML
 
-## 📸 Screenshots
-
-Screenshots of the application can be added here.
-
-Suggested screenshots:
-
-- Home Dashboard
-- Workout Programs
-- My Workouts
-- Exercise Library
-- Workout Plan
-- Workout History
-- Fitness Goals
-- User Profile
-
-## 👨‍💻 Developer
+## Developer
 
 **Hamza Mohammad**
 
 GitHub: [hamzamohammad-6r](https://github.com/hamzamohammad-6r)
 
-*GymTrackerPro – Plan your workouts. Track your progress. Reach your goals.*
+---
+
+*Plan your workouts. Track your progress. Reach your goals.*

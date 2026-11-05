@@ -266,11 +266,17 @@ public class MainActivity extends AppCompatActivity {
         photo.setImageResource(tile.photo);
         photo.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
+
         ImageView icon = view.findViewById(R.id.imageTileIcon);
         icon.setImageResource(tile.icon);
-        icon.setImageTintList(ColorStateList.valueOf(color));
-        icon.setBackgroundTintList(ColorStateList.valueOf(
-                ColorUtils.setAlphaComponent(color, 0x26)));
+
+        icon.setImageTintList(
+                ColorStateList.valueOf(Color.parseColor("#60A5FA"))
+        );
+
+        icon.setBackgroundResource(R.drawable.bg_tile_icon);
+        icon.setElevation(8f);
+
 
         TextView tileTitle =
                 view.findViewById(R.id.textTileTitle);
