@@ -402,6 +402,20 @@
             </LinearLayout>
         </LinearLayout>
 
+
+        <Button
+            android:id="@+id/buttonOpenLogin"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#151F33"
+            android:text="Login"
+            android:textAllCaps="false"
+            android:textColor="#60A5FA"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+
         <Button
             android:id="@+id/buttonOpenRegister"
             android:layout_width="match_parent"

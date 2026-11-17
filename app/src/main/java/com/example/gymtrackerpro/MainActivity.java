@@ -147,6 +147,9 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.buttonOpenRegister).setOnClickListener(v ->
                 openActivity(RegisterActivity.class));
+
+        findViewById(R.id.buttonOpenLogin).setOnClickListener(v ->
+                openActivity(LoginActivity.class));
     }
 
     private void setGreeting() {

@@ -84,6 +84,21 @@
                 android:textColor="#FFFFFF"
                 android:textColorHint="#8290A8" />
 
+
+            <EditText
+                android:id="@+id/etRegisterPassword"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginBottom="12dp"
+                android:backgroundTint="#3B82F6"
+                android:hint="Password (minimum 8 characters)"
+                android:inputType="textPassword"
+                android:padding="12dp"
+                android:singleLine="true"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#8290A8" />
+
+
             <EditText
                 android:id="@+id/etRegisterAge"
                 android:layout_width="match_parent"

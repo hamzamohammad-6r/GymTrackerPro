@@ -16,6 +16,11 @@
             android:name=".RegisterActivity"
             android:exported="false" />
 
+        <!-- Account login screen -->
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+
         <!-- My Workouts screen -->
         <activity
             android:name=".WorkoutsActivity"
