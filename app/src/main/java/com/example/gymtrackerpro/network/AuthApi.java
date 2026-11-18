@@ -28,5 +28,9 @@ public interface AuthApi {
     @POST("api/auth/forgot-password")
     Call<Map<String, String>> forgotPassword(
             @Body Map<String, String> request);
+
+    @POST("api/auth/reset-password")
+    Call<Map<String, String>> resetPassword(
+            @Body Map<String, String> request);
 }
 
