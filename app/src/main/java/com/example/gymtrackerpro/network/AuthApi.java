@@ -24,5 +24,9 @@ public interface AuthApi {
     Call<Map<String, Object>> getCurrentAccount(
             @Header("Authorization") String token
     );
+
+    @POST("api/auth/forgot-password")
+    Call<Map<String, String>> forgotPassword(
+            @Body Map<String, String> request);
 }
 

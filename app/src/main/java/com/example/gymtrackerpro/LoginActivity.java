@@ -43,11 +43,17 @@ public class LoginActivity extends AppCompatActivity {
 
         btnLogin.setOnClickListener(v -> login());
 
+        findViewById(R.id.textForgotPassword).setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
+        });
+
         textGoToRegister.setOnClickListener(v -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
 
         textContinueOffline.setOnClickListener(v -> openDashboard());
+
     }
 
     private void login() {
