@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -56,8 +57,15 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
                 if (response.isSuccessful()) {
                     Toast.makeText(ForgotPasswordActivity.this,
-                            "Request received. Check the backend console for your development reset token.",
+                            "Reset request successful! Check your backend console for the token.",
                             Toast.LENGTH_LONG).show();
+
+                    Intent intent = new Intent(
+                            ForgotPasswordActivity.this,
+                            ResetPasswordActivity.class
+                    );
+                    startActivity(intent);
+
                 } else {
                     Toast.makeText(ForgotPasswordActivity.this,
                             "Could not process request. Please try again.",

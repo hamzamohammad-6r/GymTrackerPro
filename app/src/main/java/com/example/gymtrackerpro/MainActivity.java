@@ -99,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         UiFx.applyEdgeToEdge(this);
 
+        // Match Android status bar to GymTrackerPro theme
+        getWindow().setStatusBarColor(Color.parseColor("#0B1120"));
+
+        getWindow().getDecorView().setSystemUiVisibility(0);
+
         database = GymTrackerDatabase.getDatabase(getApplicationContext());
         databaseExecutor = Executors.newSingleThreadExecutor();
 
@@ -522,18 +527,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        updateAuthenticationButtons();
+
         // Refresh after returning from another screen.
         if (databaseExecutor != null && !databaseExecutor.isShutdown()) {
             loadDashboard();
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    private void updateAuthenticationButtons() {
+        SharedPreferences preferences = getSharedPreferences(
+                "GymTrackerSession",
+                MODE_PRIVATE
+        );
 
-        if (databaseExecutor != null) {
-            databaseExecutor.shutdown();
-        }
+        String accessToken = preferences.getString("accessToken", null);
+
+        boolean isLoggedIn = accessToken != null && !accessToken.trim().isEmpty();
+
+        Button loginButton = findViewById(R.id.buttonOpenLogin);
+        Button registerButton = findViewById(R.id.buttonOpenRegister);
+
+        loginButton.setVisibility(isLoggedIn ? View.GONE : View.VISIBLE);
+        registerButton.setVisibility(isLoggedIn ? View.GONE : View.VISIBLE);
     }
 }
