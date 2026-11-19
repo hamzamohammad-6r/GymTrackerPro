@@ -84,6 +84,125 @@
 
         </LinearLayout>
 
+
+        <!-- IN-WORKOUT MUSIC PLAYER -->
+        <LinearLayout
+            android:id="@+id/layoutActiveWorkoutMusic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_glow_card"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="♫  WORKOUT MUSIC"
+                android:textColor="#60A5FA"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08" />
+
+            <TextView
+                android:id="@+id/textActiveMusicTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="No song assigned"
+                android:textColor="#F8FAFC"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textActiveMusicStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Music is ready when you are"
+                android:textColor="#94A3B8"
+                android:textSize="13sp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/textActiveMusicElapsed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0:00"
+                    android:textColor="#94A3B8"
+                    android:textSize="12sp" />
+
+                <SeekBar
+                    android:id="@+id/seekActiveMusic"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressTint="#3B82F6"
+                    android:thumbTint="#60A5FA" />
+
+                <TextView
+                    android:id="@+id/textActiveMusicDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0:00"
+                    android:textColor="#94A3B8"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/buttonActiveMusicPlayPause"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#2563EB"
+                android:text="Play Music"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/buttonActiveMusicNext"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="5dp"
+                    android:backgroundTint="#1E40AF"
+                    android:text="Next Song"
+                    android:textColor="#FFFFFF" />
+
+                <Button
+                    android:id="@+id/buttonActiveMusicStop"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="5dp"
+                    android:backgroundTint="#334155"
+                    android:text="Stop"
+                    android:textColor="#FFFFFF" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
         <Button
             android:id="@+id/buttonOpenWorkoutTimer"
             android:layout_width="match_parent"

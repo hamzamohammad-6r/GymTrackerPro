@@ -115,21 +115,15 @@ public class WorkoutsActivity extends AppCompatActivity {
         buttonBackHome.setOnClickListener(v -> finish());
 
         buttonChangeProgram.setOnClickListener(v -> {
-            Toast.makeText(this, "CHANGE PROGRAMME BUTTON CLICKED",
-                    Toast.LENGTH_SHORT).show();
-
             startActivity(new Intent(
                     WorkoutsActivity.this,
                     ProgramsActivity.class
             ));
         });
 
-        buttonStartNextWorkout.setOnClickListener(v -> {
-            Toast.makeText(this, "START WORKOUT BUTTON CLICKED",
-                    Toast.LENGTH_SHORT).show();
-
-            showNextWorkoutPreview();
-        });
+        buttonStartNextWorkout.setOnClickListener(
+                v -> showNextWorkoutPreview()
+        );
 
         UiFx.applyPressEffect(buttonChangeProgram);
         UiFx.applyPressEffect(buttonStartNextWorkout);

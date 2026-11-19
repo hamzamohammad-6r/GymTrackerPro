@@ -13,6 +13,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.widget.SeekBar;
+
+import java.util.ArrayList;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,6 +49,31 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
 
     private int totalExercises = 0;
 
+    // Active workout music player
+    private TextView textActiveMusicTitle;
+    private TextView textActiveMusicStatus;
+
+    private TextView textActiveMusicElapsed;
+    private TextView textActiveMusicDuration;
+
+    private SeekBar seekActiveMusic;
+
+    private android.os.Handler musicProgressHandler =
+            new android.os.Handler(android.os.Looper.getMainLooper());
+
+    private boolean isUserSeekingMusic = false;
+
+    private Button buttonActiveMusicPlayPause;
+    private Button buttonActiveMusicNext;
+    private Button buttonActiveMusicStop;
+
+    private MediaPlayer activeWorkoutPlayer;
+
+    private List<WorkoutMusic> assignedWorkoutMusic = new ArrayList<>();
+
+    private int currentMusicIndex = 0;
+    private boolean isMusicPrepared = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +100,67 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
         buttonCompleteWorkout = findViewById(R.id.buttonCompleteWorkout);
         buttonWorkoutTimer = findViewById(R.id.buttonOpenWorkoutTimer);
         buttonWorkoutMusic = findViewById(R.id.buttonWorkoutMusic);
+
+        textActiveMusicTitle = findViewById(R.id.textActiveMusicTitle);
+        textActiveMusicStatus = findViewById(R.id.textActiveMusicStatus);
+
+        textActiveMusicElapsed = findViewById(R.id.textActiveMusicElapsed);
+        textActiveMusicDuration = findViewById(R.id.textActiveMusicDuration);
+
+        seekActiveMusic = findViewById(R.id.seekActiveMusic);
+
+        seekActiveMusic.setEnabled(false);
+
+        buttonActiveMusicPlayPause = findViewById(R.id.buttonActiveMusicPlayPause);
+        buttonActiveMusicNext = findViewById(R.id.buttonActiveMusicNext);
+        buttonActiveMusicStop = findViewById(R.id.buttonActiveMusicStop);
+
+        buttonActiveMusicPlayPause.setEnabled(false);
+        buttonActiveMusicNext.setEnabled(false);
+        buttonActiveMusicStop.setEnabled(false);
+
+        buttonActiveMusicPlayPause.setOnClickListener(v -> toggleWorkoutMusic());
+
+        buttonActiveMusicNext.setOnClickListener(v -> playNextWorkoutSong());
+
+        buttonActiveMusicStop.setOnClickListener(v -> stopWorkoutMusic());
+
+        seekActiveMusic.setOnSeekBarChangeListener(
+                new SeekBar.OnSeekBarChangeListener() {
+
+                    @Override
+                    public void onProgressChanged(
+                            SeekBar seekBar,
+                            int progress,
+                            boolean fromUser
+                    ) {
+                        if (fromUser && activeWorkoutPlayer != null
+                                && isMusicPrepared) {
+
+                            textActiveMusicElapsed.setText(
+                                    formatMusicTime(progress)
+                            );
+                        }
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                        isUserSeekingMusic = true;
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                        isUserSeekingMusic = false;
+
+                        if (activeWorkoutPlayer != null && isMusicPrepared) {
+                            activeWorkoutPlayer.seekTo(
+                                    seekBar.getProgress()
+                            );
+                        }
+                    }
+                }
+        );
 
         findViewById(R.id.buttonBackActiveWorkout)
                 .setOnClickListener(v -> finish());
@@ -145,6 +236,11 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
 
                 currentWorkout = workout;
 
+                // Load music assigned specifically to this workout.
+                List<WorkoutMusic> musicList =
+                        database.workoutMusicDao()
+                                .getMusicForWorkout(workoutId);
+
                 List<WorkoutExercise> workoutExercises =
                         database.workoutExerciseDao()
                                 .getExercisesForWorkout(workoutId);
@@ -180,6 +276,12 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
                             workoutExercises,
                             exercises
                     );
+
+                    assignedWorkoutMusic.clear();
+                    assignedWorkoutMusic.addAll(musicList);
+
+                    initializeWorkoutMusic();
+
                 });
 
             } catch (Exception e) {
@@ -245,6 +347,257 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
             addExerciseCard(exercise, workoutExercise);
         }
     }
+
+
+    private void initializeWorkoutMusic() {
+
+        if (assignedWorkoutMusic.isEmpty()) {
+            textActiveMusicTitle.setText("No song assigned");
+            textActiveMusicStatus.setText("Assign music to this workout to get started.");
+
+            buttonActiveMusicPlayPause.setEnabled(false);
+            buttonActiveMusicNext.setEnabled(false);
+            buttonActiveMusicStop.setEnabled(false);
+            return;
+        }
+
+        currentMusicIndex = 0;
+
+        buttonActiveMusicPlayPause.setEnabled(true);
+        buttonActiveMusicNext.setEnabled(
+                assignedWorkoutMusic.size() > 1
+        );
+        buttonActiveMusicStop.setEnabled(true);
+
+        playWorkoutSong(currentMusicIndex);
+    }
+
+    private String formatMusicTime(int milliseconds) {
+
+        int totalSeconds = milliseconds / 1000;
+
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+
+        return String.format(
+                Locale.getDefault(),
+                "%d:%02d",
+                minutes,
+                seconds
+        );
+    }
+
+
+    private void playWorkoutSong(int index) {
+
+        if (assignedWorkoutMusic.isEmpty()) {
+            return;
+        }
+
+        if (index < 0 || index >= assignedWorkoutMusic.size()) {
+            return;
+        }
+
+        currentMusicIndex = index;
+
+        stopWorkoutPlayerOnly();
+
+        WorkoutMusic music = assignedWorkoutMusic.get(currentMusicIndex);
+
+        textActiveMusicTitle.setText(music.getSongTitle());
+        textActiveMusicStatus.setText("Loading music...");
+
+        buttonActiveMusicPlayPause.setText("Loading...");
+
+        try {
+
+            activeWorkoutPlayer = new MediaPlayer();
+
+            activeWorkoutPlayer.setDataSource(
+                    this,
+                    Uri.parse(music.getSongUri())
+            );
+
+            activeWorkoutPlayer.setOnPreparedListener(player -> {
+                isMusicPrepared = true;
+
+                int duration = player.getDuration();
+
+                seekActiveMusic.setMax(duration);
+                seekActiveMusic.setProgress(0);
+                seekActiveMusic.setEnabled(true);
+
+                textActiveMusicElapsed.setText("0:00");
+                textActiveMusicDuration.setText(formatMusicTime(duration));
+
+                player.start();
+
+                updateMusicProgress();
+
+                if (isFinishing() || isDestroyed()) {
+                    player.release();
+                    return;
+                }
+
+                isMusicPrepared = true;
+
+                player.start();
+
+                textActiveMusicStatus.setText("Now playing");
+                buttonActiveMusicPlayPause.setText("Pause Music");
+            });
+
+            activeWorkoutPlayer.setOnCompletionListener(player -> {
+
+                if (!assignedWorkoutMusic.isEmpty()) {
+
+                    int nextIndex =
+                            (currentMusicIndex + 1)
+                                    % assignedWorkoutMusic.size();
+
+                    playWorkoutSong(nextIndex);
+                }
+            });
+
+            activeWorkoutPlayer.setOnErrorListener((player, what, extra) -> {
+
+                textActiveMusicStatus.setText("Unable to play this song.");
+                buttonActiveMusicPlayPause.setText("Play Music");
+
+                stopWorkoutPlayerOnly();
+
+                return true;
+            });
+
+            activeWorkoutPlayer.prepareAsync();
+
+        } catch (Exception e) {
+
+            Log.e("ActiveWorkout", "Music playback error", e);
+
+            textActiveMusicStatus.setText("Could not load this song.");
+            buttonActiveMusicPlayPause.setText("Play Music");
+
+            stopWorkoutPlayerOnly();
+        }
+    }
+
+
+    private void toggleWorkoutMusic() {
+
+        try {
+
+            if (activeWorkoutPlayer == null) {
+
+                playWorkoutSong(currentMusicIndex);
+                return;
+            }
+
+            if (!isMusicPrepared) {
+                return;
+            }
+
+            if (activeWorkoutPlayer.isPlaying()) {
+
+                activeWorkoutPlayer.pause();
+
+                textActiveMusicStatus.setText("Music paused");
+                buttonActiveMusicPlayPause.setText("Resume Music");
+
+            } else {
+
+                activeWorkoutPlayer.start();
+
+                textActiveMusicStatus.setText("Now playing");
+                buttonActiveMusicPlayPause.setText("Pause Music");
+            }
+
+        } catch (Exception e) {
+
+            Log.e("ActiveWorkout", "Music control error", e);
+        }
+    }
+
+    private final Runnable musicProgressRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+            if (activeWorkoutPlayer != null && isMusicPrepared) {
+
+                try {
+                    int currentPosition =
+                            activeWorkoutPlayer.getCurrentPosition();
+
+                    if (!isUserSeekingMusic) {
+                        seekActiveMusic.setProgress(currentPosition);
+
+                        textActiveMusicElapsed.setText(
+                                formatMusicTime(currentPosition)
+                        );
+                    }
+
+                } catch (Exception e) {
+                    Log.e("ActiveWorkout", "Progress update error", e);
+                }
+            }
+
+            musicProgressHandler.postDelayed(this, 500);
+        }
+    };
+
+
+    private void updateMusicProgress() {
+
+        musicProgressHandler.removeCallbacks(musicProgressRunnable);
+
+        musicProgressHandler.post(musicProgressRunnable);
+    }
+
+
+    private void playNextWorkoutSong() {
+
+        if (assignedWorkoutMusic.isEmpty()) {
+            return;
+        }
+
+        int nextIndex =
+                (currentMusicIndex + 1)
+                        % assignedWorkoutMusic.size();
+
+        playWorkoutSong(nextIndex);
+    }
+
+
+    private void stopWorkoutMusic() {
+
+        stopWorkoutPlayerOnly();
+
+        textActiveMusicStatus.setText("Music stopped");
+        buttonActiveMusicPlayPause.setText("Play Music");
+    }
+
+
+    private void stopWorkoutPlayerOnly() {
+
+        musicProgressHandler.removeCallbacks(musicProgressRunnable);
+
+        seekActiveMusic.setProgress(0);
+        textActiveMusicElapsed.setText("0:00");
+
+        isMusicPrepared = false;
+
+        if (activeWorkoutPlayer != null) {
+
+            try {
+                activeWorkoutPlayer.stop();
+            } catch (Exception ignored) {
+            }
+
+            activeWorkoutPlayer.release();
+            activeWorkoutPlayer = null;
+        }
+    }
+
 
 
     private void addExerciseCard(
@@ -474,6 +827,10 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+
+
+
+        stopWorkoutPlayerOnly();
 
         super.onDestroy();
 
