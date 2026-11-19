@@ -48,10 +48,12 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
 
         getWindow().setStatusBarColor(Color.parseColor("#0B1120"));
         getWindow().getDecorView().setSystemUiVisibility(0);
-        setContentView(R.layout.activity_workout_exercises);
-        TextView buttonBackArrow = findViewById(R.id.buttonBackArrow);
 
+        setContentView(R.layout.activity_workout_exercises);
+
+        TextView buttonBackArrow = findViewById(R.id.buttonBackArrow);
         buttonBackArrow.setOnClickListener(v -> finish());
+
         UiFx.applyEdgeToEdge(this);
 
         database = GymTrackerDatabase.getDatabase(
@@ -181,12 +183,12 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
 
                 runOnUiThread(() -> {
                     if (!isFinishing() && !isDestroyed()) {
-                        Toast.makeText(
+                        CustomNotification.show(
                                 this,
+                                "Workout Setup Required",
                                 "Could not load workouts or exercises. "
-                                        + "Add a workout and an exercise first.",
-                                Toast.LENGTH_LONG
-                        ).show();
+                                        + "Please try again."
+                        );
                     }
                 });
             }
@@ -194,28 +196,32 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
     }
 
     private void saveExerciseToWorkout() {
+
         if (workouts.isEmpty()) {
-            Toast.makeText(
+            CustomNotification.show(
                     this,
-                    "Create a workout first.",
-                    Toast.LENGTH_SHORT
-            ).show();
+                    "Workout Required",
+                    "Please create a workout before assigning exercises."
+            );
             return;
         }
 
         if (exercises.isEmpty()) {
-            Toast.makeText(
+            CustomNotification.show(
                     this,
-                    "Create an exercise first.",
-                    Toast.LENGTH_SHORT
-            ).show();
+                    "Exercise Required",
+                    "Please create an exercise before assigning it to a workout."
+            );
             return;
         }
 
         String setsText = editSets.getText().toString().trim();
+
         String repetitionsText =
                 editRepetitions.getText().toString().trim();
+
         String weightText = editWeight.getText().toString().trim();
+
         String notes = editExerciseNotes.getText().toString().trim();
 
         if (setsText.isEmpty()) {
@@ -242,6 +248,7 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
             sets = Integer.parseInt(setsText);
             repetitions = Integer.parseInt(repetitionsText);
             weight = Double.parseDouble(weightText);
+
         } catch (NumberFormatException e) {
             Toast.makeText(
                     this,
@@ -253,6 +260,7 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
 
         if (sets <= 0 || repetitions <= 0 || weight < 0
                 || !Double.isFinite(weight)) {
+
             Toast.makeText(
                     this,
                     "Sets and reps must be positive. Weight cannot be negative.",
@@ -291,11 +299,11 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
                     editWeight.setText("");
                     editExerciseNotes.setText("");
 
-                    Toast.makeText(
+                    CustomNotification.show(
                             this,
-                            "Exercise added to workout!",
-                            Toast.LENGTH_SHORT
-                    ).show();
+                            "Exercise Added!",
+                            "Your exercise has been successfully assigned to the workout."
+                    );
 
                     loadAssignedExercises();
                 });
@@ -305,11 +313,11 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
 
                 runOnUiThread(() -> {
                     if (!isFinishing() && !isDestroyed()) {
-                        Toast.makeText(
+                        CustomNotification.show(
                                 this,
-                                "Could not add exercise. Check Logcat.",
-                                Toast.LENGTH_LONG
-                        ).show();
+                                "Assignment Failed",
+                                "We couldn't add this exercise. Please try again."
+                        );
                     }
                 });
             }
@@ -317,8 +325,10 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
     }
 
     private void loadAssignedExercises() {
+
         if (workouts.isEmpty()
                 || spinnerWorkouts.getSelectedItemPosition() < 0) {
+
             textAssignedExercises.setText(
                     "Create a workout and an exercise first."
             );
@@ -342,13 +352,16 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
                     result.append(
                             "No exercises assigned to this workout yet."
                     );
+
                 } else {
                     for (WorkoutExercise assignment : assignments) {
+
                         Exercise exercise = null;
 
                         for (Exercise item : exercises) {
                             if (item.getExerciseId()
                                     == assignment.getExerciseId()) {
+
                                 exercise = item;
                                 break;
                             }
@@ -369,6 +382,7 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
 
                             if (assignment.getNotes() != null
                                     && !assignment.getNotes().trim().isEmpty()) {
+
                                 result.append("\nNotes: ")
                                         .append(assignment.getNotes());
                             }
