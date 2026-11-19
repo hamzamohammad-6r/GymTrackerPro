@@ -287,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
                 .inflate(R.layout.item_home_tile, parent, false);
 
         // Apply the new premium electric-blue tile background.
-        view.setBackgroundResource(R.drawable.bg_home_tile_gold);
+        view.setBackgroundResource(R.drawable.bg_home_tile_neon);
 
         int color = Color.parseColor(tile.color);
 
@@ -300,10 +300,10 @@ public class MainActivity extends AppCompatActivity {
         icon.setImageResource(tile.icon);
 
         icon.setImageTintList(
-                ColorStateList.valueOf(Color.parseColor("#60A5FA"))
+                ColorStateList.valueOf(Color.parseColor("#FFFFFF"))
         );
 
-        icon.setBackgroundResource(R.drawable.bg_tile_icon);
+        icon.setBackgroundResource(R.drawable.bg_tile_icon_neon);
         icon.setElevation(8f);
 
 
