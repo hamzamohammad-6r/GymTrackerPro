@@ -41,8 +41,9 @@
                 android:layout_marginStart="14dp"
                 android:text="Workout Music"
                 android:textColor="#F8FAFC"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:letterSpacing="-0.02"/>
 
         </LinearLayout>
 
@@ -51,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="24dp"
-            android:text="Your playlist. Your pace. Your progress."
+            android:text="Choose a workout, assign your favourite music, and train to your rhythm."
             android:textColor="#94A3B8"
             android:textSize="14sp" />
 
@@ -59,7 +60,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_card"
+            android:background="@drawable/bg_glow_card"
             android:orientation="vertical"
             android:padding="18dp">
 
@@ -75,7 +76,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="22dp"
                 android:text="Select Workout"
                 android:textColor="#E2E8F0"
                 android:textSize="15sp"
@@ -94,7 +95,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="18dp"
-                android:backgroundTint="#2563EB"
+                android:backgroundTint="#3B82F6"
                 android:text="Choose Song"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
@@ -104,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:background="#0F172A"
+                android:background="@drawable/bg_card"
                 android:padding="14dp"
                 android:text="No song selected."
                 android:textColor="#CBD5E1"
@@ -116,8 +117,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:background="@drawable/bg_card"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/bg_glow_card"
             android:orientation="vertical"
             android:padding="18dp">
 
@@ -134,7 +135,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:background="#0F172A"
+                android:background="@drawable/bg_card"
                 android:padding="14dp"
                 android:text="No songs assigned yet."
                 android:textColor="#94A3B8"
@@ -145,7 +146,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="12dp"
-                android:backgroundTint="#334155"
+                android:backgroundTint="#7F1D1D"
                 android:text="Delete Latest Assigned Song"
                 android:textColor="#F8FAFC"
                 android:textSize="13sp" />
@@ -156,8 +157,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:background="@drawable/bg_card"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/bg_glow_card"
             android:orientation="vertical"
             android:padding="18dp">
 
@@ -192,7 +193,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="12dp"
-                android:backgroundTint="#334155"
+                android:backgroundTint="#1E40AF"
                 android:text="Refresh Playlist"
                 android:textColor="#F8FAFC" />
 
@@ -222,7 +223,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="#172554"
+                android:background="@drawable/bg_card"
                 android:padding="14dp"
                 android:text="Playback status: Stopped"
                 android:textColor="#FFFFFF"
@@ -265,7 +266,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
-                android:backgroundTint="#1E40AF"
+                android:backgroundTint="#1D4ED8"
                 android:text="Pause Song"
                 android:textColor="#FFFFFF"
                 android:enabled="false" />
@@ -275,7 +276,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
-                android:backgroundTint="#172554"
+                android:backgroundTint="#334155"
                 android:text="Stop Music"
                 android:textColor="#FFFFFF" />
 
