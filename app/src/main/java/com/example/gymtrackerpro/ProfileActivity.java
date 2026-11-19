@@ -5,6 +5,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.graphics.Color;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -107,6 +108,10 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        UiFx.applyEdgeToEdge(this);
+
+        getWindow().setStatusBarColor(Color.parseColor("#0B1120"));
+        getWindow().getDecorView().setSystemUiVisibility(0);
         setContentView(R.layout.activity_profile);
         TextView buttonBackArrow = findViewById(R.id.buttonBackArrow);
 

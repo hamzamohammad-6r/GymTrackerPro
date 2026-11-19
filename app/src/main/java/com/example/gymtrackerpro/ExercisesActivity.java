@@ -1,5 +1,6 @@
 package com.example.gymtrackerpro;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -66,6 +67,10 @@ public class ExercisesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        UiFx.applyEdgeToEdge(this);
+
+        getWindow().setStatusBarColor(Color.parseColor("#0B1120"));
+        getWindow().getDecorView().setSystemUiVisibility(0);
         setContentView(R.layout.activity_exercises);
         TextView buttonBackArrow = findViewById(R.id.buttonBackArrow);
 

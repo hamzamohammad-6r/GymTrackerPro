@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
+        scrollHome = findViewById(R.id.scrollHome);
         textTotalWorkouts = findViewById(R.id.textTotalWorkouts);
         textCompletedWorkouts = findViewById(R.id.textCompletedWorkouts);
         textPlannedWorkouts = findViewById(R.id.textPlannedWorkouts);
@@ -155,6 +156,26 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.buttonOpenLogin).setOnClickListener(v ->
                 openActivity(LoginActivity.class));
+
+        // Bottom navigation
+        // Home
+        findViewById(R.id.navHome).setOnClickListener(v -> {
+            scrollHome.smoothScrollTo(0, 0);
+        });
+
+        // Progress
+        findViewById(R.id.navProgress).setOnClickListener(v -> {
+            openActivity(WorkoutHistoryActivity.class);
+        });
+
+        // Profile
+        findViewById(R.id.navProfile).setOnClickListener(v -> {
+            openActivity(ProfileActivity.class);
+        });
+
+        findViewById(R.id.navTimer).setOnClickListener(v -> {
+            openActivity(TimerActivity.class);
+        });
     }
 
     private void setGreeting() {

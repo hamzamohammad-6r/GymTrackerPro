@@ -1,5 +1,6 @@
 package com.example.gymtrackerpro;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +34,10 @@ public class GoalsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        UiFx.applyEdgeToEdge(this);
+
+        getWindow().setStatusBarColor(Color.parseColor("#0B1120"));
+        getWindow().getDecorView().setSystemUiVisibility(0);
         setContentView(R.layout.activity_goals);
         TextView buttonBackArrow = findViewById(R.id.buttonBackArrow);
 
