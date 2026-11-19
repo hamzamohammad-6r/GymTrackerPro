@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.app.AlertDialog;
 import android.widget.Toast;
@@ -12,6 +13,10 @@ import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.activity.OnBackPressedCallback;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.InsetDrawable;
+import android.graphics.drawable.LayerDrawable;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -25,7 +30,7 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
     private ExecutorService databaseExecutor;
 
     private TextView textHistorySummary;
-    private TextView textWorkoutHistory;
+    private LinearLayout textWorkoutHistory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +102,7 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
     }
 
 
+
     private void loadWorkoutHistory() {
         databaseExecutor.execute(() -> {
             try {
@@ -130,43 +136,25 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                             .getWorkoutsForUser(guestUserId);
                 }
 
-                StringBuilder history = new StringBuilder();
+                final List<Workout> historyWorkouts =
+                        workouts == null
+                                ? new java.util.ArrayList<>()
+                                : new java.util.ArrayList<>(workouts);
+
                 int completed = 0;
                 int planned = 0;
 
-                for (Workout workout : workouts) {
-
+                for (Workout workout : historyWorkouts) {
                     if (workout.isCompleted()) {
                         completed++;
                     } else {
                         planned++;
                     }
-
-                    history.append(
-                                    workout.isCompleted()
-                                            ? "✓ COMPLETED\n"
-                                            : "○ PLANNED\n"
-                            )
-                            .append(workout.getWorkoutName())
-                            .append("\nDate: ")
-                            .append(workout.getWorkoutDate());
-
-                    String day = workout.getDayOfWeek();
-
-                    if (day != null && !day.trim().isEmpty()) {
-                        history.append("\nDay: ").append(day);
-                    }
-
-                    history.append("\n\n--------------------\n\n");
                 }
 
-                final int total = workouts.size();
+                final int total = historyWorkouts.size();
                 final int finalCompleted = completed;
                 final int finalPlanned = planned;
-
-                final String historyText = total == 0
-                        ? "No completed or planned workouts yet. Start your training programme to begin your history."
-                        : history.toString();
 
                 runOnUiThread(() -> {
                     if (isFinishing() || isDestroyed()) return;
@@ -177,7 +165,28 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                                     + " | Planned: " + finalPlanned
                     );
 
-                    textWorkoutHistory.setText(historyText);
+                    textWorkoutHistory.removeAllViews();
+
+                    if (historyWorkouts.isEmpty()) {
+                        TextView empty = new TextView(this);
+                        empty.setText(
+                                "No completed or planned workouts yet.\n"
+                                        + "Start your training programme to begin your history."
+                        );
+                        empty.setTextColor(Color.parseColor("#94A3B8"));
+                        empty.setTextSize(14);
+                        empty.setGravity(android.view.Gravity.CENTER);
+                        empty.setPadding(dp(20), dp(30), dp(20), dp(30));
+
+                        textWorkoutHistory.addView(empty);
+
+                    } else {
+                        for (Workout workout : historyWorkouts) {
+                            textWorkoutHistory.addView(
+                                    createSessionCard(workout)
+                            );
+                        }
+                    }
                 });
 
             } catch (Exception e) {
@@ -186,12 +195,126 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (isFinishing() || isDestroyed()) return;
 
-                    textWorkoutHistory.setText(
-                            "Unable to load workout history."
-                    );
+                    textWorkoutHistory.removeAllViews();
+
+                    TextView error = new TextView(this);
+                    error.setText("Unable to load workout history.");
+                    error.setTextColor(Color.parseColor("#F87171"));
+                    error.setTextSize(14);
+
+                    textWorkoutHistory.addView(error);
                 });
             }
         });
+    }
+
+
+
+    private View createSessionCard(Workout workout) {
+
+        boolean completed = workout.isCompleted();
+
+        int accentColor = Color.parseColor(
+                completed ? "#22C55E" : "#F59E0B"
+        );
+
+        int glowColor = Color.parseColor(
+                completed ? "#3322C55E" : "#33F59E0B"
+        );
+
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+
+        GradientDrawable outer = new GradientDrawable();
+        outer.setColor(glowColor);
+        outer.setCornerRadius(dp(20));
+        outer.setStroke(dp(2), accentColor);
+
+        GradientDrawable inner = new GradientDrawable();
+        inner.setColor(Color.parseColor("#151F33"));
+        inner.setCornerRadius(dp(17));
+        inner.setStroke(dp(1), accentColor);
+
+        Drawable[] layers = {
+                outer,
+                new InsetDrawable(inner, dp(3))
+        };
+
+        card.setBackground(new LayerDrawable(layers));
+
+        // Apply padding after setting the background
+        card.setPadding(dp(20), dp(18), dp(20), dp(18));
+
+        LinearLayout.LayoutParams cardParams =
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+
+        cardParams.bottomMargin = dp(14);
+        card.setLayoutParams(cardParams);
+
+        TextView status = new TextView(this);
+        status.setText(completed ? "✓  COMPLETED" : "○  PLANNED");
+        status.setTextColor(accentColor);
+        status.setTextSize(12);
+        status.setTypeface(null, android.graphics.Typeface.BOLD);
+        card.addView(status);
+
+        TextView name = new TextView(this);
+        name.setText(workout.getWorkoutName());
+        name.setTextColor(Color.parseColor("#F8FAFC"));
+        name.setTextSize(17);
+        name.setTypeface(null, android.graphics.Typeface.BOLD);
+
+        LinearLayout.LayoutParams nameParams =
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+
+        nameParams.topMargin = dp(9);
+        card.addView(name, nameParams);
+
+        TextView date = new TextView(this);
+        date.setText("Date: " + workout.getWorkoutDate());
+        date.setTextColor(Color.parseColor("#CBD5E1"));
+        date.setTextSize(13);
+
+        LinearLayout.LayoutParams dateParams =
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+
+        dateParams.topMargin = dp(7);
+        card.addView(date, dateParams);
+
+        String day = workout.getDayOfWeek();
+
+        if (day != null && !day.trim().isEmpty()) {
+            TextView dayText = new TextView(this);
+            dayText.setText("Day: " + day);
+            dayText.setTextColor(Color.parseColor("#94A3B8"));
+            dayText.setTextSize(13);
+
+            LinearLayout.LayoutParams dayParams =
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+
+            dayParams.topMargin = dp(4);
+            card.addView(dayText, dayParams);
+        }
+
+        return card;
+    }
+
+
+    private int dp(float value) {
+        return (int) (value * getResources()
+                .getDisplayMetrics().density + 0.5f);
     }
 
 
