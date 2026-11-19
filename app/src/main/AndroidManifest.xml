@@ -11,6 +11,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GymTrackerPro">
 
+        <!-- Splash Screen - Launcher Activity -->
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
         <!-- Account registration screen -->
         <activity
             android:name=".RegisterActivity"
@@ -29,13 +41,7 @@
         <!-- Main home screen -->
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false" />
 
         <activity
             android:name=".ExercisesActivity"
@@ -61,10 +67,12 @@
             android:name=".WorkoutHistoryActivity"
             android:exported="false" />
 
-        <activity android:name=".ProgramsActivity"
+        <activity
+            android:name=".ProgramsActivity"
             android:exported="false" />
 
-        <activity android:name=".ProgramDetailActivity"
+        <activity
+            android:name=".ProgramDetailActivity"
             android:exported="false" />
 
         <activity
