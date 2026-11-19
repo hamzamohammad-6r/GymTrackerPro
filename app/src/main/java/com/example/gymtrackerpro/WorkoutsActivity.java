@@ -9,6 +9,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.AlertDialog;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.graphics.Typeface;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +21,10 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import android.graphics.drawable.GradientDrawable;
+import android.view.View;
+import android.view.Gravity;
+import android.widget.LinearLayout;
 
 public class WorkoutsActivity extends AppCompatActivity {
 
@@ -30,7 +39,7 @@ public class WorkoutsActivity extends AppCompatActivity {
     private TextView textProgramDays;
     private TextView textProgramLevel;
     private TextView textProgramProgress;
-    private TextView textWorkoutList;
+    private LinearLayout textWorkoutList;
 
     private Button buttonChangeProgram;
     private Button buttonStartNextWorkout;
@@ -234,9 +243,7 @@ public class WorkoutsActivity extends AppCompatActivity {
 
     private void showNoProgram(String message) {
 
-        textSelectedProgramTitle.setText(
-                "No programme selected"
-        );
+        textSelectedProgramTitle.setText("No programme selected");
 
         textProgramDescription.setText(message);
 
@@ -245,15 +252,19 @@ public class WorkoutsActivity extends AppCompatActivity {
         textProgramLevel.setText("--");
 
         textProgramProgress.setText(
-                "Your programme progress will appear here "
-                        + "after you select a programme."
+                "Your programme progress will appear here after you select a programme."
         );
 
-        textWorkoutList.setText(
-                "No training schedule available.\n\n"
-                        + "Choose a free programme to view "
-                        + "your prescribed training days."
+        textWorkoutList.removeAllViews();
+
+        TextView emptyMessage = createScheduleText(
+                "No training schedule available.\n\nChoose a free programme to view your prescribed training days.",
+                14,
+                Color.parseColor("#94A3B8"),
+                false
         );
+
+        textWorkoutList.addView(emptyMessage);
 
         buttonStartNextWorkout.setEnabled(false);
     }
@@ -292,51 +303,303 @@ public class WorkoutsActivity extends AppCompatActivity {
         buttonStartNextWorkout.setEnabled(true);
     }
 
+
     private void displayWeeklySchedule() {
 
-        StringBuilder display = new StringBuilder();
+        textWorkoutList.removeAllViews();
 
         for (int i = 0; i < selectedProgram.days.size(); i++) {
 
-            ProgramCatalog.Day day =
-                    selectedProgram.days.get(i);
+            ProgramCatalog.Day day = selectedProgram.days.get(i);
 
-            display.append("DAY ")
-                    .append(i + 1)
-                    .append("  ·  ")
-                    .append(day.weekday)
-                    .append("\n");
+            String weekday = day.weekday == null
+                    ? "TRAINING DAY"
+                    : day.weekday.toUpperCase(Locale.ROOT);
 
-            display.append(day.title)
-                    .append("\n\n");
+            int dayColor = getDayColor(weekday);
 
+            // MAIN DAY CARD
+            LinearLayout dayCard = new LinearLayout(this);
+
+            dayCard.setOrientation(LinearLayout.VERTICAL);
+            dayCard.setPadding(
+                    dp(16), dp(16), dp(16), dp(16)
+            );
+
+            dayCard.setBackground(
+                    getDrawable(R.drawable.bg_glow_card)
+            );
+
+            LinearLayout.LayoutParams cardParams =
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+
+            cardParams.bottomMargin = dp(16);
+
+            dayCard.setLayoutParams(cardParams);
+
+            // DAY NUMBER AND WEEKDAY HEADER
+            LinearLayout header = new LinearLayout(this);
+
+            header.setOrientation(LinearLayout.HORIZONTAL);
+            header.setGravity(Gravity.CENTER_VERTICAL);
+
+            TextView dayNumber = createScheduleText(
+                    "DAY " + (i + 1),
+                    12,
+                    Color.parseColor("#94A3B8"),
+                    true
+            );
+
+            header.addView(dayNumber);
+
+            View spacer = new View(this);
+
+            header.addView(spacer, new LinearLayout.LayoutParams(
+                    0,
+                    1,
+                    1
+            ));
+
+            TextView weekdayLabel = createScheduleText(
+                    weekday,
+                    12,
+                    dayColor,
+                    true
+            );
+
+            weekdayLabel.setGravity(Gravity.CENTER);
+            weekdayLabel.setPadding(
+                    dp(12), dp(7), dp(12), dp(7)
+            );
+
+            weekdayLabel.setBackground(createRoundedBackground(
+                    Color.argb(
+                            35,
+                            Color.red(dayColor),
+                            Color.green(dayColor),
+                            Color.blue(dayColor)
+                    ),
+                    dayColor
+            ));
+
+            header.addView(weekdayLabel);
+
+            dayCard.addView(header);
+
+            // WORKOUT TITLE
+            TextView workoutTitle = createScheduleText(
+                    day.title,
+                    19,
+                    Color.parseColor("#F8FAFC"),
+                    true
+            );
+
+            LinearLayout.LayoutParams titleParams =
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+
+            titleParams.topMargin = dp(14);
+
+            dayCard.addView(workoutTitle, titleParams);
+
+            // DIVIDER
+            View divider = new View(this);
+
+            divider.setBackgroundColor(
+                    Color.parseColor("#334155")
+            );
+
+            LinearLayout.LayoutParams dividerParams =
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            dp(1)
+                    );
+
+            dividerParams.topMargin = dp(15);
+            dividerParams.bottomMargin = dp(14);
+
+            dayCard.addView(divider, dividerParams);
+
+            // EXERCISES LABEL
+            TextView exercisesLabel = createScheduleText(
+                    "EXERCISES",
+                    11,
+                    Color.parseColor("#60A5FA"),
+                    true
+            );
+
+            LinearLayout.LayoutParams exerciseLabelParams =
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+
+            exerciseLabelParams.bottomMargin = dp(12);
+
+            dayCard.addView(exercisesLabel, exerciseLabelParams);
+
+            // EXERCISE ROWS
             for (ProgramCatalog.Entry exercise : day.exercises) {
 
-                display.append("• ")
-                        .append(exercise.exerciseName)
-                        .append("\n");
+                LinearLayout exerciseCard = new LinearLayout(this);
 
-                display.append("   ")
-                        .append(exercise.prescription())
-                        .append("\n");
+                exerciseCard.setOrientation(LinearLayout.VERTICAL);
+                exerciseCard.setPadding(
+                        dp(12), dp(12), dp(12), dp(12)
+                );
+
+                exerciseCard.setBackground(createRoundedBackground(
+                        Color.parseColor("#1E293B"),
+                        Color.TRANSPARENT
+                ));
+
+                LinearLayout.LayoutParams exerciseParams =
+                        new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT
+                        );
+
+                exerciseParams.bottomMargin = dp(9);
+
+                exerciseCard.setLayoutParams(exerciseParams);
+
+                LinearLayout exerciseHeader = new LinearLayout(this);
+
+                exerciseHeader.setOrientation(LinearLayout.HORIZONTAL);
+                exerciseHeader.setGravity(Gravity.CENTER_VERTICAL);
+
+                TextView exerciseName = createScheduleText(
+                        exercise.exerciseName,
+                        14,
+                        Color.parseColor("#F8FAFC"),
+                        true
+                );
+
+                LinearLayout.LayoutParams nameParams =
+                        new LinearLayout.LayoutParams(
+                                0,
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                1
+                        );
+
+                exerciseHeader.addView(exerciseName, nameParams);
+
+                TextView prescription = createScheduleText(
+                        exercise.prescription(),
+                        13,
+                        Color.parseColor("#60A5FA"),
+                        true
+                );
+
+                exerciseHeader.addView(prescription);
+
+                exerciseCard.addView(exerciseHeader);
 
                 if (exercise.note != null
                         && !exercise.note.trim().isEmpty()) {
 
-                    display.append("   ")
-                            .append(exercise.note)
-                            .append("\n");
+                    TextView note = createScheduleText(
+                            exercise.note,
+                            12,
+                            Color.parseColor("#94A3B8"),
+                            false
+                    );
+
+                    LinearLayout.LayoutParams noteParams =
+                            new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                            );
+
+                    noteParams.topMargin = dp(7);
+
+                    exerciseCard.addView(note, noteParams);
                 }
 
-                display.append("\n");
+                dayCard.addView(exerciseCard);
             }
 
-            display.append("------------------------------")
-                    .append("\n\n");
+            textWorkoutList.addView(dayCard);
+        }
+    }
+
+    private int getDayColor(String weekday) {
+
+        switch (weekday) {
+
+            case "MONDAY":
+                return Color.parseColor("#60A5FA");
+
+            case "TUESDAY":
+                return Color.parseColor("#22D3EE");
+
+            case "WEDNESDAY":
+                return Color.parseColor("#A78BFA");
+
+            case "THURSDAY":
+                return Color.parseColor("#2DD4BF");
+
+            case "FRIDAY":
+                return Color.parseColor("#FB923C");
+
+            case "SATURDAY":
+                return Color.parseColor("#4ADE80");
+
+            case "SUNDAY":
+                return Color.parseColor("#F87171");
+
+            default:
+                return Color.parseColor("#60A5FA");
+        }
+    }
+
+    private TextView createScheduleText(
+            String text,
+            float size,
+            int color,
+            boolean bold
+    ) {
+
+        TextView view = new TextView(this);
+
+        view.setText(text);
+        view.setTextSize(size);
+        view.setTextColor(color);
+
+        if (bold) {
+            view.setTypeface(null, android.graphics.Typeface.BOLD);
         }
 
-        textWorkoutList.setText(display.toString());
+        return view;
     }
+
+    private GradientDrawable createRoundedBackground(
+            int backgroundColor,
+            int strokeColor
+    ) {
+
+        GradientDrawable drawable = new GradientDrawable();
+
+        drawable.setColor(backgroundColor);
+        drawable.setCornerRadius(dp(14));
+
+        if (strokeColor != Color.TRANSPARENT) {
+            drawable.setStroke(dp(1), strokeColor);
+        }
+
+        return drawable;
+    }
+
+    private int dp(float value) {
+        return (int) (value * getResources()
+                .getDisplayMetrics().density + 0.5f);
+    }
+
 
 
     private void showNextWorkoutPreview() {

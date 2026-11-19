@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Soft outer blue glow -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="22dp" />
+            <solid android:color="#332563EB" />
+            <stroke
+                android:width="3dp"
+                android:color="#553B82F6" />
+        </shape>
+    </item>
+
+    <!-- Main card surface -->
+    <item
+        android:left="3dp"
+        android:top="3dp"
+        android:right="3dp"
+        android:bottom="3dp">
+
+        <shape android:shape="rectangle">
+            <corners android:radius="19dp" />
+            <solid android:color="#151F33" />
+            <stroke
+                android:width="1dp"
+                android:color="#604F8FFF" />
+        </shape>
+
+    </item>
+
+</layer-list>

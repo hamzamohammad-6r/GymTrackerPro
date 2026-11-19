@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Header -->
+        <!-- HEADER -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,16 +21,16 @@
 
             <TextView
                 android:id="@+id/buttonBackArrow"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
                 android:background="@drawable/bg_card"
                 android:clickable="true"
-                android:contentDescription="Back to dashboard"
                 android:focusable="true"
+                android:contentDescription="Back to dashboard"
                 android:gravity="center"
-                android:text="←"
+                android:text="‹"
                 android:textColor="#60A5FA"
-                android:textSize="28sp"
+                android:textSize="34sp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -43,81 +43,44 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="My Training Programme"
+                    android:text="My Workouts"
                     android:textColor="#F8FAFC"
-                    android:textSize="23sp"
+                    android:textSize="25sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="Your guided fitness journey"
+                    android:text="Your training plan and schedule"
                     android:textColor="#94A3B8"
-                    android:textSize="12sp" />
+                    android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Intro banner -->
+        <!-- SECTION 1: ACTIVE PROGRAMME -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="#172B4D"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="YOUR TRAINING JOURNEY"
-                android:textColor="#60A5FA"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.08" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Train with a plan."
-                android:textColor="#F8FAFC"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Follow your prescribed workouts, complete each session and track your progress."
-                android:textColor="#CBD5E1"
-                android:textSize="14sp"
-                android:lineSpacingExtra="3dp" />
-        </LinearLayout>
-
-        <!-- Selected programme -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:background="@drawable/bg_card"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_glow_card"
             android:orientation="vertical"
             android:padding="18dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="01  ·  MY SELECTED PROGRAMME"
+                android:text="YOUR ACTIVE PROGRAMME"
                 android:textColor="#60A5FA"
-                android:textSize="12sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.05" />
+                android:letterSpacing="0.08" />
 
             <TextView
                 android:id="@+id/textSelectedProgramTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="12dp"
                 android:text="No programme selected"
                 android:textColor="#F8FAFC"
                 android:textSize="23sp"
@@ -127,24 +90,27 @@
                 android:id="@+id/textProgramDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Choose one of our free fitness programmes to begin your training journey."
+                android:layout_marginTop="7dp"
+                android:text="Choose one of our free fitness programmes to begin."
                 android:textColor="#94A3B8"
                 android:textSize="13sp"
                 android:lineSpacingExtra="3dp" />
 
-            <!-- Programme information -->
+            <!-- PROGRAMME STATISTICS -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginEnd="5dp"
+                    android:background="#1E293B"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -158,10 +124,10 @@
                         android:id="@+id/textProgramDuration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="7dp"
                         android:text="-- weeks"
                         android:textColor="#F8FAFC"
-                        android:textSize="18sp"
+                        android:textSize="17sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -169,12 +135,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginHorizontal="5dp"
+                    android:background="#1E293B"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DAYS PER WEEK"
+                        android:text="DAYS / WEEK"
                         android:textColor="#94A3B8"
                         android:textSize="10sp"
                         android:textStyle="bold" />
@@ -183,10 +152,10 @@
                         android:id="@+id/textProgramDays"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="7dp"
                         android:text="-- days"
                         android:textColor="#F8FAFC"
-                        android:textSize="18sp"
+                        android:textSize="17sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -194,7 +163,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginStart="5dp"
+                    android:background="#1E293B"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -208,10 +180,10 @@
                         android:id="@+id/textProgramLevel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="7dp"
                         android:text="--"
                         android:textColor="#F8FAFC"
-                        android:textSize="18sp"
+                        android:textSize="17sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
@@ -220,13 +192,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="18dp"
-                android:background="#29364D" />
+                android:background="#334155" />
 
             <TextView
                 android:id="@+id/textProgramProgress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="14dp"
                 android:text="Your programme progress will appear here."
                 android:textColor="#CBD5E1"
                 android:textSize="13sp" />
@@ -234,21 +206,22 @@
             <Button
                 android:id="@+id/buttonChangeProgram"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="48dp"
                 android:layout_marginTop="16dp"
-                android:backgroundTint="#334155"
+                android:backgroundTint="#26364F"
                 android:stateListAnimator="@null"
                 android:text="Change Programme"
                 android:textAllCaps="false"
-                android:textColor="#F8FAFC"
+                android:textColor="#BFDBFE"
+                android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Weekly schedule -->
+        <!-- SECTION 2: WEEKLY SCHEDULE -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="18dp"
             android:background="@drawable/bg_card"
             android:orientation="vertical"
             android:padding="18dp">
@@ -256,17 +229,17 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="02  ·  YOUR WEEKLY SCHEDULE"
+                android:text="YOUR TRAINING PLAN"
                 android:textColor="#60A5FA"
-                android:textSize="12sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.05" />
+                android:letterSpacing="0.08" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Prescribed Training Days"
+                android:text="Weekly Schedule"
                 android:textColor="#F8FAFC"
                 android:textSize="21sp"
                 android:textStyle="bold" />
@@ -276,34 +249,29 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="14dp"
-                android:text="Follow the exercises and repetitions assigned to each training day."
+                android:text="Your prescribed training days and exercises."
                 android:textColor="#94A3B8"
                 android:textSize="13sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#29364D" />
+                android:background="#334155" />
 
-            <TextView
+            <LinearLayout
                 android:id="@+id/textWorkoutList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="100dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="8dp"
-                android:text="Select a programme to view your weekly schedule."
-                android:textColor="#CBD5E1"
-                android:textSize="14sp"
-                android:lineSpacingExtra="8dp"
-                android:gravity="top" />
+                android:orientation="vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="8dp" />
         </LinearLayout>
 
-        <!-- Start workout -->
+        <!-- SECTION 3: START WORKOUT -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="18dp"
             android:background="@drawable/bg_card"
             android:orientation="vertical"
             android:padding="18dp">
@@ -311,25 +279,26 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="03  ·  READY TO TRAIN?"
+                android:text="READY TO TRAIN?"
                 android:textColor="#60A5FA"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Time to get stronger."
+                android:text="Your next session starts here."
                 android:textColor="#F8FAFC"
-                android:textSize="20sp"
+                android:textSize="19sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="Start your next prescribed training session."
+                android:text="Follow your training plan one session at a time."
                 android:textColor="#94A3B8"
                 android:textSize="13sp" />
 
@@ -341,26 +310,26 @@
                 android:backgroundTint="#2563EB"
                 android:elevation="0dp"
                 android:stateListAnimator="@null"
-                android:text="Start Workout"
+                android:text="Start Workout  →"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="15sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Back to dashboard -->
+        <!-- BACK TO DASHBOARD -->
         <Button
             android:id="@+id/buttonBackHome"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginTop="22dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="18dp"
             android:layout_marginBottom="12dp"
-            android:backgroundTint="#2563EB"
+            android:backgroundTint="#1E293B"
             android:stateListAnimator="@null"
             android:text="←  Back to Dashboard"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:textSize="15sp"
+            android:textColor="#CBD5E1"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
     </LinearLayout>
