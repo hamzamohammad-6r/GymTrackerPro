@@ -1,6 +1,7 @@
 package com.example.gymtrackerpro;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -160,10 +161,10 @@ public class ProfileActivity extends AppCompatActivity {
         loadProfile();
 
         // Bottom navigation
-        TextView navHome = findViewById(R.id.navHome);
-        TextView navProgress = findViewById(R.id.navProgress);
-        TextView navTimer = findViewById(R.id.navTimer);
-        TextView navProfile = findViewById(R.id.navProfile);
+        View navHome = findViewById(R.id.navHome);
+        View navProgress = findViewById(R.id.navProgress);
+        View navTimer = findViewById(R.id.navTimer);
+        View navProfile = findViewById(R.id.navProfile);
 
         navHome.setOnClickListener(v ->
                 openScreen(MainActivity.class));

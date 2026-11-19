@@ -314,6 +314,19 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
+                <!-- Sign Out -->
+                <Button
+                    android:id="@+id/buttonSignOut"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="14dp"
+                    android:backgroundTint="#263B82F6"
+                    android:text="Sign Out"
+                    android:textColor="#F87171"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+
             </LinearLayout>
 
             <TextView

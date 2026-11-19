@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.app.AlertDialog;
 import android.widget.Toast;
@@ -67,10 +68,10 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
         loadWorkoutHistory();
 
         // Bottom navigation
-        TextView navHome = findViewById(R.id.navHome);
-        TextView navProgress = findViewById(R.id.navProgress);
-        TextView navTimer = findViewById(R.id.navTimer);
-        TextView navProfile = findViewById(R.id.navProfile);
+        View navHome = findViewById(R.id.navHome);
+        View navProgress = findViewById(R.id.navProgress);
+        View navTimer = findViewById(R.id.navTimer);
+        View navProfile = findViewById(R.id.navProfile);
 
         navHome.setOnClickListener(v ->
                 openScreen(MainActivity.class));
