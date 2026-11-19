@@ -1,326 +1,394 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_midnight_gradient"
-    android:fillViewport="true"
-    android:clipToPadding="false">
+    android:orientation="vertical"
+    android:background="@drawable/bg_midnight_gradient">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:clipToPadding="false">
 
-        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_marginBottom="22dp">
+            android:orientation="vertical"
+            android:padding="20dp">
 
-            <TextView
-                android:id="@+id/buttonBackArrow"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/bg_card"
-                android:clickable="true"
-                android:contentDescription="Back to Dashboard"
-                android:focusable="true"
-                android:gravity="center"
-                android:text="←"
-                android:textColor="#60A5FA"
-                android:textSize="28sp"
-                android:textStyle="bold" />
-
+            <!-- Header -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="22dp">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="My Profile"
-                    android:textColor="#F8FAFC"
+                    android:id="@+id/buttonBackArrow"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_card"
+                    android:clickable="true"
+                    android:contentDescription="Back to Dashboard"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:text="←"
+                    android:textColor="#60A5FA"
                     android:textSize="28sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="Manage your personal details"
-                    android:textColor="#94A3B8"
-                    android:textSize="13sp" />
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="My Profile"
+                        android:textColor="#F8FAFC"
+                        android:textSize="28sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="Manage your personal details"
+                        android:textColor="#94A3B8"
+                        android:textSize="13sp" />
+
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-
-        <!-- Profile summary card -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/bg_card"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="18dp">
-
-            <ImageView
-                android:id="@+id/imageProfilePicture"
-                android:layout_width="76dp"
-                android:layout_height="76dp"
-                android:background="#233B68"
-                android:contentDescription="Profile picture"
-                android:padding="4dp"
-                android:scaleType="centerCrop"
-                android:src="@android:drawable/ic_menu_myplaces" />
-
+            <!-- Profile summary card -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/bg_card"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="18dp">
+
+                <ImageView
+                    android:id="@+id/imageProfilePicture"
+                    android:layout_width="76dp"
+                    android:layout_height="76dp"
+                    android:background="#233B68"
+                    android:contentDescription="Profile picture"
+                    android:padding="4dp"
+                    android:scaleType="centerCrop"
+                    android:src="@android:drawable/ic_menu_myplaces" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textProfileDisplayName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Your Name"
+                        android:textColor="#F8FAFC"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="GymTrackerPro Member"
+                        android:textColor="#94A3B8"
+                        android:textSize="13sp" />
+
+                    <Button
+                        android:id="@+id/buttonChangeProfilePicture"
+                        android:layout_width="wrap_content"
+                        android:layout_height="42dp"
+                        android:layout_marginTop="8dp"
+                        android:backgroundTint="#2563EB"
+                        android:text="Change Photo"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Form card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:orientation="vertical"
+                android:padding="18dp">
 
                 <TextView
-                    android:id="@+id/textProfileDisplayName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Your Name"
-                    android:textColor="#F8FAFC"
-                    android:textSize="18sp"
+                    android:layout_marginBottom="20dp"
+                    android:text="PERSONAL INFORMATION"
+                    android:textColor="#60A5FA"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08" />
+
+                <!-- Full name -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Full Name"
+                    android:textColor="#E2E8F0"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
+                <EditText
+                    android:id="@+id/editName"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="7dp"
+                    android:backgroundTint="#3B82F6"
+                    android:hint="Enter your full name"
+                    android:inputType="textPersonName"
+                    android:paddingHorizontal="12dp"
+                    android:textColor="#F8FAFC"
+                    android:textColorHint="#64748B"
+                    android:textSize="15sp" />
+
+                <!-- Email -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="GymTrackerPro Member"
-                    android:textColor="#94A3B8"
-                    android:textSize="13sp" />
+                    android:layout_marginTop="20dp"
+                    android:text="Email Address"
+                    android:textColor="#E2E8F0"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
+                <EditText
+                    android:id="@+id/editEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="7dp"
+                    android:backgroundTint="#3B82F6"
+                    android:hint="Enter your email"
+                    android:inputType="textEmailAddress"
+                    android:paddingHorizontal="12dp"
+                    android:textColor="#F8FAFC"
+                    android:textColorHint="#64748B"
+                    android:textSize="15sp" />
+
+                <!-- Body metrics -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="BODY METRICS"
+                    android:textColor="#60A5FA"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08" />
+
+                <!-- Age -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Age"
+                    android:textColor="#E2E8F0"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/editAge"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="7dp"
+                    android:backgroundTint="#3B82F6"
+                    android:hint="Age in years"
+                    android:inputType="number"
+                    android:paddingHorizontal="12dp"
+                    android:textColor="#F8FAFC"
+                    android:textColorHint="#64748B"
+                    android:textSize="15sp" />
+
+                <!-- Height -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Height (cm)"
+                    android:textColor="#E2E8F0"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/editHeight"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="7dp"
+                    android:backgroundTint="#3B82F6"
+                    android:hint="Height in centimetres"
+                    android:inputType="numberDecimal"
+                    android:paddingHorizontal="12dp"
+                    android:textColor="#F8FAFC"
+                    android:textColorHint="#64748B"
+                    android:textSize="15sp" />
+
+                <!-- Weight -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Weight (kg)"
+                    android:textColor="#E2E8F0"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/editWeight"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="7dp"
+                    android:backgroundTint="#3B82F6"
+                    android:hint="Weight in kilograms"
+                    android:inputType="numberDecimal"
+                    android:paddingHorizontal="12dp"
+                    android:textColor="#F8FAFC"
+                    android:textColorHint="#64748B"
+                    android:textSize="15sp" />
+
+                <!-- Fitness objective -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="FITNESS OBJECTIVE"
+                    android:textColor="#60A5FA"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Fitness Goal"
+                    android:textColor="#E2E8F0"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/editFitnessGoal"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="7dp"
+                    android:backgroundTint="#3B82F6"
+                    android:hint="e.g. Build muscle"
+                    android:inputType="textCapSentences"
+                    android:paddingHorizontal="12dp"
+                    android:textColor="#F8FAFC"
+                    android:textColorHint="#64748B"
+                    android:textSize="15sp" />
+
+                <!-- Save profile -->
                 <Button
-                    android:id="@+id/buttonChangeProfilePicture"
-                    android:layout_width="wrap_content"
-                    android:layout_height="42dp"
-                    android:layout_marginTop="8dp"
+                    android:id="@+id/buttonSaveProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="30dp"
                     android:backgroundTint="#2563EB"
-                    android:text="Change Photo"
-                    android:textAllCaps="false"
+                    android:text="Save Profile"
                     android:textColor="#FFFFFF"
-                    android:textSize="12sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
-        </LinearLayout>
-
-
-        <!-- Form card -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_card"
-            android:orientation="vertical"
-            android:padding="18dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:text="PERSONAL INFORMATION"
-                android:textColor="#60A5FA"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.08" />
-
-            <!-- Full name -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Full Name"
-                android:textColor="#E2E8F0"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/editName"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="7dp"
-                android:backgroundTint="#3B82F6"
-                android:hint="Enter your full name"
-                android:inputType="textPersonName"
-                android:paddingHorizontal="12dp"
-                android:textColor="#F8FAFC"
-                android:textColorHint="#64748B"
-                android:textSize="15sp" />
-
-            <!-- Email -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Email Address"
-                android:textColor="#E2E8F0"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/editEmail"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="7dp"
-                android:backgroundTint="#3B82F6"
-                android:hint="Enter your email"
-                android:inputType="textEmailAddress"
-                android:paddingHorizontal="12dp"
-                android:textColor="#F8FAFC"
-                android:textColorHint="#64748B"
-                android:textSize="15sp" />
-
-            <!-- Body metrics section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:layout_marginBottom="16dp"
-                android:text="BODY METRICS"
-                android:textColor="#60A5FA"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.08" />
-
-            <!-- Age -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Age"
-                android:textColor="#E2E8F0"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/editAge"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="7dp"
-                android:backgroundTint="#3B82F6"
-                android:hint="Age in years"
-                android:inputType="number"
-                android:paddingHorizontal="12dp"
-                android:textColor="#F8FAFC"
-                android:textColorHint="#64748B"
-                android:textSize="15sp" />
-
-            <!-- Height -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Height (cm)"
-                android:textColor="#E2E8F0"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/editHeight"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="7dp"
-                android:backgroundTint="#3B82F6"
-                android:hint="Height in centimetres"
-                android:inputType="numberDecimal"
-                android:paddingHorizontal="12dp"
-                android:textColor="#F8FAFC"
-                android:textColorHint="#64748B"
-                android:textSize="15sp" />
-
-            <!-- Weight -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Weight (kg)"
-                android:textColor="#E2E8F0"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/editWeight"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="7dp"
-                android:backgroundTint="#3B82F6"
-                android:hint="Weight in kilograms"
-                android:inputType="numberDecimal"
-                android:paddingHorizontal="12dp"
-                android:textColor="#F8FAFC"
-                android:textColorHint="#64748B"
-                android:textSize="15sp" />
-
-            <!-- Fitness goal section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:layout_marginBottom="16dp"
-                android:text="FITNESS OBJECTIVE"
-                android:textColor="#60A5FA"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.08" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Fitness Goal"
-                android:textColor="#E2E8F0"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/editFitnessGoal"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="7dp"
-                android:backgroundTint="#3B82F6"
-                android:hint="e.g. Build muscle"
-                android:inputType="textCapSentences"
-                android:paddingHorizontal="12dp"
-                android:textColor="#F8FAFC"
-                android:textColorHint="#64748B"
-                android:textSize="15sp" />
-
-            <!-- Save profile -->
-            <Button
-                android:id="@+id/buttonSaveProfile"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="30dp"
-                android:backgroundTint="#2563EB"
-                android:text="Save Profile"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:layout_marginTop="22dp"
+                android:layout_marginBottom="12dp"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="YOUR FITNESS JOURNEY. YOUR PROGRESS."
+                android:textColor="#64748B"
+                android:textSize="11sp"
+                android:letterSpacing="0.06" />
 
         </LinearLayout>
+    </ScrollView>
+
+    <!-- Fixed Bottom Navigation -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="#111C30"
+        android:elevation="12dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:layout_marginBottom="12dp"
+            android:id="@+id/navHome"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
-            android:text="YOUR FITNESS JOURNEY. YOUR PROGRESS."
-            android:textColor="#64748B"
-            android:textSize="11sp"
-            android:letterSpacing="0.06" />
+            android:text="⌂\nHome"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/navProgress"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="▥\nProgress"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/navTimer"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="◷\nTimer"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/navProfile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="♙\nProfile"
+            android:textColor="#3B82F6"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true" />
 
     </LinearLayout>
-</ScrollView>
+
+</LinearLayout>

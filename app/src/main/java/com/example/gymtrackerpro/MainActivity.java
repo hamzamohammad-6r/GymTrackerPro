@@ -371,7 +371,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openActivity(Class<? extends Activity> activityClass) {
-        startActivity(new Intent(this, activityClass));
+        Intent intent = new Intent(this, activityClass);
+        UiFx.startActivityWithTransition(this, intent);
     }
 
     // ------------------------------------------------------------------

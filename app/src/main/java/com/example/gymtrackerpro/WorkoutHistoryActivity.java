@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.activity.OnBackPressedCallback;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -34,7 +35,21 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_workout_history);
         TextView buttonBackArrow = findViewById(R.id.buttonBackArrow);
 
-        buttonBackArrow.setOnClickListener(v -> finish());
+        buttonBackArrow.setOnClickListener(v ->
+                UiFx.finishWithTransition(this));
+
+        getOnBackPressedDispatcher().addCallback(
+                this,
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        UiFx.finishWithTransition(
+                                WorkoutHistoryActivity.this
+                        );
+                    }
+                }
+        );
+
         UiFx.applyEdgeToEdge(this);
 
         database = GymTrackerDatabase.getDatabase(
@@ -46,9 +61,37 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
         textWorkoutHistory = findViewById(R.id.textWorkoutHistory);
 
         findViewById(R.id.buttonHistoryBack)
-                .setOnClickListener(v -> finish());
+                .setOnClickListener(v ->
+                        UiFx.finishWithTransition(this));
 
         loadWorkoutHistory();
+
+        // Bottom navigation
+        TextView navHome = findViewById(R.id.navHome);
+        TextView navProgress = findViewById(R.id.navProgress);
+        TextView navTimer = findViewById(R.id.navTimer);
+        TextView navProfile = findViewById(R.id.navProfile);
+
+        navHome.setOnClickListener(v ->
+                openScreen(MainActivity.class));
+
+        // Already on Progress screen
+        navProgress.setOnClickListener(v -> {});
+
+        navTimer.setOnClickListener(v ->
+                openScreen(TimerActivity.class));
+
+        navProfile.setOnClickListener(v ->
+                openScreen(ProfileActivity.class));
+    }
+
+    private void openScreen(Class<?> activityClass) {
+        Intent intent = new Intent(
+                WorkoutHistoryActivity.this,
+                activityClass
+        );
+
+        UiFx.startActivityWithTransition(this, intent);
     }
 
     private void loadWorkoutHistory() {

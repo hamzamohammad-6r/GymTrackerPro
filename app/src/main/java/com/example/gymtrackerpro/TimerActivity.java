@@ -305,7 +305,7 @@ public class TimerActivity extends AppCompatActivity {
 
         Intent intent = new Intent(TimerActivity.this, activityClass);
 
-        startActivity(intent);
+        UiFx.startActivityWithTransition(this, intent);
     }
 
     @Override

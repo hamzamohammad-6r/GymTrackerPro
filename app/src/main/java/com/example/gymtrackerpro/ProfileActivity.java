@@ -8,7 +8,6 @@ import android.widget.Toast;
 import android.graphics.Color;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,6 +16,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.widget.ImageView;
+import androidx.activity.OnBackPressedCallback;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -115,7 +115,15 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         TextView buttonBackArrow = findViewById(R.id.buttonBackArrow);
 
-        buttonBackArrow.setOnClickListener(v -> finish());
+        buttonBackArrow.setOnClickListener(v -> UiFx.finishWithTransition(this));
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                UiFx.finishWithTransition(ProfileActivity.this);
+            }
+        });
+
         UiFx.applyEdgeToEdge(this);
 
         database = GymTrackerDatabase.getDatabase(
@@ -150,6 +158,31 @@ public class ProfileActivity extends AppCompatActivity {
         buttonSaveProfile.setOnClickListener(v -> saveProfile());
 
         loadProfile();
+
+        // Bottom navigation
+        TextView navHome = findViewById(R.id.navHome);
+        TextView navProgress = findViewById(R.id.navProgress);
+        TextView navTimer = findViewById(R.id.navTimer);
+        TextView navProfile = findViewById(R.id.navProfile);
+
+        navHome.setOnClickListener(v ->
+                openScreen(MainActivity.class));
+
+        navProgress.setOnClickListener(v ->
+                openScreen(WorkoutHistoryActivity.class));
+
+        navTimer.setOnClickListener(v ->
+                openScreen(TimerActivity.class));
+
+    // Already on Profile screen
+        navProfile.setOnClickListener(v -> {
+            // No navigation needed
+        });
+    }
+
+    private void openScreen(Class<?> activityClass) {
+        Intent intent = new Intent(ProfileActivity.this, activityClass);
+        UiFx.startActivityWithTransition(this, intent);
     }
 
     private void loadProfile() {

@@ -3,157 +3,228 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/bg_midnight_gradient"
-    android:padding="20dp">
+    android:background="@drawable/bg_midnight_gradient">
 
-    <!-- Header -->
+    <!-- Main Content -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="20dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="20dp">
 
-        <TextView
-            android:id="@+id/buttonBackArrow"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/bg_card"
-            android:gravity="center"
-            android:text="←"
-            android:textColor="#60A5FA"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:clickable="true"
-            android:focusable="true"
-            android:contentDescription="Back to Dashboard" />
-
+        <!-- Header -->
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:id="@+id/buttonBackArrow"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_card"
+                android:gravity="center"
+                android:text="←"
+                android:textColor="#60A5FA"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Back to Dashboard" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Workout History"
+                    android:textColor="#F8FAFC"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Your training journey, at a glance"
+                    android:textColor="#94A3B8"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Progress Summary -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="#172B4D"
+            android:orientation="vertical"
+            android:padding="18dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Workout History"
+                android:text="YOUR PROGRESS"
+                android:textColor="#60A5FA"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08" />
+
+            <TextView
+                android:id="@+id/textHistorySummary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="#0F172A"
+                android:padding="16dp"
+                android:text="Total: 0 | Completed: 0 | Planned: 0"
                 android:textColor="#F8FAFC"
-                android:textSize="26sp"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:lineSpacingExtra="5dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Every completed session moves you forward."
+                android:textColor="#BFDBFE"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <!-- Workout Records -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Training Sessions"
+                android:textColor="#F8FAFC"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text="Your training journey, at a glance"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="16dp"
+                android:text="Completed and planned workouts"
                 android:textColor="#94A3B8"
                 android:textSize="13sp" />
 
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fillViewport="true"
+                android:scrollbars="vertical">
+
+                <TextView
+                    android:id="@+id/textWorkoutHistory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="100dp"
+                    android:background="#0F172A"
+                    android:padding="16dp"
+                    android:text="Loading workout history..."
+                    android:textColor="#CBD5E1"
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="7dp" />
+
+            </ScrollView>
         </LinearLayout>
-    </LinearLayout>
 
-    <!-- Progress summary -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:background="#172B4D"
-        android:orientation="vertical"
-        android:padding="18dp">
-
-        <TextView
+        <!-- Existing Back Button -->
+        <Button
+            android:id="@+id/buttonHistoryBack"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="YOUR PROGRESS"
-            android:textColor="#60A5FA"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.08" />
-
-        <TextView
-            android:id="@+id/textHistorySummary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="#0F172A"
-            android:padding="16dp"
-            android:text="Total: 0 | Completed: 0 | Planned: 0"
-            android:textColor="#F8FAFC"
+            android:layout_height="52dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#2563EB"
+            android:text="Back to Dashboard"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
             android:textSize="15sp"
-            android:textStyle="bold"
-            android:lineSpacingExtra="5dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Every completed session moves you forward."
-            android:textColor="#BFDBFE"
-            android:textSize="13sp" />
-
-    </LinearLayout>
-
-    <!-- Workout records -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@drawable/bg_card"
-        android:orientation="vertical"
-        android:padding="18dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Training Sessions"
-            android:textColor="#F8FAFC"
-            android:textSize="20sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="16dp"
-            android:text="Completed and planned workouts"
-            android:textColor="#94A3B8"
-            android:textSize="13sp" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:fillViewport="true"
-            android:scrollbars="vertical">
-
-            <TextView
-                android:id="@+id/textWorkoutHistory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="100dp"
-                android:background="#0F172A"
-                android:padding="16dp"
-                android:text="Loading workout history..."
-                android:textColor="#CBD5E1"
-                android:textSize="15sp"
-                android:lineSpacingExtra="7dp" />
-
-        </ScrollView>
     </LinearLayout>
 
-    <!-- Existing navigation button -->
-    <Button
-        android:id="@+id/buttonHistoryBack"
+    <!-- Fixed Bottom Navigation -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#2563EB"
-        android:text="Back to Dashboard"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:textSize="15sp"
-        android:textStyle="bold" />
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="#111C30"
+        android:elevation="12dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp">
+
+        <TextView
+            android:id="@+id/navHome"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="⌂&#10;Home"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/navProgress"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="▥&#10;Progress"
+            android:textColor="#3B82F6"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/navTimer"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="◷&#10;Timer"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/navProfile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="♙&#10;Profile"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
 
 </LinearLayout>
