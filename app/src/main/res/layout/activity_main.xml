@@ -338,52 +338,58 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
 
-            <!-- Training Streak -->
+
+            <!-- Neon Training Streak -->
             <LinearLayout
                 android:id="@+id/cardStreak"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/bg_training_streak"
-                android:elevation="3dp"
+                android:background="@drawable/bg_training_streak_neon"
+                android:elevation="6dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="18dp">
+                android:padding="20dp">
 
+                <!-- Flame icon -->
                 <TextView
-                    android:layout_width="54dp"
-                    android:layout_height="54dp"
-                    android:background="#352C1B"
+                    android:layout_width="58dp"
+                    android:layout_height="58dp"
+                    android:background="@drawable/bg_tile_icon_neon"
                     android:contentDescription="Training streak"
                     android:gravity="center"
                     android:text="🔥"
-                    android:textSize="27sp" />
+                    android:textSize="30sp" />
 
+                <!-- Streak information -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
+                    android:layout_marginStart="16dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Training streak"
+                        android:text="TRAINING STREAK"
                         android:textColor="#F8FAFC"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
+                        android:letterSpacing="0.06"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Keep showing up and build consistency."
-                        android:textColor="#94A3B8"
+                        android:layout_marginTop="5dp"
+                        android:text="Consistency builds strength."
+                        android:textColor="#BFDBFE"
                         android:textSize="12sp" />
+
                 </LinearLayout>
 
+                <!-- Streak counter -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -395,20 +401,23 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:textColor="#FBBF24"
-                        android:textSize="28sp"
+                        android:textColor="#60A5FA"
+                        android:textSize="34sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:letterSpacing="0.08"
+                        android:letterSpacing="0.12"
                         android:text="DAYS"
-                        android:textColor="#94A3B8"
+                        android:textColor="#BFDBFE"
                         android:textSize="10sp"
                         android:textStyle="bold" />
+
                 </LinearLayout>
+
             </LinearLayout>
+
 
             <!-- Login -->
             <Button
