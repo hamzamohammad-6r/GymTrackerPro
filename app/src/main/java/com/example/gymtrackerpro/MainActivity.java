@@ -316,55 +316,77 @@ public class MainActivity extends AppCompatActivity {
         tileTitle.setText(tile.title);
         tileSubtitle.setText(tile.subtitle);
 
-// Custom details for the Profile tile only.
+
+        // Custom details for the Profile tile only.
         if (tile.target == ProfileActivity.class) {
 
-            SharedPreferences preferences = getSharedPreferences(
+            SharedPreferences profilePrefs = getSharedPreferences(
                     "GymTrackerProfilePrefs",
                     MODE_PRIVATE
             );
 
-            String savedPhoto = preferences.getString(
-                    "profile_image_uri",
-                    null
-            );
+            String photoKey = "profile_image_uri";
+
+            if (loggedInEmail != null && !loggedInEmail.trim().isEmpty()) {
+                photoKey = "profile_image_uri_" +
+                        loggedInEmail.trim().toLowerCase(java.util.Locale.ROOT);
+            }
+
+            String savedPhoto = profilePrefs.getString(photoKey, null);
 
             if (savedPhoto != null) {
                 try {
                     photo.setImageURI(Uri.parse(savedPhoto));
                 } catch (Exception e) {
-                    photo.setImageResource(tile.photo);
+                    photo.setImageResource(android.R.drawable.ic_menu_myplaces);
                 }
+            } else {
+                photo.setImageResource(android.R.drawable.ic_menu_myplaces);
             }
 
-            databaseExecutor.execute(() -> {
-                try {
-                    List<User> users = database.userDao().getAllUsers();
+            SharedPreferences session = getSharedPreferences(
+                    "GymTrackerSession",
+                    MODE_PRIVATE
+            );
 
-                    if (users != null && !users.isEmpty()) {
-                        User user = users.get(0);
+            String loggedInEmail = session.getString("email", null);
+
+            // Use a generic profile when nobody is logged in.
+            tileTitle.setText("Profile");
+            tileSubtitle.setText("Your personal details");
+
+            if (loggedInEmail != null && !loggedInEmail.trim().isEmpty()) {
+
+                databaseExecutor.execute(() -> {
+                    try {
+                        User user = database.userDao()
+                                .getUserByEmail(loggedInEmail);
 
                         runOnUiThread(() -> {
                             if (isFinishing() || isDestroyed()) {
                                 return;
                             }
 
-                            tileTitle.setText(user.getName());
-                            tileSubtitle.setText(
-                                    user.getFitnessGoal() == null
-                                            || user.getFitnessGoal().trim().isEmpty()
-                                            ? "Your personal fitness profile"
-                                            : user.getFitnessGoal()
-                            );
-                        });
-                    }
-                } catch (Exception e) {
-                    Log.e(TAG, "Could not load profile tile", e);
-                }
-            });
-        }
+                            if (user != null) {
+                                tileTitle.setText(user.getName());
 
+                                tileSubtitle.setText(
+                                        user.getFitnessGoal() == null
+                                                || user.getFitnessGoal().trim().isEmpty()
+                                                ? "Your personal fitness profile"
+                                                : user.getFitnessGoal()
+                                );
+                            }
+                        });
+
+                    } catch (Exception e) {
+                        Log.e(TAG, "Could not load account profile", e);
+                    }
+                });
+            }
+        }
         view.setOnClickListener(v -> openActivity(tile.target));
+
         UiFx.applyPressEffect(view);
 
         return view;
@@ -384,8 +406,30 @@ public class MainActivity extends AppCompatActivity {
             final Dashboard data = new Dashboard();
 
             try {
-                List<Workout> workouts =
-                        database.workoutDao().getAllWorkouts();
+                SharedPreferences session = getSharedPreferences(
+                        "GymTrackerSession",
+                        MODE_PRIVATE
+                );
+
+                String loggedInEmail = session.getString("email", null);
+                List<Workout> workouts;
+
+                if (loggedInEmail != null && !loggedInEmail.trim().isEmpty()) {
+
+                    User currentUser = database.userDao()
+                            .getUserByEmail(loggedInEmail);
+
+                    if (currentUser != null) {
+                        workouts = database.workoutDao()
+                                .getWorkoutsForUser(currentUser.getUserId());
+                    } else {
+                        workouts = new ArrayList<>();
+                    }
+
+                } else {
+                    // Continue Offline: preserve existing local workout data.
+                    workouts = database.workoutDao().getAllWorkouts();
+                }
 
                 if (workouts != null) {
                     String today = formatDate(Calendar.getInstance());
@@ -424,7 +468,8 @@ public class MainActivity extends AppCompatActivity {
 
                 if (data.total > 0) {
                     data.rate = Math.round(
-                            (data.completed * 100.0f) / data.total);
+                            (data.completed * 100.0f) / data.total
+                    );
                 }
 
             } catch (Exception e) {

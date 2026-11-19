@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -185,8 +186,26 @@ public class WorkoutsActivity extends AppCompatActivity {
     }
 
     private int getOrCreateUserId() {
+
+        SharedPreferences session = getSharedPreferences(
+                "GymTrackerSession",
+                MODE_PRIVATE
+        );
+
+        String loggedInEmail = session.getString("email", null);
+
+        // Signed-in users get their own local database profile.
+        // Offline mode continues using the existing local user.
+        String accountEmail;
+
+        if (loggedInEmail != null && !loggedInEmail.trim().isEmpty()) {
+            accountEmail = loggedInEmail.trim();
+        } else {
+            accountEmail = LOCAL_USER_EMAIL;
+        }
+
         User user = database.userDao()
-                .getUserByEmail(LOCAL_USER_EMAIL);
+                .getUserByEmail(accountEmail);
 
         if (user != null) {
             return user.getUserId();
@@ -194,11 +213,12 @@ public class WorkoutsActivity extends AppCompatActivity {
 
         User newUser = new User(
                 "GymTrackerPro User",
-                LOCAL_USER_EMAIL,
+                accountEmail,
                 0,
                 0.0,
                 0.0,
-                "General fitness");
+                "General fitness"
+        );
 
         return (int) database.userDao().insertUser(newUser);
     }
@@ -247,15 +267,20 @@ public class WorkoutsActivity extends AppCompatActivity {
                     Workout workout = database.workoutDao()
                             .getWorkoutById(selectedId);
 
-                    if (workout != null) {
+                    int currentUserId = getOrCreateUserId();
+
+                    if (workout != null
+                            && workout.getUserId() == currentUserId) {
+
                         workout.setWorkoutName(name);
                         workout.setWorkoutDate(date);
                         workout.setDayOfWeek(day);
 
                         success = database.workoutDao()
                                 .updateWorkout(workout) > 0;
+
                     } else {
-                        error = "Workout not found.";
+                        error = "Workout not found or does not belong to your account.";
                     }
                 } else {
                     int userId = getOrCreateUserId();
@@ -317,8 +342,10 @@ public class WorkoutsActivity extends AppCompatActivity {
     private void loadWorkouts() {
         databaseExecutor.execute(() -> {
             try {
+                int currentUserId = getOrCreateUserId();
+
                 List<Workout> workouts =
-                        database.workoutDao().getAllWorkouts();
+                        database.workoutDao().getWorkoutsForUser(currentUserId);
 
                 StringBuilder display = new StringBuilder();
 
@@ -564,8 +591,18 @@ public class WorkoutsActivity extends AppCompatActivity {
             boolean deleted = false;
 
             try {
-                deleted = database.workoutDao()
-                        .deleteWorkout(workout) > 0;
+                int currentUserId = getOrCreateUserId();
+
+                Workout savedWorkout = database.workoutDao()
+                        .getWorkoutById(workout.getWorkoutId());
+
+                if (savedWorkout != null
+                        && savedWorkout.getUserId() == currentUserId) {
+
+                    deleted = database.workoutDao()
+                            .deleteWorkout(savedWorkout) > 0;
+                }
+
             } catch (Exception e) {
                 Log.e(TAG, "Unable to delete workout", e);
             }
@@ -578,8 +615,7 @@ public class WorkoutsActivity extends AppCompatActivity {
                 }
 
                 if (success) {
-                    if (editingWorkoutId
-                            == workout.getWorkoutId()) {
+                    if (editingWorkoutId == workout.getWorkoutId()) {
                         editingWorkout = false;
                         editingWorkoutId = -1;
 
@@ -594,6 +630,7 @@ public class WorkoutsActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
 
                     loadWorkouts();
+
                 } else {
                     Toast.makeText(this,
                             "Could not delete workout.",
@@ -619,10 +656,14 @@ public class WorkoutsActivity extends AppCompatActivity {
             boolean updated = false;
 
             try {
+                int currentUserId = getOrCreateUserId();
+
                 Workout savedWorkout = database.workoutDao()
                         .getWorkoutById(workoutId);
 
-                if (savedWorkout != null) {
+                if (savedWorkout != null
+                        && savedWorkout.getUserId() == currentUserId) {
+
                     savedWorkout.setCompleted(newStatus);
 
                     updated = database.workoutDao()

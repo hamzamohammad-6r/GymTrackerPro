@@ -61,7 +61,7 @@ public class ProfileActivity extends AppCompatActivity {
                                         MODE_PRIVATE
                                 ).edit()
                                         .putString(
-                                                KEY_PROFILE_IMAGE_URI,
+                                                getAccountProfileImageKey(),
                                                 uri.toString()
                                         )
                                         .apply();
@@ -84,6 +84,7 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     }
             );
+
     private void loadSavedProfilePicture() {
         SharedPreferences preferences = getSharedPreferences(
                 PREFS_NAME,
@@ -91,7 +92,7 @@ public class ProfileActivity extends AppCompatActivity {
         );
 
         String savedUri = preferences.getString(
-                KEY_PROFILE_IMAGE_URI,
+                getAccountProfileImageKey(),
                 null
         );
 
@@ -103,6 +104,10 @@ public class ProfileActivity extends AppCompatActivity {
                         android.R.drawable.ic_menu_myplaces
                 );
             }
+        } else {
+            imageProfilePicture.setImageResource(
+                    android.R.drawable.ic_menu_myplaces
+            );
         }
     }
 
@@ -153,10 +158,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         loadSavedProfilePicture();
 
-        Button buttonSaveProfile =
-                findViewById(R.id.buttonSaveProfile);
-
+        Button buttonSaveProfile = findViewById(R.id.buttonSaveProfile);
         buttonSaveProfile.setOnClickListener(v -> saveProfile());
+
+        Button buttonSignOut = findViewById(R.id.buttonSignOut);
+        buttonSignOut.setOnClickListener(v -> signOut());
 
         loadProfile();
 
@@ -186,55 +192,102 @@ public class ProfileActivity extends AppCompatActivity {
         UiFx.startActivityWithTransition(this, intent);
     }
 
+
     private void loadProfile() {
+
+        SharedPreferences session = getSharedPreferences(
+                "GymTrackerSession",
+                MODE_PRIVATE
+        );
+
+        String loggedInEmail = session.getString("email", null);
+
         executor.execute(() -> {
             try {
-                List<User> users = database.userDao().getAllUsers();
+
+                User user = null;
+
+                if (loggedInEmail != null && !loggedInEmail.trim().isEmpty()) {
+                    user = database.userDao().getUserByEmail(loggedInEmail);
+                }
+
+                final User loadedUser = user;
 
                 runOnUiThread(() -> {
+
                     if (isFinishing() || isDestroyed()) {
                         return;
                     }
 
-                    if (users != null && !users.isEmpty()) {
-                        currentUser = users.get(0);
+                    currentUser = loadedUser;
+
+                    if (currentUser != null) {
+
                         textProfileDisplayName.setText(currentUser.getName());
 
                         editName.setText(currentUser.getName());
-                        editEmail.setText(currentUser.getEmail());
-                        editAge.setText(
-                                String.valueOf(currentUser.getAge()));
-                        editHeight.setText(
-                                String.valueOf(currentUser.getHeight()));
-                        editWeight.setText(
-                                String.valueOf(currentUser.getWeight()));
-                        editFitnessGoal.setText(
-                                currentUser.getFitnessGoal());
+                        editEmail.setText(loggedInEmail);
+
+                        editAge.setText(String.valueOf(currentUser.getAge()));
+                        editHeight.setText(String.valueOf(currentUser.getHeight()));
+                        editWeight.setText(String.valueOf(currentUser.getWeight()));
+
+                        editFitnessGoal.setText(currentUser.getFitnessGoal());
+
+                    } else {
+
+                        // No local profile exists for this account yet.
+                        textProfileDisplayName.setText("Your Profile");
+
+                        editName.setText("");
+                        editEmail.setText(loggedInEmail != null ? loggedInEmail : "");
+                        editAge.setText("");
+                        editHeight.setText("");
+                        editWeight.setText("");
+                        editFitnessGoal.setText("");
                     }
                 });
 
             } catch (Exception e) {
+
                 runOnUiThread(() -> {
                     if (!isFinishing() && !isDestroyed()) {
-                        Toast.makeText(this,
+                        Toast.makeText(
+                                ProfileActivity.this,
                                 "Could not load profile",
-                                Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_SHORT
+                        ).show();
                     }
                 });
             }
         });
     }
 
+
+
     private void saveProfile() {
+
         String name = editName.getText().toString().trim();
-        String email = editEmail.getText().toString().trim();
+        String enteredEmail = editEmail.getText().toString().trim();
         String ageText = editAge.getText().toString().trim();
         String heightText = editHeight.getText().toString().trim();
         String weightText = editWeight.getText().toString().trim();
-        String fitnessGoal =
-                editFitnessGoal.getText().toString().trim();
+        String fitnessGoal = editFitnessGoal.getText().toString().trim();
 
-        if (name.isEmpty() || email.isEmpty()
+        SharedPreferences session = getSharedPreferences(
+                "GymTrackerSession",
+                MODE_PRIVATE
+        );
+
+        String loggedInEmail = session.getString("email", null);
+
+        // Use the logged-in account email as the account identifier.
+        String accountEmail = loggedInEmail != null
+                && !loggedInEmail.trim().isEmpty()
+                ? loggedInEmail.trim()
+                : enteredEmail;
+
+        if (name.isEmpty() || accountEmail.isEmpty()
                 || ageText.isEmpty() || heightText.isEmpty()
                 || weightText.isEmpty() || fitnessGoal.isEmpty()) {
 
@@ -245,8 +298,18 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS
-                .matcher(email).matches()) {
+                .matcher(accountEmail).matches()) {
+
             editEmail.setError("Enter a valid email address");
+            return;
+        }
+
+        // A logged-in user cannot change the account identifier here.
+        if (loggedInEmail != null
+                && !loggedInEmail.trim().equalsIgnoreCase(enteredEmail)) {
+
+            editEmail.setError("Your account email cannot be changed here");
+            editEmail.setText(loggedInEmail);
             return;
         }
 
@@ -259,8 +322,7 @@ public class ProfileActivity extends AppCompatActivity {
             height = Double.parseDouble(heightText);
             weight = Double.parseDouble(weightText);
 
-            if (age <= 0 || age > 120
-                    || height <= 0 || weight <= 0) {
+            if (age <= 0 || age > 120 || height <= 0 || weight <= 0) {
                 Toast.makeText(this,
                         "Enter valid age, height and weight",
                         Toast.LENGTH_LONG).show();
@@ -276,34 +338,44 @@ public class ProfileActivity extends AppCompatActivity {
 
         executor.execute(() -> {
             try {
-                // Recheck the database before saving.
-                List<User> users = database.userDao().getAllUsers();
 
-                if (users != null && !users.isEmpty()) {
-                    currentUser = users.get(0);
-                }
+                // Find only this account's local profile.
+                User userToSave = database.userDao()
+                        .getUserByEmail(accountEmail);
 
-                if (currentUser == null) {
-                    currentUser = new User(
-                            name, email, age,
-                            height, weight, fitnessGoal
+                if (userToSave == null) {
+
+                    userToSave = new User(
+                            name,
+                            accountEmail,
+                            age,
+                            height,
+                            weight,
+                            fitnessGoal
                     );
 
-                    database.userDao().insertUser(currentUser);
+                    database.userDao().insertUser(userToSave);
 
                 } else {
-                    currentUser.setName(name);
-                    currentUser.setEmail(email);
-                    currentUser.setAge(age);
-                    currentUser.setHeight(height);
-                    currentUser.setWeight(weight);
-                    currentUser.setFitnessGoal(fitnessGoal);
 
-                    database.userDao().updateUser(currentUser);
+                    userToSave.setName(name);
+                    userToSave.setEmail(accountEmail);
+                    userToSave.setAge(age);
+                    userToSave.setHeight(height);
+                    userToSave.setWeight(weight);
+                    userToSave.setFitnessGoal(fitnessGoal);
+
+                    database.userDao().updateUser(userToSave);
                 }
+
+                User savedUser = userToSave;
 
                 runOnUiThread(() -> {
                     if (!isFinishing() && !isDestroyed()) {
+
+                        currentUser = savedUser;
+                        textProfileDisplayName.setText(savedUser.getName());
+
                         Toast.makeText(this,
                                 "Profile saved successfully",
                                 Toast.LENGTH_SHORT).show();
@@ -311,6 +383,7 @@ public class ProfileActivity extends AppCompatActivity {
                 });
 
             } catch (Exception e) {
+
                 runOnUiThread(() -> {
                     if (!isFinishing() && !isDestroyed()) {
                         Toast.makeText(this,
@@ -320,6 +393,59 @@ public class ProfileActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private String getAccountProfileImageKey() {
+        SharedPreferences session = getSharedPreferences(
+                "GymTrackerSession",
+                MODE_PRIVATE
+        );
+
+        String email = session.getString("email", null);
+
+        if (email == null || email.trim().isEmpty()) {
+            return KEY_PROFILE_IMAGE_URI;
+        }
+
+        return KEY_PROFILE_IMAGE_URI + "_" +
+                email.trim().toLowerCase(java.util.Locale.ROOT);
+    }
+
+
+    private void signOut() {
+
+        new androidx.appcompat.app.AlertDialog.Builder(ProfileActivity.this)
+                .setTitle("Sign Out?")
+                .setMessage("Are you sure you want to sign out of GymTrackerPro?")
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .setPositiveButton("Sign Out", (dialog, which) -> {
+
+                    SharedPreferences preferences = getSharedPreferences(
+                            "GymTrackerSession",
+                            MODE_PRIVATE
+                    );
+
+                    preferences.edit()
+                            .remove("accessToken")
+                            .remove("email")
+                            .remove("accountId")
+                            .apply();
+
+                    Intent intent = new Intent(
+                            ProfileActivity.this,
+                            MainActivity.class
+                    );
+
+                    intent.setFlags(
+                            Intent.FLAG_ACTIVITY_NEW_TASK |
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    );
+
+                    startActivity(intent);
+                })
+                .show();
     }
 
     @Override
