@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="22dp"
-            android:background="#172B4D"
+            android:background="@drawable/bg_glow_card"
             android:orientation="vertical"
             android:padding="18dp">
 
@@ -93,7 +93,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_card"
+            android:background="@drawable/bg_glow_card"
             android:orientation="vertical"
             android:padding="18dp">
 
@@ -126,9 +126,10 @@
             <EditText
                 android:id="@+id/editGoalType"
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
+                android:layout_height="56dp"
                 android:layout_marginTop="7dp"
-                android:backgroundTint="#3B82F6"
+                android:background="@drawable/bg_card"
+                android:backgroundTint="#60A5FA"
                 android:hint="e.g. Build muscle"
                 android:inputType="textCapSentences"
                 android:paddingHorizontal="12dp"
@@ -173,9 +174,10 @@
                     <EditText
                         android:id="@+id/editTargetValue"
                         android:layout_width="match_parent"
-                        android:layout_height="54dp"
+                        android:layout_height="56dp"
                         android:layout_marginTop="7dp"
-                        android:backgroundTint="#3B82F6"
+                        android:background="@drawable/bg_card"
+                        android:backgroundTint="#60A5FA"
                         android:hint="e.g. 70"
                         android:inputType="numberDecimal"
                         android:paddingHorizontal="10dp"
@@ -204,9 +206,10 @@
                     <EditText
                         android:id="@+id/editCurrentValue"
                         android:layout_width="match_parent"
-                        android:layout_height="54dp"
+                        android:layout_height="56dp"
                         android:layout_marginTop="7dp"
-                        android:backgroundTint="#3B82F6"
+                        android:background="@drawable/bg_card"
+                        android:backgroundTint="#60A5FA"
                         android:hint="e.g. 60"
                         android:inputType="numberDecimal"
                         android:paddingHorizontal="10dp"
@@ -233,11 +236,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="7dp"
-                android:backgroundTint="#334155"
+                android:backgroundTint="#1E40AF"
                 android:text="Select Target Date"
                 android:textAllCaps="false"
                 android:textColor="#F8FAFC"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textStyle="bold"/>
 
             <!-- Save goal -->
             <Button
@@ -245,7 +249,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="16dp"
-                android:backgroundTint="#2563EB"
+                android:backgroundTint="#3B82F6"
                 android:text="Save Fitness Goal"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
@@ -258,11 +262,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
-                android:backgroundTint="#23324A"
+                android:backgroundTint="#334155"
                 android:text="Refresh Goals"
                 android:textAllCaps="false"
                 android:textColor="#BFDBFE"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textStyle="bold"/>
 
         </LinearLayout>
 
@@ -271,7 +276,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:background="@drawable/bg_card"
+            android:background="@drawable/bg_glow_card"
             android:orientation="vertical"
             android:padding="18dp">
 
@@ -296,9 +301,9 @@
                 android:id="@+id/textGoalsList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="80dp"
-                android:background="#0F172A"
-                android:padding="16dp"
+                android:minHeight="100dp"
+                android:background="@drawable/bg_card"
+                android:padding="18dp"
                 android:text="Loading goals..."
                 android:textColor="#CBD5E1"
                 android:textSize="15sp"
