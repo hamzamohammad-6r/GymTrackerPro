@@ -327,6 +327,13 @@ public class MainActivity extends AppCompatActivity {
 
             String photoKey = "profile_image_uri";
 
+            SharedPreferences session = getSharedPreferences(
+                    "GymTrackerSession",
+                    MODE_PRIVATE
+            );
+
+            String loggedInEmail = session.getString("email", null);
+
             if (loggedInEmail != null && !loggedInEmail.trim().isEmpty()) {
                 photoKey = "profile_image_uri_" +
                         loggedInEmail.trim().toLowerCase(java.util.Locale.ROOT);
@@ -343,13 +350,6 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 photo.setImageResource(android.R.drawable.ic_menu_myplaces);
             }
-
-            SharedPreferences session = getSharedPreferences(
-                    "GymTrackerSession",
-                    MODE_PRIVATE
-            );
-
-            String loggedInEmail = session.getString("email", null);
 
             // Use a generic profile when nobody is logged in.
             tileTitle.setText("Profile");

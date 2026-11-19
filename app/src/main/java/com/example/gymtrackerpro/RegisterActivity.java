@@ -31,6 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText etHeight;
     private EditText etWeight;
     private EditText etFitnessGoal;
+
     private Button btnCreateAccount;
 
     private GymTrackerDatabase database;
@@ -69,6 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
         String email = etEmail.getText().toString().trim()
                 .toLowerCase();
         String password = etPassword.getText().toString();
+
         String ageText = etAge.getText().toString().trim();
         String heightText = etHeight.getText().toString().trim();
         String weightText = etWeight.getText().toString().trim();
@@ -109,6 +111,7 @@ public class RegisterActivity extends AppCompatActivity {
             weight = Double.parseDouble(weightText);
 
         } catch (NumberFormatException e) {
+
             Toast.makeText(this,
                     "Enter valid numbers for age, height and weight.",
                     Toast.LENGTH_SHORT).show();
@@ -116,6 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (age < 1 || age > 120 || height <= 0 || weight <= 0) {
+
             Toast.makeText(this,
                     "Please check your age, height and weight.",
                     Toast.LENGTH_SHORT).show();
@@ -135,6 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         btnCreateAccount.setEnabled(true);
                         btnCreateAccount.setText("CREATE ACCOUNT");
+
                         etEmail.setError(
                                 "This email already exists locally"
                         );
@@ -199,6 +204,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                             if (response.code() == 400
                                     || response.code() == 409) {
+
                                 etEmail.setError(
                                         "Registration details rejected. "
                                                 + "Check your email."
@@ -212,9 +218,26 @@ public class RegisterActivity extends AppCompatActivity {
                                     Toast.LENGTH_LONG
                             ).show();
 
-                            Log.e("RegisterActivity",
-                                    "Backend registration failed: "
-                                            + response.code());
+                            // Diagnostic logging
+                            try {
+                                String errorBody =
+                                        response.errorBody() != null
+                                                ? response.errorBody().string()
+                                                : "No error body returned";
+
+                                Log.e("RegisterActivity",
+                                        "Registration HTTP error: "
+                                                + response.code());
+
+                                Log.e("RegisterActivity",
+                                        "Registration error details: "
+                                                + errorBody);
+
+                            } catch (Exception e) {
+                                Log.e("RegisterActivity",
+                                        "Could not read registration error",
+                                        e);
+                            }
                         }
                     }
 
