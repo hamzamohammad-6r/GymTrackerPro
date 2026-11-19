@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -282,18 +284,19 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom Navigation -->
+    <!-- Fixed White Bottom Navigation -->
     <LinearLayout
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:background="#0B1120"
+        android:layout_height="70dp"
+        android:background="#FFFFFF"
         android:elevation="12dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingTop="6dp"
         android:paddingBottom="6dp">
 
+        <!-- Home -->
         <LinearLayout
             android:id="@+id/navHome"
             android:layout_width="0dp"
@@ -302,21 +305,22 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="⌂"
-                android:textColor="#94A3B8"
-                android:textSize="25sp" />
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_nav_home"
+                app:tint="#64748B"
+                android:contentDescription="Home" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Home"
-                android:textColor="#94A3B8"
+                android:textColor="#64748B"
                 android:textSize="11sp" />
         </LinearLayout>
 
+        <!-- Progress -->
         <LinearLayout
             android:id="@+id/navProgress"
             android:layout_width="0dp"
@@ -325,21 +329,22 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="▥"
-                android:textColor="#94A3B8"
-                android:textSize="23sp" />
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_nav_progress"
+                app:tint="#64748B"
+                android:contentDescription="Progress" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Progress"
-                android:textColor="#94A3B8"
+                android:textColor="#64748B"
                 android:textSize="11sp" />
         </LinearLayout>
 
+        <!-- Timer - Active -->
         <LinearLayout
             android:id="@+id/navTimer"
             android:layout_width="0dp"
@@ -348,22 +353,25 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="◷"
-                android:textColor="#3B82F6"
-                android:textSize="23sp" />
+            <ImageView
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_nav_icon_glow"
+                android:padding="9dp"
+                android:src="@drawable/ic_nav_timer"
+                app:tint="#2563EB"
+                android:contentDescription="Timer" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Timer"
-                android:textColor="#3B82F6"
+                android:textColor="#2563EB"
                 android:textSize="11sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <!-- Profile -->
         <LinearLayout
             android:id="@+id/navProfile"
             android:layout_width="0dp"
@@ -372,18 +380,18 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="●"
-                android:textColor="#94A3B8"
-                android:textSize="21sp" />
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_nav_profile"
+                app:tint="#64748B"
+                android:contentDescription="Profile" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Profile"
-                android:textColor="#94A3B8"
+                android:textColor="#64748B"
                 android:textSize="11sp" />
         </LinearLayout>
 
