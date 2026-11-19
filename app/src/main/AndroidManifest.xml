@@ -91,6 +91,10 @@
             android:name=".TimerActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ActiveWorkoutActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

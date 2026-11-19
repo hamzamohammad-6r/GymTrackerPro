@@ -1,4 +1,3 @@
-
 package com.example.gymtrackerpro;
 
 import androidx.room.Dao;

@@ -1,6 +1,7 @@
 package com.example.gymtrackerpro;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,8 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.util.Calendar;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,26 +34,36 @@ public class ProgramDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_program_detail);
         UiFx.applyEdgeToEdge(this);
 
         program = ProgramCatalog.byId(
-                getIntent().getStringExtra(EXTRA_PROGRAM_ID));
+                getIntent().getStringExtra(EXTRA_PROGRAM_ID)
+        );
 
         if (program == null) {
-            Toast.makeText(this, "Program not found.",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(
+                    this,
+                    "Program not found.",
+                    Toast.LENGTH_SHORT
+            ).show();
+
             finish();
             return;
         }
 
-        database = GymTrackerDatabase.getDatabase(getApplicationContext());
+        database = GymTrackerDatabase.getDatabase(
+                getApplicationContext()
+        );
+
         databaseExecutor = Executors.newSingleThreadExecutor();
 
         bindHeader();
         bindDays();
 
         buttonStart = findViewById(R.id.buttonStartProgram);
+
         buttonStart.setOnClickListener(v -> checkThenConfirm());
 
         UiFx.applyPressEffect(buttonStart);
@@ -64,6 +73,7 @@ public class ProgramDetailActivity extends AppCompatActivity {
     }
 
     private void bindHeader() {
+
         findViewById(R.id.viewDetailCover)
                 .setBackgroundResource(program.coverRes);
 
@@ -96,17 +106,23 @@ public class ProgramDetailActivity extends AppCompatActivity {
     }
 
     private void bindDays() {
+
         LinearLayout containerDays = findViewById(R.id.containerDays);
+
         LayoutInflater inflater = LayoutInflater.from(this);
 
         for (int i = 0; i < program.days.size(); i++) {
+
             ProgramCatalog.Day day = program.days.get(i);
 
             View dayView = inflater.inflate(
-                    R.layout.item_program_day, containerDays, false);
+                    R.layout.item_program_day,
+                    containerDays,
+                    false
+            );
 
             ((TextView) dayView.findViewById(R.id.textDayTitle))
-                    .setText("Day " + (i + 1) + " \u00b7 " + day.title);
+                    .setText("Day " + (i + 1) + " · " + day.title);
 
             ((TextView) dayView.findViewById(R.id.textDayWeekday))
                     .setText(day.weekday);
@@ -115,22 +131,28 @@ public class ProgramDetailActivity extends AppCompatActivity {
                     dayView.findViewById(R.id.containerDayExercises);
 
             for (ProgramCatalog.Entry entry : day.exercises) {
+
                 View row = inflater.inflate(
                         R.layout.item_program_exercise,
                         exerciseContainer,
-                        false);
+                        false
+                );
 
                 MuscleIcons.bind(
                         (ImageView) row.findViewById(R.id.imageMuscle),
-                        entry.muscleGroup);
+                        entry.muscleGroup
+                );
 
                 ((TextView) row.findViewById(R.id.textExName))
                         .setText(entry.exerciseName);
 
                 ((TextView) row.findViewById(R.id.textExNote))
-                        .setText(entry.muscleGroup
-                                + (entry.note == null || entry.note.isEmpty()
-                                ? "" : " \u00b7 " + entry.note));
+                        .setText(
+                                entry.muscleGroup
+                                        + (entry.note == null || entry.note.isEmpty()
+                                        ? ""
+                                        : " · " + entry.note)
+                        );
 
                 ((TextView) row.findViewById(R.id.textExSets))
                         .setText(entry.prescription());
@@ -142,110 +164,151 @@ public class ProgramDetailActivity extends AppCompatActivity {
         }
     }
 
-    /** Checks whether the program was already added, then asks to confirm. */
+    /**
+     * Opens the confirmation dialog before saving a programme.
+     */
     private void checkThenConfirm() {
-        buttonStart.setEnabled(false);
 
-        databaseExecutor.execute(() -> {
-            boolean alreadyAdded = false;
+        if (buttonStart == null) {
+            return;
+        }
 
-            try {
-                List<Workout> workouts =
-                        database.workoutDao().getAllWorkouts();
-
-                String prefix = program.shortName + " - ";
-
-                if (workouts != null) {
-                    for (Workout workout : workouts) {
-                        String name = workout.getWorkoutName();
-                        if (name != null && name.startsWith(prefix)) {
-                            alreadyAdded = true;
-                            break;
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Unable to check existing workouts", e);
-            }
-
-            final boolean duplicate = alreadyAdded;
-
-            runOnUiThread(() -> {
-                if (isFinishing() || isDestroyed()) {
-                    return;
-                }
-
-                buttonStart.setEnabled(true);
-                showConfirmDialog(duplicate);
-            });
-        });
+        showConfirmDialog();
     }
 
-    private void showConfirmDialog(boolean duplicate) {
+    /**
+     * Confirms that the user wants to start the selected programme.
+     */
+    private void showConfirmDialog() {
+
         StringBuilder days = new StringBuilder();
 
         for (int i = 0; i < program.days.size(); i++) {
+
             if (i > 0) {
-                days.append(i == program.days.size() - 1 ? " and " : ", ");
+                days.append(
+                        i == program.days.size() - 1
+                                ? " and "
+                                : ", "
+                );
             }
+
             days.append(program.days.get(i).weekday);
         }
 
-        String message = "This adds " + program.daysPerWeek()
-                + " workouts to My Workouts (" + days + "), "
-                + "with every exercise, set and rep already filled in. "
-                + "Repeat the week for " + program.weeks + " weeks.";
-
-        if (duplicate) {
-            message = "You already added this program before. "
-                    + "Adding it again creates another week of workouts.\n\n"
-                    + message;
-        }
+        String message =
+                "You are about to start " + program.title + ".\n\n"
+                        + "Training days: " + days + "\n"
+                        + "Duration: " + program.weeks + " weeks\n"
+                        + "Sessions per week: " + program.daysPerWeek()
+                        + "\n\n"
+                        + "Your exercises, sets and repetitions are "
+                        + "prescribed and cannot be changed.\n\n"
+                        + "If you already have an active programme, "
+                        + "this will replace it. Your previous workout "
+                        + "history will be preserved.";
 
         new MaterialAlertDialogBuilder(this)
                 .setTitle("Start " + program.title + "?")
                 .setMessage(message)
                 .setNegativeButton("Not now", null)
-                .setPositiveButton("Add to my week",
-                        (dialog, which) -> startProgram())
+                .setPositiveButton(
+                        "Start Programme",
+                        (dialog, which) -> startProgram()
+                )
                 .show();
     }
 
+    /**
+     * Saves the selected programme for the currently logged-in user.
+     * Existing workout history is preserved.
+     */
     private void startProgram() {
+
+        if (databaseExecutor == null || databaseExecutor.isShutdown()) {
+            return;
+        }
+
         buttonStart.setEnabled(false);
 
         databaseExecutor.execute(() -> {
-            ProgramImporter.Result result = null;
+
+            String errorMessage = null;
+            boolean success = false;
 
             try {
-                result = ProgramImporter.importProgram(
-                        database, program, Calendar.getInstance());
+
+                SharedPreferences session = getSharedPreferences(
+                        "GymTrackerSession",
+                        MODE_PRIVATE
+                );
+
+                String loggedInEmail = session.getString(
+                        "email",
+                        null
+                );
+
+                int userId = UserProgramManager.getCurrentUserId(
+                        database,
+                        loggedInEmail
+                );
+
+                UserProgramManager.selectProgram(
+                        database,
+                        userId,
+                        program.id
+                );
+
+                success = true;
+
             } catch (Exception e) {
-                Log.e(TAG, "Unable to import program", e);
+
+                Log.e(
+                        TAG,
+                        "Unable to save selected programme",
+                        e
+                );
+
+                errorMessage = e.getMessage();
             }
 
-            final ProgramImporter.Result finalResult = result;
+            final boolean saved = success;
+            final String error = errorMessage;
 
             runOnUiThread(() -> {
+
                 if (isFinishing() || isDestroyed()) {
                     return;
                 }
 
                 buttonStart.setEnabled(true);
 
-                if (finalResult == null) {
-                    Toast.makeText(this,
-                            "Sorry, we couldn't add this program.",
-                            Toast.LENGTH_LONG).show();
+                if (!saved) {
+
+                    Toast.makeText(
+                            this,
+                            error != null
+                                    ? error
+                                    : "Could not save your programme.",
+                            Toast.LENGTH_LONG
+                    ).show();
+
                     return;
                 }
 
-                Toast.makeText(this,
-                        "Added " + finalResult.workoutsAdded
-                                + " workouts. Let's go! \uD83D\uDCAA",
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(
+                        this,
+                        "Your programme has been saved!",
+                        Toast.LENGTH_SHORT
+                ).show();
 
-                startActivity(new Intent(this, WorkoutsActivity.class));
+                startActivity(
+                        new Intent(
+                                ProgramDetailActivity.this,
+                                WorkoutsActivity.class
+                        )
+                );
+
                 finish();
             });
         });
@@ -253,6 +316,7 @@ public class ProgramDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
 
         if (databaseExecutor != null) {

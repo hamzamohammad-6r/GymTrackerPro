@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.app.AlertDialog;
 import android.widget.Toast;
+import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.activity.OnBackPressedCallback;
@@ -95,17 +96,46 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
         UiFx.startActivityWithTransition(this, intent);
     }
 
+
     private void loadWorkoutHistory() {
         databaseExecutor.execute(() -> {
             try {
-                List<Workout> workouts =
-                        database.workoutDao().getAllWorkouts();
+                SharedPreferences session = getSharedPreferences(
+                        "GymTrackerSession",
+                        MODE_PRIVATE
+                );
+
+                String loggedInEmail = session.getString("email", null);
+
+                List<Workout> workouts;
+
+                if (loggedInEmail != null
+                        && !loggedInEmail.trim().isEmpty()) {
+
+                    User currentUser = database.userDao().getUserByEmail(
+                            loggedInEmail.trim()
+                    );
+
+                    if (currentUser != null) {
+                        workouts = database.workoutDao()
+                                .getWorkoutsForUser(currentUser.getUserId());
+                    } else {
+                        workouts = new java.util.ArrayList<>();
+                    }
+
+                } else {
+                    int guestUserId = LocalUser.getOrCreateId(database);
+
+                    workouts = database.workoutDao()
+                            .getWorkoutsForUser(guestUserId);
+                }
 
                 StringBuilder history = new StringBuilder();
                 int completed = 0;
                 int planned = 0;
 
                 for (Workout workout : workouts) {
+
                     if (workout.isCompleted()) {
                         completed++;
                     } else {
@@ -115,7 +145,8 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                     history.append(
                                     workout.isCompleted()
                                             ? "✓ COMPLETED\n"
-                                            : "○ PLANNED\n")
+                                            : "○ PLANNED\n"
+                            )
                             .append(workout.getWorkoutName())
                             .append("\nDate: ")
                             .append(workout.getWorkoutDate());
@@ -134,14 +165,17 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                 final int finalPlanned = planned;
 
                 final String historyText = total == 0
-                        ? "No workouts found yet. Create a workout to start your history."
+                        ? "No completed or planned workouts yet. Start your training programme to begin your history."
                         : history.toString();
 
                 runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) return;
+
                     textHistorySummary.setText(
                             "Total: " + total
                                     + " | Completed: " + finalCompleted
-                                    + " | Planned: " + finalPlanned);
+                                    + " | Planned: " + finalPlanned
+                    );
 
                     textWorkoutHistory.setText(historyText);
                 });
@@ -149,12 +183,17 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.e(TAG, "Unable to load workout history", e);
 
-                runOnUiThread(() ->
-                        textWorkoutHistory.setText(
-                                "Unable to load workout history."));
+                runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) return;
+
+                    textWorkoutHistory.setText(
+                            "Unable to load workout history."
+                    );
+                });
             }
         });
     }
+
 
     private void markWorkoutCompleted(Workout workout) {
         if (workout.isCompleted()) {

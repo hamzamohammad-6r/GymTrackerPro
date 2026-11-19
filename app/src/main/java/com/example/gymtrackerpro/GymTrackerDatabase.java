@@ -16,9 +16,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
                 Exercise.class,
                 WorkoutExercise.class,
                 Goal.class,
-                WorkoutMusic.class
+                WorkoutMusic.class,
+                UserProgram.class
         },
-        version = 4,
+        version = 5,
         exportSchema = false
 )
 public abstract class GymTrackerDatabase extends RoomDatabase {
@@ -71,6 +72,29 @@ public abstract class GymTrackerDatabase extends RoomDatabase {
                 }
             };
 
+    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+
+            database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `user_programs` (" +
+                            "`userProgramId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                            "`userId` INTEGER NOT NULL, " +
+                            "`programId` TEXT, " +
+                            "`startDate` TEXT, " +
+                            "`active` INTEGER NOT NULL, " +
+                            "FOREIGN KEY(`userId`) REFERENCES `users`(`userId`) " +
+                            "ON UPDATE NO ACTION ON DELETE CASCADE)"
+            );
+
+            database.execSQL(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS " +
+                            "`index_user_programs_userId` " +
+                            "ON `user_programs` (`userId`)"
+            );
+        }
+    };
+
     public abstract UserDao userDao();
 
     public abstract WorkoutDao workoutDao();
@@ -83,6 +107,8 @@ public abstract class GymTrackerDatabase extends RoomDatabase {
 
     public abstract WorkoutMusicDao workoutMusicDao();
 
+    public abstract UserProgramDao userProgramDao();
+
     public static GymTrackerDatabase getDatabase(Context context) {
 
         if (INSTANCE == null) {
@@ -94,7 +120,12 @@ public abstract class GymTrackerDatabase extends RoomDatabase {
                                     GymTrackerDatabase.class,
                                     "gymtracker_database"
                             )
-                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                            .addMigrations(
+                                    MIGRATION_1_2,
+                                    MIGRATION_2_3,
+                                    MIGRATION_3_4,
+                                    MIGRATION_4_5
+                            )
                             .build();
                 }
             }
