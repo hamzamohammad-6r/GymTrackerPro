@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -44,16 +43,21 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(v -> login());
 
         findViewById(R.id.textForgotPassword).setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+            Intent intent = new Intent(
+                    LoginActivity.this,
+                    ForgotPasswordActivity.class
+            );
             startActivity(intent);
         });
 
         textGoToRegister.setOnClickListener(v -> {
-            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            startActivity(new Intent(
+                    LoginActivity.this,
+                    RegisterActivity.class
+            ));
         });
 
         textContinueOffline.setOnClickListener(v -> openDashboard());
-
     }
 
     private void login() {
@@ -62,9 +66,13 @@ public class LoginActivity extends AppCompatActivity {
         String password = etPassword.getText().toString();
 
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this,
-                    "Please enter your email and password.",
-                    Toast.LENGTH_SHORT).show();
+
+            CustomNotification.show(
+                    this,
+                    "Missing Information",
+                    "Please enter your email address and password."
+            );
+
             return;
         }
 
@@ -75,74 +83,97 @@ public class LoginActivity extends AppCompatActivity {
         request.put("email", email);
         request.put("password", password);
 
-        authApi.login(request).enqueue(new Callback<Map<String, Object>>() {
+        authApi.login(request).enqueue(
+                new Callback<Map<String, Object>>() {
 
-            @Override
-            public void onResponse(
-                    Call<Map<String, Object>> call,
-                    Response<Map<String, Object>> response) {
+                    @Override
+                    public void onResponse(
+                            Call<Map<String, Object>> call,
+                            Response<Map<String, Object>> response
+                    ) {
 
-                btnLogin.setEnabled(true);
-                btnLogin.setText("Login");
+                        if (isFinishing() || isDestroyed()) return;
 
-                if (response.isSuccessful() && response.body() != null) {
+                        btnLogin.setEnabled(true);
+                        btnLogin.setText("Login");
 
-                    Map<String, Object> result = response.body();
+                        if (response.isSuccessful()
+                                && response.body() != null) {
 
-                    Object tokenObject = result.get("accessToken");
-                    Object accountIdObject = result.get("accountId");
+                            Map<String, Object> result = response.body();
 
-                    if (tokenObject == null) {
-                        Toast.makeText(LoginActivity.this,
-                                "Login response did not contain an access token.",
-                                Toast.LENGTH_LONG).show();
-                        return;
+                            Object tokenObject = result.get("accessToken");
+                            Object accountIdObject = result.get("accountId");
+
+                            if (tokenObject == null) {
+
+                                CustomNotification.show(
+                                        LoginActivity.this,
+                                        "Login Error",
+                                        "The login response did not contain an access token."
+                                );
+
+                                return;
+                            }
+
+                            String accessToken = tokenObject.toString();
+
+                            String accountId = accountIdObject == null
+                                    ? ""
+                                    : accountIdObject.toString();
+
+                            SharedPreferences preferences =
+                                    getSharedPreferences(
+                                            "GymTrackerSession",
+                                            MODE_PRIVATE
+                                    );
+
+                            preferences.edit()
+                                    .putString("accessToken", accessToken)
+                                    .putString("email", email)
+                                    .putString("accountId", accountId)
+                                    .apply();
+
+                            openDashboard();
+
+                        } else {
+
+                            CustomNotification.show(
+                                    LoginActivity.this,
+                                    "Login Failed",
+                                    "Check your email address and password, then try again."
+                            );
+                        }
                     }
 
-                    String accessToken = tokenObject.toString();
-                    String accountId = accountIdObject == null
-                            ? ""
-                            : accountIdObject.toString();
+                    @Override
+                    public void onFailure(
+                            Call<Map<String, Object>> call,
+                            Throwable t
+                    ) {
 
-                    SharedPreferences preferences =
-                            getSharedPreferences("GymTrackerSession", MODE_PRIVATE);
+                        if (isFinishing() || isDestroyed()) return;
 
-                    preferences.edit()
-                            .putString("accessToken", accessToken)
-                            .putString("email", email)
-                            .putString("accountId", accountId)
-                            .apply();
+                        btnLogin.setEnabled(true);
+                        btnLogin.setText("Login");
 
-                    Toast.makeText(LoginActivity.this,
-                            "Login successful!",
-                            Toast.LENGTH_SHORT).show();
-
-                    openDashboard();
-
-                } else {
-                    Toast.makeText(LoginActivity.this,
-                            "Login failed. Check your email and password.",
-                            Toast.LENGTH_LONG).show();
+                        CustomNotification.show(
+                                LoginActivity.this,
+                                "Connection Error",
+                                "Could not connect to the server. Check your Wi-Fi connection."
+                        );
+                    }
                 }
-            }
-
-            @Override
-            public void onFailure(
-                    Call<Map<String, Object>> call,
-                    Throwable t) {
-
-                btnLogin.setEnabled(true);
-                btnLogin.setText("Login");
-
-                Toast.makeText(LoginActivity.this,
-                        "Could not connect to the server. Check your Wi-Fi connection.",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+        );
     }
 
     private void openDashboard() {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+        Intent intent = new Intent(
+                LoginActivity.this,
+                MainActivity.class
+        );
+
         startActivity(intent);
         finish();
     }
