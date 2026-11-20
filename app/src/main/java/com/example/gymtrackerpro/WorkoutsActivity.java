@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.app.AlertDialog;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
-import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.view.View;
+import android.view.Gravity;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,10 +19,6 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import android.graphics.drawable.GradientDrawable;
-import android.view.View;
-import android.view.Gravity;
-import android.widget.LinearLayout;
 
 public class WorkoutsActivity extends AppCompatActivity {
 
@@ -70,7 +64,6 @@ public class WorkoutsActivity extends AppCompatActivity {
         loadSelectedProgram();
     }
 
-
     private void bindViews() {
 
         textSelectedProgramTitle =
@@ -103,7 +96,6 @@ public class WorkoutsActivity extends AppCompatActivity {
         buttonBackHome =
                 findViewById(R.id.buttonBackHome);
     }
-
 
     private void setupButtons() {
 
@@ -296,7 +288,6 @@ public class WorkoutsActivity extends AppCompatActivity {
 
         buttonStartNextWorkout.setEnabled(true);
     }
-
 
     private void displayWeeklySchedule() {
 
@@ -594,18 +585,16 @@ public class WorkoutsActivity extends AppCompatActivity {
                 .getDisplayMetrics().density + 0.5f);
     }
 
-
-
     private void showNextWorkoutPreview() {
 
         if (selectedProgram == null
                 || selectedProgram.days.isEmpty()) {
 
-            Toast.makeText(
+            CustomNotification.show(
                     this,
-                    "Please select a programme first.",
-                    Toast.LENGTH_SHORT
-            ).show();
+                    "Programme Required",
+                    "Please select a programme first."
+            );
 
             return;
         }
@@ -615,11 +604,11 @@ public class WorkoutsActivity extends AppCompatActivity {
 
         if (nextDay == null) {
 
-            Toast.makeText(
+            CustomNotification.show(
                     this,
-                    "No training day was found.",
-                    Toast.LENGTH_SHORT
-            ).show();
+                    "Training Day Not Found",
+                    "No training day was found in your selected programme."
+            );
 
             return;
         }
@@ -691,16 +680,20 @@ public class WorkoutsActivity extends AppCompatActivity {
 
                 runOnUiThread(() -> {
 
+                    if (isFinishing() || isDestroyed()) {
+                        return;
+                    }
+
                     buttonStartNextWorkout.setEnabled(true);
                     buttonStartNextWorkout.setText("Start Workout");
 
                     if (result.isCompleted()) {
 
-                        Toast.makeText(
+                        CustomNotification.show(
                                 WorkoutsActivity.this,
-                                "This session has already been completed.",
-                                Toast.LENGTH_LONG
-                        ).show();
+                                "Workout Already Completed",
+                                "This session has already been completed."
+                        );
 
                         return;
                     }
@@ -720,22 +713,29 @@ public class WorkoutsActivity extends AppCompatActivity {
 
             } catch (Exception e) {
 
+                Log.e(TAG, "Could not prepare workout", e);
+
                 runOnUiThread(() -> {
+
+                    if (isFinishing() || isDestroyed()) {
+                        return;
+                    }
 
                     buttonStartNextWorkout.setEnabled(true);
                     buttonStartNextWorkout.setText("Start Workout");
 
-                    Toast.makeText(
+                    CustomNotification.show(
                             WorkoutsActivity.this,
+                            "Workout Preparation Failed",
                             "Could not prepare your workout: "
-                                    + e.getMessage(),
-                            Toast.LENGTH_LONG
-                    ).show();
+                                    + (e.getMessage() == null
+                                    ? "Please try again."
+                                    : e.getMessage())
+                    );
                 });
             }
         });
     }
-
 
     private ProgramCatalog.Day getNextTrainingDay() {
 
@@ -779,6 +779,7 @@ public class WorkoutsActivity extends AppCompatActivity {
         String day = weekday.trim().toLowerCase(Locale.ROOT);
 
         switch (day) {
+
             case "monday":
                 return 0;
 
