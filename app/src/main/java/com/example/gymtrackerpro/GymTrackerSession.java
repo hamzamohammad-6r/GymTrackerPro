@@ -114,6 +114,7 @@ public class GymTrackerSession {
                         getAccountId(context)
                 );
             } catch (Exception e) {
+                clearSession(context);
                 return null;
             }
 
@@ -130,6 +131,7 @@ public class GymTrackerSession {
             int ivLength = 12;
 
             if (combined.length <= ivLength) {
+                clearSession(context);
                 return null;
             }
 

@@ -243,15 +243,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void loadProfile() {
 
-        SharedPreferences session = getSharedPreferences(
-                "GymTrackerSession",
-                MODE_PRIVATE
-        );
-
-        String loggedInEmail = session.getString(
-                "email",
-                null
-        );
+        String loggedInEmail = GymTrackerSession.getEmail(this);
 
         executor.execute(() -> {
 
@@ -370,15 +362,7 @@ public class ProfileActivity extends AppCompatActivity {
                 .toString()
                 .trim();
 
-        SharedPreferences session = getSharedPreferences(
-                "GymTrackerSession",
-                MODE_PRIVATE
-        );
-
-        String loggedInEmail = session.getString(
-                "email",
-                null
-        );
+        String loggedInEmail = GymTrackerSession.getEmail(this);
 
         // Use the logged-in account email as the account identifier.
 
@@ -547,15 +531,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private String getAccountProfileImageKey() {
 
-        SharedPreferences session = getSharedPreferences(
-                "GymTrackerSession",
-                MODE_PRIVATE
-        );
-
-        String email = session.getString(
-                "email",
-                null
-        );
+        String email = GymTrackerSession.getEmail(this);
 
         if (email == null || email.trim().isEmpty()) {
 
@@ -586,17 +562,7 @@ public class ProfileActivity extends AppCompatActivity {
                             // Clear only authentication information.
                             // Keep profile pictures and local user data.
 
-                            SharedPreferences preferences =
-                                    getSharedPreferences(
-                                            "GymTrackerSession",
-                                            MODE_PRIVATE
-                                    );
-
-                            preferences.edit()
-                                    .remove("accessToken")
-                                    .remove("email")
-                                    .remove("accountId")
-                                    .apply();
+                            GymTrackerSession.clearSession(this);
 
                             // Return directly to Login.
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+
+    <base-config cleartextTrafficPermitted="false">
+
+        <trust-anchors>
+            <!-- Keep normal Android system certificate trust -->
+            <certificates src="system" />
+
+            <!-- Trust the local GymTrackerPro development certificate -->
+            <certificates src="@raw/gymtrackerpro_local" />
+        </trust-anchors>
+
+    </base-config>
+
+</network-security-config>

@@ -5,11 +5,12 @@
 
     <application
         android:allowBackup="true"
-        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Gym Tracker Pro"
         android:supportsRtl="true"
-        android:theme="@style/Theme.GymTrackerPro">
+        android:theme="@style/Theme.GymTrackerPro"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:usesCleartextTraffic="false" >
 
         <!-- Splash Screen - Launcher Activity -->
         <activity
