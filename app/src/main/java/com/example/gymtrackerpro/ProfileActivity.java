@@ -583,6 +583,9 @@ public class ProfileActivity extends AppCompatActivity {
                         "Sign Out",
                         (dialog, which) -> {
 
+                            // Clear only authentication information.
+                            // Keep profile pictures and local user data.
+
                             SharedPreferences preferences =
                                     getSharedPreferences(
                                             "GymTrackerSession",
@@ -595,10 +598,14 @@ public class ProfileActivity extends AppCompatActivity {
                                     .remove("accountId")
                                     .apply();
 
+                            // Return directly to Login.
+
                             Intent intent = new Intent(
                                     ProfileActivity.this,
-                                    MainActivity.class
+                                    LoginActivity.class
                             );
+
+                            // Prevent returning to previous screens.
 
                             intent.setFlags(
                                     Intent.FLAG_ACTIVITY_NEW_TASK
@@ -606,6 +613,7 @@ public class ProfileActivity extends AppCompatActivity {
                             );
 
                             startActivity(intent);
+                            finish();
                         }
                 )
                 .show();

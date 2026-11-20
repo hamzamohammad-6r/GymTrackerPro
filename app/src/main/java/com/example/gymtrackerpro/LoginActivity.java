@@ -3,6 +3,7 @@ package com.example.gymtrackerpro;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -38,6 +39,11 @@ public class LoginActivity extends AppCompatActivity {
         textGoToRegister = findViewById(R.id.textGoToRegister);
         textContinueOffline = findViewById(R.id.textContinueOffline);
 
+        // Remove the offline login option.
+        if (textContinueOffline != null) {
+            textContinueOffline.setVisibility(View.GONE);
+        }
+
         authApi = ApiClient.getClient().create(AuthApi.class);
 
         btnLogin.setOnClickListener(v -> login());
@@ -56,8 +62,6 @@ public class LoginActivity extends AppCompatActivity {
                     RegisterActivity.class
             ));
         });
-
-        textContinueOffline.setOnClickListener(v -> openDashboard());
     }
 
     private void login() {
@@ -105,12 +109,13 @@ public class LoginActivity extends AppCompatActivity {
                             Object tokenObject = result.get("accessToken");
                             Object accountIdObject = result.get("accountId");
 
-                            if (tokenObject == null) {
+                            if (tokenObject == null
+                                    || tokenObject.toString().trim().isEmpty()) {
 
                                 CustomNotification.show(
                                         LoginActivity.this,
                                         "Login Error",
-                                        "The login response did not contain an access token."
+                                        "The login response did not contain a valid access token."
                                 );
 
                                 return;

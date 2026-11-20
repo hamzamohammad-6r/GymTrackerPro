@@ -3,14 +3,17 @@ package com.example.gymtrackerpro;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +21,7 @@ import androidx.core.graphics.ColorUtils;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
@@ -25,11 +29,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.widget.ScrollView;
-import java.util.ArrayList;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,7 +44,9 @@ public class MainActivity extends AppCompatActivity {
             "Show up. Do the work. Repeat."
     };
 
-    /** Everything the dashboard needs, gathered off the main thread. */
+    /**
+     * Everything the dashboard needs, gathered off the main thread.
+     */
     private static class Dashboard {
         int total;
         int completed;
@@ -87,7 +88,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView textTodayTitle;
     private TextView textTodaySub;
     private TextView textProgressCaption;
+
     private Button buttonTodayAction;
+
     private View cardToday;
     private LinearProgressIndicator progressCompletion;
 
@@ -96,15 +99,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Prevent access to the dashboard without a login session.
+        if (redirectToLoginIfNeeded()) {
+            return;
+        }
+
         setContentView(R.layout.activity_main);
+
         UiFx.applyEdgeToEdge(this);
 
-        // Match Android status bar to GymTrackerPro theme
-        getWindow().setStatusBarColor(Color.parseColor("#0B1120"));
+        // Match Android status bar to GymTrackerPro theme.
+        getWindow().setStatusBarColor(
+                Color.parseColor("#0B1120")
+        );
 
         getWindow().getDecorView().setSystemUiVisibility(0);
 
-        database = GymTrackerDatabase.getDatabase(getApplicationContext());
+        database = GymTrackerDatabase.getDatabase(
+                getApplicationContext()
+        );
+
         databaseExecutor = Executors.newSingleThreadExecutor();
 
         initializeViews();
@@ -115,74 +130,137 @@ public class MainActivity extends AppCompatActivity {
         // Fill the exercise library on first launch.
         databaseExecutor.execute(() ->
                 ExerciseSeeder.seedIfNeeded(
-                        getApplicationContext(), database));
+                        getApplicationContext(),
+                        database
+                )
+        );
 
-        // The dashboard itself loads in onResume(), which runs right after
-        // onCreate() and again whenever you return to this screen.
+        // The dashboard itself loads in onResume().
 
         UiFx.staggerIn(
                 findViewById(R.id.headerRow),
                 cardToday,
                 findViewById(R.id.cardStats),
                 findViewById(R.id.sectionPrograms),
-                findViewById(R.id.containerTiles));
+                findViewById(R.id.containerTiles)
+        );
+    }
+
+    /**
+     * Checks whether the user has an authenticated local session.
+     * Redirects to LoginActivity if the session is missing.
+     */
+    private boolean redirectToLoginIfNeeded() {
+
+        SharedPreferences preferences = getSharedPreferences(
+                "GymTrackerSession",
+                MODE_PRIVATE
+        );
+
+        String accessToken = preferences.getString(
+                "accessToken",
+                null
+        );
+
+        String email = preferences.getString(
+                "email",
+                null
+        );
+
+        boolean isAuthenticated =
+                accessToken != null
+                        && !accessToken.trim().isEmpty()
+                        && email != null
+                        && !email.trim().isEmpty();
+
+        if (!isAuthenticated) {
+
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    LoginActivity.class
+            );
+
+            intent.setFlags(
+                    Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK
+            );
+
+            startActivity(intent);
+            finish();
+
+            return true;
+        }
+
+        return false;
     }
 
     private void initializeViews() {
+
         scrollHome = findViewById(R.id.scrollHome);
+
         textTotalWorkouts = findViewById(R.id.textTotalWorkouts);
         textCompletedWorkouts = findViewById(R.id.textCompletedWorkouts);
         textPlannedWorkouts = findViewById(R.id.textPlannedWorkouts);
         textCompletionRate = findViewById(R.id.textCompletionRate);
         textStreak = findViewById(R.id.textStreak);
+
         textTodayLabel = findViewById(R.id.textTodayLabel);
         textTodayTitle = findViewById(R.id.textTodayTitle);
         textTodaySub = findViewById(R.id.textTodaySub);
+
         textProgressCaption = findViewById(R.id.textProgressCaption);
+
         buttonTodayAction = findViewById(R.id.buttonTodayAction);
+
         cardToday = findViewById(R.id.cardToday);
+
         progressCompletion = findViewById(R.id.progressCompletion);
 
         UiFx.applyPressEffect(cardToday);
 
         findViewById(R.id.textSeeAllPrograms).setOnClickListener(v ->
-                openActivity(ProgramsActivity.class));
-
-        findViewById(R.id.textSeeAllPrograms).setOnClickListener(v ->
-                openActivity(ProgramsActivity.class));
+                openActivity(ProgramsActivity.class)
+        );
 
         findViewById(R.id.buttonOpenRegister).setOnClickListener(v ->
-                openActivity(RegisterActivity.class));
+                openActivity(RegisterActivity.class)
+        );
 
         findViewById(R.id.buttonOpenLogin).setOnClickListener(v ->
-                openActivity(LoginActivity.class));
+                openActivity(LoginActivity.class)
+        );
 
-        // Bottom navigation
-        // Home
+        // Bottom navigation.
+
+        // Home.
         findViewById(R.id.navHome).setOnClickListener(v -> {
             scrollHome.smoothScrollTo(0, 0);
         });
 
-        // Progress
+        // Progress.
         findViewById(R.id.navProgress).setOnClickListener(v -> {
             openActivity(WorkoutHistoryActivity.class);
         });
 
-        // Profile
+        // Profile.
         findViewById(R.id.navProfile).setOnClickListener(v -> {
             openActivity(ProfileActivity.class);
         });
 
+        // Timer.
         findViewById(R.id.navTimer).setOnClickListener(v -> {
             openActivity(TimerActivity.class);
         });
     }
 
     private void setGreeting() {
+
         Calendar now = Calendar.getInstance();
+
         int hour = now.get(Calendar.HOUR_OF_DAY);
 
         String greeting;
+
         if (hour < 12) {
             greeting = "GOOD MORNING";
         } else if (hour < 18) {
@@ -191,18 +269,26 @@ public class MainActivity extends AppCompatActivity {
             greeting = "GOOD EVENING";
         }
 
-        ((TextView) findViewById(R.id.textGreeting)).setText(greeting);
+        ((TextView) findViewById(R.id.textGreeting))
+                .setText(greeting);
 
         int index = now.get(Calendar.DAY_OF_YEAR) % MOTIVATION.length;
+
         ((TextView) findViewById(R.id.textMotivation))
                 .setText(MOTIVATION[index]);
     }
 
     private void buildProgramsCarousel() {
+
         LinearLayout container = findViewById(R.id.containerPrograms);
 
         for (ProgramCatalog.Program program : ProgramCatalog.all()) {
-            View card = ProgramCardBinder.create(this, container, program);
+
+            View card = ProgramCardBinder.create(
+                    this,
+                    container,
+                    program
+            );
 
             LinearLayout.LayoutParams params =
                     (LinearLayout.LayoutParams) card.getLayoutParams();
@@ -215,55 +301,108 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void buildTiles() {
+
         LinearLayout container = findViewById(R.id.containerTiles);
 
         Tile[] tiles = {
-                new Tile("Programs", "Free plans to follow",
-                        R.drawable.ic_tile_programs, R.drawable.photo_programs,
-                        "#3B82F6", ProgramsActivity.class),
 
-                new Tile("My Workouts", "Plan your training days",
-                        R.drawable.ic_tile_workouts, R.drawable.photo_workouts,
-                        "#3B82F6", WorkoutsActivity.class),
+                new Tile(
+                        "Programs",
+                        "Free plans to follow",
+                        R.drawable.ic_tile_programs,
+                        R.drawable.photo_programs,
+                        "#3B82F6",
+                        ProgramsActivity.class
+                ),
 
-                new Tile("Exercises", "Your exercise library",
-                        R.drawable.ic_tile_exercises, R.drawable.photo_exercises,
-                        "#3B82F6", ExercisesActivity.class),
+                new Tile(
+                        "My Workouts",
+                        "Plan your training days",
+                        R.drawable.ic_tile_workouts,
+                        R.drawable.photo_workouts,
+                        "#3B82F6",
+                        WorkoutsActivity.class
+                ),
 
-                new Tile("Workout Plan", "Sets, reps and weights",
-                        R.drawable.ic_tile_plan, R.drawable.photo_plan,
-                        "#3B82F6", WorkoutExercisesActivity.class),
+                new Tile(
+                        "Exercises",
+                        "Your exercise library",
+                        R.drawable.ic_tile_exercises,
+                        R.drawable.photo_exercises,
+                        "#3B82F6",
+                        ExercisesActivity.class
+                ),
 
-                new Tile("History", "Look back at your work",
-                        R.drawable.ic_tile_history, R.drawable.photo_history,
-                        "#3B82F6", WorkoutHistoryActivity.class),
+                new Tile(
+                        "Workout Plan",
+                        "Sets, reps and weights",
+                        R.drawable.ic_tile_plan,
+                        R.drawable.photo_plan,
+                        "#3B82F6",
+                        WorkoutExercisesActivity.class
+                ),
 
-                new Tile("Music", "A playlist per workout",
-                        R.drawable.ic_tile_music, R.drawable.photo_music,
-                        "#3B82F6", WorkoutMusicActivity.class),
+                new Tile(
+                        "History",
+                        "Look back at your work",
+                        R.drawable.ic_tile_history,
+                        R.drawable.photo_history,
+                        "#3B82F6",
+                        WorkoutHistoryActivity.class
+                ),
 
-                new Tile("Goals", "Set targets and hit them",
-                        R.drawable.ic_tile_goals, R.drawable.photo_goals,
-                        "#3B82F6", GoalsActivity.class),
+                new Tile(
+                        "Music",
+                        "A playlist per workout",
+                        R.drawable.ic_tile_music,
+                        R.drawable.photo_music,
+                        "#3B82F6",
+                        WorkoutMusicActivity.class
+                ),
 
-                new Tile("Profile", "Your personal details",
-                        R.drawable.ic_tile_profile, R.drawable.photo_profile,
-                        "#3B82F6", ProfileActivity.class)
+                new Tile(
+                        "Goals",
+                        "Set targets and hit them",
+                        R.drawable.ic_tile_goals,
+                        R.drawable.photo_goals,
+                        "#3B82F6",
+                        GoalsActivity.class
+                ),
+
+                new Tile(
+                        "Profile",
+                        "Your personal details",
+                        R.drawable.ic_tile_profile,
+                        R.drawable.photo_profile,
+                        "#3B82F6",
+                        ProfileActivity.class
+                )
         };
 
         for (int i = 0; i < tiles.length; i += 2) {
+
             LinearLayout row = new LinearLayout(this);
+
             row.setOrientation(LinearLayout.HORIZONTAL);
 
-            LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams rowParams =
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+
             rowParams.bottomMargin = UiFx.dp(container, 12);
+
             row.setLayoutParams(rowParams);
 
             for (int j = 0; j < 2; j++) {
+
                 if (i + j < tiles.length) {
-                    View tile = createTile(row, tiles[i + j]);
+
+                    View tile = createTile(
+                            row,
+                            tiles[i + j]
+                    );
 
                     LinearLayout.LayoutParams params =
                             (LinearLayout.LayoutParams) tile.getLayoutParams();
@@ -283,39 +422,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private View createTile(LinearLayout parent, final Tile tile) {
-        View view = getLayoutInflater()
-                .inflate(R.layout.item_home_tile, parent, false);
 
-        // Apply the new premium electric-blue tile background.
+        View view = getLayoutInflater().inflate(
+                R.layout.item_home_tile,
+                parent,
+                false
+        );
+
+        // Apply the premium electric-blue tile background.
         view.setBackgroundResource(R.drawable.bg_home_tile_neon);
 
         int color = Color.parseColor(tile.color);
 
         ImageView photo = view.findViewById(R.id.imageTilePhoto);
+
         photo.setImageResource(tile.photo);
         photo.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-
         ImageView icon = view.findViewById(R.id.imageTileIcon);
+
         icon.setImageResource(tile.icon);
 
         icon.setImageTintList(
-                ColorStateList.valueOf(Color.parseColor("#FFFFFF"))
+                ColorStateList.valueOf(
+                        Color.parseColor("#FFFFFF")
+                )
         );
 
         icon.setBackgroundResource(R.drawable.bg_tile_icon_neon);
         icon.setElevation(8f);
 
+        TextView tileTitle = view.findViewById(R.id.textTileTitle);
 
-        TextView tileTitle =
-                view.findViewById(R.id.textTileTitle);
-
-        TextView tileSubtitle =
-                view.findViewById(R.id.textTileSubtitle);
+        TextView tileSubtitle = view.findViewById(R.id.textTileSubtitle);
 
         tileTitle.setText(tile.title);
         tileSubtitle.setText(tile.subtitle);
-
 
         // Custom details for the Profile tile only.
         if (tile.target == ProfileActivity.class) {
@@ -334,40 +476,55 @@ public class MainActivity extends AppCompatActivity {
 
             String loggedInEmail = session.getString("email", null);
 
-            if (loggedInEmail != null && !loggedInEmail.trim().isEmpty()) {
-                photoKey = "profile_image_uri_" +
-                        loggedInEmail.trim().toLowerCase(java.util.Locale.ROOT);
+            if (loggedInEmail != null
+                    && !loggedInEmail.trim().isEmpty()) {
+
+                photoKey = "profile_image_uri_"
+                        + loggedInEmail.trim().toLowerCase(Locale.ROOT);
             }
 
             String savedPhoto = profilePrefs.getString(photoKey, null);
 
             if (savedPhoto != null) {
+
                 try {
                     photo.setImageURI(Uri.parse(savedPhoto));
+
                 } catch (Exception e) {
-                    photo.setImageResource(android.R.drawable.ic_menu_myplaces);
+
+                    photo.setImageResource(
+                            android.R.drawable.ic_menu_myplaces
+                    );
                 }
+
             } else {
-                photo.setImageResource(android.R.drawable.ic_menu_myplaces);
+
+                photo.setImageResource(
+                        android.R.drawable.ic_menu_myplaces
+                );
             }
 
-            // Use a generic profile when nobody is logged in.
             tileTitle.setText("Profile");
             tileSubtitle.setText("Your personal details");
 
-            if (loggedInEmail != null && !loggedInEmail.trim().isEmpty()) {
+            if (loggedInEmail != null
+                    && !loggedInEmail.trim().isEmpty()) {
 
                 databaseExecutor.execute(() -> {
+
                     try {
+
                         User user = database.userDao()
                                 .getUserByEmail(loggedInEmail);
 
                         runOnUiThread(() -> {
+
                             if (isFinishing() || isDestroyed()) {
                                 return;
                             }
 
                             if (user != null) {
+
                                 tileTitle.setText(user.getName());
 
                                 tileSubtitle.setText(
@@ -380,12 +537,20 @@ public class MainActivity extends AppCompatActivity {
                         });
 
                     } catch (Exception e) {
-                        Log.e(TAG, "Could not load account profile", e);
+
+                        Log.e(
+                                TAG,
+                                "Could not load account profile",
+                                e
+                        );
                     }
                 });
             }
         }
-        view.setOnClickListener(v -> openActivity(tile.target));
+
+        view.setOnClickListener(v ->
+                openActivity(tile.target)
+        );
 
         UiFx.applyPressEffect(view);
 
@@ -393,7 +558,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openActivity(Class<? extends Activity> activityClass) {
+
         Intent intent = new Intent(this, activityClass);
+
         UiFx.startActivityWithTransition(this, intent);
     }
 
@@ -402,60 +569,81 @@ public class MainActivity extends AppCompatActivity {
     // ------------------------------------------------------------------
 
     private void loadDashboard() {
+
         databaseExecutor.execute(() -> {
+
             final Dashboard data = new Dashboard();
 
             try {
+
                 SharedPreferences session = getSharedPreferences(
                         "GymTrackerSession",
                         MODE_PRIVATE
                 );
 
                 String loggedInEmail = session.getString("email", null);
+
                 List<Workout> workouts;
 
-                if (loggedInEmail != null && !loggedInEmail.trim().isEmpty()) {
+                if (loggedInEmail != null
+                        && !loggedInEmail.trim().isEmpty()) {
 
                     User currentUser = database.userDao()
                             .getUserByEmail(loggedInEmail);
 
                     if (currentUser != null) {
+
                         workouts = database.workoutDao()
-                                .getWorkoutsForUser(currentUser.getUserId());
+                                .getWorkoutsForUser(
+                                        currentUser.getUserId()
+                                );
+
                     } else {
+
                         workouts = new ArrayList<>();
                     }
 
                 } else {
-                    // Continue Offline: preserve existing local workout data.
-                    workouts = database.workoutDao().getAllWorkouts();
+
+                    // Never load all users' workouts without an account.
+                    workouts = new ArrayList<>();
                 }
 
                 if (workouts != null) {
+
                     String today = formatDate(Calendar.getInstance());
+
                     Set<String> completedDates = new HashSet<>();
 
                     data.total = workouts.size();
 
                     for (Workout workout : workouts) {
+
                         if (workout == null) {
                             continue;
                         }
 
                         if (workout.isCompleted()) {
+
                             data.completed++;
 
                             if (workout.getWorkoutDate() != null) {
-                                completedDates.add(workout.getWorkoutDate());
+                                completedDates.add(
+                                        workout.getWorkoutDate()
+                                );
                             }
                         }
 
                         if (today.equals(workout.getWorkoutDate())) {
+
                             if (workout.isCompleted()) {
+
                                 if (data.todayDone == null) {
                                     data.todayDone = workout.getWorkoutName();
                                 }
+
                             } else if (data.todayPlanned == null) {
+
                                 data.todayPlanned = workout.getWorkoutName();
                             }
                         }
@@ -467,16 +655,23 @@ public class MainActivity extends AppCompatActivity {
                 data.planned = data.total - data.completed;
 
                 if (data.total > 0) {
+
                     data.rate = Math.round(
                             (data.completed * 100.0f) / data.total
                     );
                 }
 
             } catch (Exception e) {
-                Log.e(TAG, "Unable to load dashboard", e);
+
+                Log.e(
+                        TAG,
+                        "Unable to load dashboard",
+                        e
+                );
             }
 
             runOnUiThread(() -> {
+
                 if (isFinishing() || isDestroyed()) {
                     return;
                 }
@@ -486,11 +681,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /** Consecutive days with a completed workout, ending today or yesterday. */
+    /**
+     * Consecutive days with a completed workout,
+     * ending today or yesterday.
+     */
     private int computeStreak(Set<String> completedDates) {
+
         Calendar day = Calendar.getInstance();
 
         if (!completedDates.contains(formatDate(day))) {
+
             // Today is still open, so the streak may end yesterday.
             day.add(Calendar.DAY_OF_MONTH, -1);
         }
@@ -498,7 +698,9 @@ public class MainActivity extends AppCompatActivity {
         int streak = 0;
 
         while (completedDates.contains(formatDate(day))) {
+
             streak++;
+
             day.add(Calendar.DAY_OF_MONTH, -1);
         }
 
@@ -506,32 +708,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String formatDate(Calendar calendar) {
+
         return String.format(
                 Locale.US,
                 "%04d-%02d-%02d",
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH) + 1,
-                calendar.get(Calendar.DAY_OF_MONTH));
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
     }
 
     private void renderDashboard(Dashboard data) {
+
         animateNumber(textTotalWorkouts, data.total, "");
+
         animateNumber(textCompletedWorkouts, data.completed, "");
+
         animateNumber(textPlannedWorkouts, data.planned, "");
+
         animateNumber(textCompletionRate, data.rate, "%");
 
         progressCompletion.setProgressCompat(data.rate, true);
 
         if (data.total == 0) {
+
             textProgressCaption.setText(
-                    "Add your first workout to start tracking progress.");
+                    "Add your first workout to start tracking progress."
+            );
+
         } else if (data.rate >= 100) {
+
             textProgressCaption.setText(
-                    "Every planned workout is done. Amazing!");
+                    "Every planned workout is done. Amazing!"
+            );
+
         } else {
+
             textProgressCaption.setText(
                     data.completed + " of " + data.total
-                            + " workouts completed. Keep going!");
+                            + " workouts completed. Keep going!"
+            );
         }
 
         textStreak.setText(String.valueOf(data.streak));
@@ -540,82 +756,157 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void renderToday(Dashboard data) {
+
         final Class<? extends Activity> target;
 
         if (data.todayPlanned != null) {
+
             textTodayLabel.setText("TODAY'S WORKOUT");
+
             textTodayTitle.setText(data.todayPlanned);
+
             textTodaySub.setText(
-                    "Planned for today. Open your workouts when you're ready.");
+                    "Planned for today. Open your workouts when you're ready."
+            );
+
             buttonTodayAction.setText("Open workouts");
+
             target = WorkoutsActivity.class;
 
         } else if (data.todayDone != null) {
+
             textTodayLabel.setText("TODAY'S WORKOUT");
-            textTodayTitle.setText("Nice work! \uD83C\uDF89");
+
+            textTodayTitle.setText("Nice work! 🎉");
+
             textTodaySub.setText(
-                    data.todayDone + " is complete. Rest up and refuel.");
+                    data.todayDone + " is complete. Rest up and refuel."
+            );
+
             buttonTodayAction.setText("View history");
+
             target = WorkoutHistoryActivity.class;
 
         } else if (data.total == 0) {
+
             textTodayLabel.setText("GET STARTED");
+
             textTodayTitle.setText("Build your first week");
+
             textTodaySub.setText(
                     "Pick a free program and we'll fill in the exercises, "
-                            + "sets and reps for you.");
+                            + "sets and reps for you."
+            );
+
             buttonTodayAction.setText("Browse programs");
+
             target = ProgramsActivity.class;
 
         } else {
+
             textTodayLabel.setText("REST DAY?");
+
             textTodayTitle.setText("Nothing planned today");
+
             textTodaySub.setText(
-                    "Take it easy, or add a session to your week.");
+                    "Take it easy, or add a session to your week."
+            );
+
             buttonTodayAction.setText("Plan a workout");
+
             target = WorkoutsActivity.class;
         }
 
-        View.OnClickListener listener = v -> openActivity(target);
+        View.OnClickListener listener = v ->
+                openActivity(target);
+
         cardToday.setOnClickListener(listener);
+
         buttonTodayAction.setOnClickListener(listener);
     }
 
-    private void animateNumber(final TextView view, int to,
-                               final String suffix) {
+    private void animateNumber(
+            final TextView view,
+            int to,
+            final String suffix
+    ) {
+
         ValueAnimator animator = ValueAnimator.ofInt(0, to);
+
         animator.setDuration(650);
+
         animator.addUpdateListener(a ->
-                view.setText(a.getAnimatedValue() + suffix));
+                view.setText(a.getAnimatedValue() + suffix)
+        );
+
         animator.start();
     }
 
     @Override
     protected void onResume() {
+
         super.onResume();
+
+        // Recheck authentication whenever the dashboard resumes.
+        if (redirectToLoginIfNeeded()) {
+            return;
+        }
 
         updateAuthenticationButtons();
 
         // Refresh after returning from another screen.
-        if (databaseExecutor != null && !databaseExecutor.isShutdown()) {
+        if (databaseExecutor != null
+                && !databaseExecutor.isShutdown()) {
+
             loadDashboard();
         }
     }
 
     private void updateAuthenticationButtons() {
+
         SharedPreferences preferences = getSharedPreferences(
                 "GymTrackerSession",
                 MODE_PRIVATE
         );
 
-        String accessToken = preferences.getString("accessToken", null);
+        String accessToken = preferences.getString(
+                "accessToken",
+                null
+        );
 
-        boolean isLoggedIn = accessToken != null && !accessToken.trim().isEmpty();
+        String email = preferences.getString(
+                "email",
+                null
+        );
+
+        boolean isLoggedIn =
+                accessToken != null
+                        && !accessToken.trim().isEmpty()
+                        && email != null
+                        && !email.trim().isEmpty();
 
         Button loginButton = findViewById(R.id.buttonOpenLogin);
+
         Button registerButton = findViewById(R.id.buttonOpenRegister);
 
-        loginButton.setVisibility(isLoggedIn ? View.GONE : View.VISIBLE);
-        registerButton.setVisibility(isLoggedIn ? View.GONE : View.VISIBLE);
+        loginButton.setVisibility(
+                isLoggedIn ? View.GONE : View.VISIBLE
+        );
+
+        registerButton.setVisibility(
+                isLoggedIn ? View.GONE : View.VISIBLE
+        );
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        if (databaseExecutor != null
+                && !databaseExecutor.isShutdown()) {
+
+            databaseExecutor.shutdown();
+        }
+
+        super.onDestroy();
     }
 }
