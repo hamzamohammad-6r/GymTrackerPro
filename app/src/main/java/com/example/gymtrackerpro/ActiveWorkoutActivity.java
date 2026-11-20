@@ -4,23 +4,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.widget.SeekBar;
 
-import java.util.ArrayList;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
@@ -79,14 +74,19 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         UiFx.applyEdgeToEdge(this);
+
         getWindow().setStatusBarColor(
                 android.graphics.Color.parseColor("#0B1120")
         );
+
         getWindow().getDecorView().setSystemUiVisibility(0);
 
         setContentView(R.layout.activity_active_workout);
 
-        database = GymTrackerDatabase.getDatabase(getApplicationContext());
+        database = GymTrackerDatabase.getDatabase(
+                getApplicationContext()
+        );
+
         databaseExecutor = Executors.newSingleThreadExecutor();
 
         workoutId = getIntent().getIntExtra(EXTRA_WORKOUT_ID, -1);
@@ -111,19 +111,30 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
 
         seekActiveMusic.setEnabled(false);
 
-        buttonActiveMusicPlayPause = findViewById(R.id.buttonActiveMusicPlayPause);
-        buttonActiveMusicNext = findViewById(R.id.buttonActiveMusicNext);
-        buttonActiveMusicStop = findViewById(R.id.buttonActiveMusicStop);
+        buttonActiveMusicPlayPause =
+                findViewById(R.id.buttonActiveMusicPlayPause);
+
+        buttonActiveMusicNext =
+                findViewById(R.id.buttonActiveMusicNext);
+
+        buttonActiveMusicStop =
+                findViewById(R.id.buttonActiveMusicStop);
 
         buttonActiveMusicPlayPause.setEnabled(false);
         buttonActiveMusicNext.setEnabled(false);
         buttonActiveMusicStop.setEnabled(false);
 
-        buttonActiveMusicPlayPause.setOnClickListener(v -> toggleWorkoutMusic());
+        buttonActiveMusicPlayPause.setOnClickListener(
+                v -> toggleWorkoutMusic()
+        );
 
-        buttonActiveMusicNext.setOnClickListener(v -> playNextWorkoutSong());
+        buttonActiveMusicNext.setOnClickListener(
+                v -> playNextWorkoutSong()
+        );
 
-        buttonActiveMusicStop.setOnClickListener(v -> stopWorkoutMusic());
+        buttonActiveMusicStop.setOnClickListener(
+                v -> stopWorkoutMusic()
+        );
 
         seekActiveMusic.setOnSeekBarChangeListener(
                 new SeekBar.OnSeekBarChangeListener() {
@@ -183,7 +194,6 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
 
         loadWorkout();
     }
-
 
     private void loadWorkout() {
 
@@ -246,7 +256,7 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
                                 .getExercisesForWorkout(workoutId);
 
                 // Retrieve exercise details on the background thread.
-                List<Exercise> exercises = new java.util.ArrayList<>();
+                List<Exercise> exercises = new ArrayList<>();
 
                 for (WorkoutExercise workoutExercise : workoutExercises) {
 
@@ -297,8 +307,6 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
         });
     }
 
-
-
     private void displayWorkout(
             Workout workout,
             List<WorkoutExercise> workoutExercises,
@@ -348,25 +356,31 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
         }
     }
 
-
     private void initializeWorkoutMusic() {
 
         if (assignedWorkoutMusic.isEmpty()) {
+
             textActiveMusicTitle.setText("No song assigned");
-            textActiveMusicStatus.setText("Assign music to this workout to get started.");
+
+            textActiveMusicStatus.setText(
+                    "Assign music to this workout to get started."
+            );
 
             buttonActiveMusicPlayPause.setEnabled(false);
             buttonActiveMusicNext.setEnabled(false);
             buttonActiveMusicStop.setEnabled(false);
+
             return;
         }
 
         currentMusicIndex = 0;
 
         buttonActiveMusicPlayPause.setEnabled(true);
+
         buttonActiveMusicNext.setEnabled(
                 assignedWorkoutMusic.size() > 1
         );
+
         buttonActiveMusicStop.setEnabled(true);
 
         playWorkoutSong(currentMusicIndex);
@@ -386,7 +400,6 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
                 seconds
         );
     }
-
 
     private void playWorkoutSong(int index) {
 
@@ -419,6 +432,7 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
             );
 
             activeWorkoutPlayer.setOnPreparedListener(player -> {
+
                 isMusicPrepared = true;
 
                 int duration = player.getDuration();
@@ -428,7 +442,10 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
                 seekActiveMusic.setEnabled(true);
 
                 textActiveMusicElapsed.setText("0:00");
-                textActiveMusicDuration.setText(formatMusicTime(duration));
+
+                textActiveMusicDuration.setText(
+                        formatMusicTime(duration)
+                );
 
                 player.start();
 
@@ -444,6 +461,7 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
                 player.start();
 
                 textActiveMusicStatus.setText("Now playing");
+
                 buttonActiveMusicPlayPause.setText("Pause Music");
             });
 
@@ -462,6 +480,7 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
             activeWorkoutPlayer.setOnErrorListener((player, what, extra) -> {
 
                 textActiveMusicStatus.setText("Unable to play this song.");
+
                 buttonActiveMusicPlayPause.setText("Play Music");
 
                 stopWorkoutPlayerOnly();
@@ -476,12 +495,12 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
             Log.e("ActiveWorkout", "Music playback error", e);
 
             textActiveMusicStatus.setText("Could not load this song.");
+
             buttonActiveMusicPlayPause.setText("Play Music");
 
             stopWorkoutPlayerOnly();
         }
     }
-
 
     private void toggleWorkoutMusic() {
 
@@ -502,6 +521,7 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
                 activeWorkoutPlayer.pause();
 
                 textActiveMusicStatus.setText("Music paused");
+
                 buttonActiveMusicPlayPause.setText("Resume Music");
 
             } else {
@@ -509,6 +529,7 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
                 activeWorkoutPlayer.start();
 
                 textActiveMusicStatus.setText("Now playing");
+
                 buttonActiveMusicPlayPause.setText("Pause Music");
             }
 
@@ -519,16 +540,19 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
     }
 
     private final Runnable musicProgressRunnable = new Runnable() {
+
         @Override
         public void run() {
 
             if (activeWorkoutPlayer != null && isMusicPrepared) {
 
                 try {
+
                     int currentPosition =
                             activeWorkoutPlayer.getCurrentPosition();
 
                     if (!isUserSeekingMusic) {
+
                         seekActiveMusic.setProgress(currentPosition);
 
                         textActiveMusicElapsed.setText(
@@ -537,6 +561,7 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
                     }
 
                 } catch (Exception e) {
+
                     Log.e("ActiveWorkout", "Progress update error", e);
                 }
             }
@@ -545,14 +570,12 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
         }
     };
 
-
     private void updateMusicProgress() {
 
         musicProgressHandler.removeCallbacks(musicProgressRunnable);
 
         musicProgressHandler.post(musicProgressRunnable);
     }
-
 
     private void playNextWorkoutSong() {
 
@@ -567,21 +590,21 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
         playWorkoutSong(nextIndex);
     }
 
-
     private void stopWorkoutMusic() {
 
         stopWorkoutPlayerOnly();
 
         textActiveMusicStatus.setText("Music stopped");
+
         buttonActiveMusicPlayPause.setText("Play Music");
     }
-
 
     private void stopWorkoutPlayerOnly() {
 
         musicProgressHandler.removeCallbacks(musicProgressRunnable);
 
         seekActiveMusic.setProgress(0);
+
         textActiveMusicElapsed.setText("0:00");
 
         isMusicPrepared = false;
@@ -597,8 +620,6 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
             activeWorkoutPlayer = null;
         }
     }
-
-
 
     private void addExerciseCard(
             Exercise exercise,
@@ -619,6 +640,7 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
         cardParams.bottomMargin = UiFx.dp(card, 12);
 
         card.setLayoutParams(cardParams);
+
         card.setBackgroundColor(
                 android.graphics.Color.parseColor("#151F33")
         );
@@ -663,10 +685,13 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
         notes.setPadding(0, 8, 0, 8);
 
         Button detailsButton = new Button(this);
+
         detailsButton.setText("View Exercise Details");
+
         detailsButton.setTextColor(
                 android.graphics.Color.WHITE
         );
+
         detailsButton.setBackgroundTintList(
                 android.content.res.ColorStateList.valueOf(
                         android.graphics.Color.parseColor("#1E3A8A")
@@ -712,6 +737,7 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
 
         text.setText(value);
         text.setTextSize(size);
+
         text.setTextColor(
                 android.graphics.Color.parseColor(color)
         );
@@ -752,6 +778,7 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
                                     "Workout session could not be verified."
                             )
                     );
+
                     return;
                 }
 
@@ -762,6 +789,7 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
                                     "This workout has already been completed."
                             )
                     );
+
                     return;
                 }
 
@@ -770,39 +798,55 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
 
                 runOnUiThread(() -> {
 
+                    if (isFinishing() || isDestroyed()) {
+                        return;
+                    }
+
                     if (updated > 0) {
 
-                        Toast.makeText(
+                        CustomNotification.show(
                                 ActiveWorkoutActivity.this,
-                                "Workout completed successfully!",
-                                Toast.LENGTH_LONG
-                        ).show();
+                                "Workout Completed!",
+                                "Your workout has been successfully completed."
+                        );
 
-                        finish();
+                        new android.os.Handler(
+                                android.os.Looper.getMainLooper()
+                        ).postDelayed(this::finish, 3000);
 
                     } else {
 
                         buttonCompleteWorkout.setEnabled(true);
 
-                        Toast.makeText(
+                        CustomNotification.show(
                                 ActiveWorkoutActivity.this,
-                                "Could not save workout completion.",
-                                Toast.LENGTH_LONG
-                        ).show();
+                                "Update Failed",
+                                "Could not save your workout completion. Please try again."
+                        );
                     }
                 });
 
             } catch (Exception e) {
 
+                Log.e(
+                        "ActiveWorkout",
+                        "Error saving workout completion",
+                        e
+                );
+
                 runOnUiThread(() -> {
+
+                    if (isFinishing() || isDestroyed()) {
+                        return;
+                    }
 
                     buttonCompleteWorkout.setEnabled(true);
 
-                    Toast.makeText(
+                    CustomNotification.show(
                             ActiveWorkoutActivity.this,
-                            "An error occurred while saving your workout.",
-                            Toast.LENGTH_LONG
-                    ).show();
+                            "Completion Error",
+                            "An error occurred while saving your workout."
+                    );
                 });
             }
         });
@@ -818,7 +862,11 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
                 .setTitle("Workout Unavailable")
                 .setMessage(message)
                 .setPositiveButton("OK", (dialog, which) -> {
-                    Log.e("ActiveWorkout", "Workout loading failed: " + message);
+                    Log.e(
+                            "ActiveWorkout",
+                            "Workout loading failed: " + message
+                    );
+
                     finish();
                 })
                 .setOnCancelListener(dialog -> finish())
@@ -828,7 +876,7 @@ public class ActiveWorkoutActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
 
-
+        musicProgressHandler.removeCallbacks(musicProgressRunnable);
 
         stopWorkoutPlayerOnly();
 
