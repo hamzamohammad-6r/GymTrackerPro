@@ -248,7 +248,3 @@ GymTrackerPro is an ongoing Android application development project. Core fitnes
 ## 📜 License
 
 This project is developed for educational and portfolio purposes. A formal open-source licence can be added when the project is prepared for public distribution.
-
----
-
-*Built with Java, Android Studio and a passion for technology and fitness.*
