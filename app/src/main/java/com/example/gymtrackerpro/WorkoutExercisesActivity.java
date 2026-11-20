@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -87,8 +86,11 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
     }
 
     private void loadDropdowns() {
+
         databaseExecutor.execute(() -> {
+
             try {
+
                 List<Workout> loadedWorkouts =
                         database.workoutDao().getAllWorkouts();
 
@@ -96,16 +98,21 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
                         database.exerciseDao().getAllExercises();
 
                 runOnUiThread(() -> {
+
                     if (isFinishing() || isDestroyed()) {
                         return;
                     }
 
-                    workouts = loadedWorkouts;
-                    exercises = loadedExercises;
+                    workouts = loadedWorkouts != null
+                            ? loadedWorkouts : new ArrayList<>();
+
+                    exercises = loadedExercises != null
+                            ? loadedExercises : new ArrayList<>();
 
                     List<String> workoutNames = new ArrayList<>();
 
                     for (Workout workout : workouts) {
+
                         workoutNames.add(
                                 workout.getWorkoutName()
                                         + " (" + workout.getWorkoutDate() + ")"
@@ -132,6 +139,7 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
                     List<String> exerciseNames = new ArrayList<>();
 
                     for (Exercise exercise : exercises) {
+
                         exerciseNames.add(
                                 exercise.getExerciseName()
                                         + " (" + exercise.getMuscleGroup() + ")"
@@ -157,6 +165,7 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
 
                     spinnerWorkouts.setOnItemSelectedListener(
                             new android.widget.AdapterView.OnItemSelectedListener() {
+
                                 @Override
                                 public void onItemSelected(
                                         android.widget.AdapterView<?> parent,
@@ -179,15 +188,17 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
                 });
 
             } catch (Exception e) {
+
                 Log.e(TAG, "Unable to load dropdowns", e);
 
                 runOnUiThread(() -> {
+
                     if (!isFinishing() && !isDestroyed()) {
+
                         CustomNotification.show(
                                 this,
                                 "Workout Setup Required",
-                                "Could not load workouts or exercises. "
-                                        + "Please try again."
+                                "Could not load workouts or exercises. Please try again."
                         );
                     }
                 });
@@ -198,20 +209,24 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
     private void saveExerciseToWorkout() {
 
         if (workouts.isEmpty()) {
+
             CustomNotification.show(
                     this,
                     "Workout Required",
                     "Please create a workout before assigning exercises."
             );
+
             return;
         }
 
         if (exercises.isEmpty()) {
+
             CustomNotification.show(
                     this,
                     "Exercise Required",
                     "Please create an exercise before assigning it to a workout."
             );
+
             return;
         }
 
@@ -225,12 +240,14 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
         String notes = editExerciseNotes.getText().toString().trim();
 
         if (setsText.isEmpty()) {
+
             editSets.setError("Enter the number of sets");
             editSets.requestFocus();
             return;
         }
 
         if (repetitionsText.isEmpty()) {
+
             editRepetitions.setError("Enter the repetitions");
             editRepetitions.requestFocus();
             return;
@@ -245,35 +262,58 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
         final double weight;
 
         try {
+
             sets = Integer.parseInt(setsText);
             repetitions = Integer.parseInt(repetitionsText);
             weight = Double.parseDouble(weightText);
 
         } catch (NumberFormatException e) {
-            Toast.makeText(
+
+            CustomNotification.show(
                     this,
-                    "Enter valid numbers.",
-                    Toast.LENGTH_SHORT
-            ).show();
+                    "Invalid Input",
+                    "Enter valid numbers for sets, repetitions and weight."
+            );
+
             return;
         }
 
         if (sets <= 0 || repetitions <= 0 || weight < 0
                 || !Double.isFinite(weight)) {
 
-            Toast.makeText(
+            CustomNotification.show(
                     this,
-                    "Sets and reps must be positive. Weight cannot be negative.",
-                    Toast.LENGTH_LONG
-            ).show();
+                    "Invalid Workout Values",
+                    "Sets and reps must be positive. Weight cannot be negative."
+            );
+
+            return;
+        }
+
+        int workoutPosition =
+                spinnerWorkouts.getSelectedItemPosition();
+
+        int exercisePosition =
+                spinnerExercises.getSelectedItemPosition();
+
+        if (workoutPosition < 0 || workoutPosition >= workouts.size()
+                || exercisePosition < 0
+                || exercisePosition >= exercises.size()) {
+
+            CustomNotification.show(
+                    this,
+                    "Selection Required",
+                    "Please select a valid workout and exercise."
+            );
+
             return;
         }
 
         Workout selectedWorkout =
-                workouts.get(spinnerWorkouts.getSelectedItemPosition());
+                workouts.get(workoutPosition);
 
         Exercise selectedExercise =
-                exercises.get(spinnerExercises.getSelectedItemPosition());
+                exercises.get(exercisePosition);
 
         WorkoutExercise assignment = new WorkoutExercise(
                 selectedWorkout.getWorkoutId(),
@@ -285,11 +325,14 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
         );
 
         databaseExecutor.execute(() -> {
+
             try {
+
                 database.workoutExerciseDao()
                         .insertWorkoutExercise(assignment);
 
                 runOnUiThread(() -> {
+
                     if (isFinishing() || isDestroyed()) {
                         return;
                     }
@@ -309,10 +352,13 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
                 });
 
             } catch (Exception e) {
+
                 Log.e(TAG, "Unable to assign exercise", e);
 
                 runOnUiThread(() -> {
+
                     if (!isFinishing() && !isDestroyed()) {
+
                         CustomNotification.show(
                                 this,
                                 "Assignment Failed",
@@ -327,11 +373,14 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
     private void loadAssignedExercises() {
 
         if (workouts.isEmpty()
-                || spinnerWorkouts.getSelectedItemPosition() < 0) {
+                || spinnerWorkouts.getSelectedItemPosition() < 0
+                || spinnerWorkouts.getSelectedItemPosition()
+                >= workouts.size()) {
 
             textAssignedExercises.setText(
                     "Create a workout and an exercise first."
             );
+
             return;
         }
 
@@ -339,7 +388,9 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
                 workouts.get(spinnerWorkouts.getSelectedItemPosition());
 
         databaseExecutor.execute(() -> {
+
             try {
+
                 List<WorkoutExercise> assignments =
                         database.workoutExerciseDao()
                                 .getExercisesForWorkout(
@@ -348,17 +399,20 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
 
                 StringBuilder result = new StringBuilder();
 
-                if (assignments.isEmpty()) {
+                if (assignments == null || assignments.isEmpty()) {
+
                     result.append(
                             "No exercises assigned to this workout yet."
                     );
 
                 } else {
+
                     for (WorkoutExercise assignment : assignments) {
 
                         Exercise exercise = null;
 
                         for (Exercise item : exercises) {
+
                             if (item.getExerciseId()
                                     == assignment.getExerciseId()) {
 
@@ -368,6 +422,7 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
                         }
 
                         if (exercise != null) {
+
                             result.append(exercise.getExerciseName())
                                     .append("\nSets: ")
                                     .append(assignment.getSets())
@@ -395,16 +450,21 @@ public class WorkoutExercisesActivity extends AppCompatActivity {
                 String displayText = result.toString();
 
                 runOnUiThread(() -> {
+
                     if (!isFinishing() && !isDestroyed()) {
+
                         textAssignedExercises.setText(displayText);
                     }
                 });
 
             } catch (Exception e) {
+
                 Log.e(TAG, "Unable to load assigned exercises", e);
 
                 runOnUiThread(() -> {
+
                     if (!isFinishing() && !isDestroyed()) {
+
                         textAssignedExercises.setText(
                                 "Could not load assigned exercises."
                         );
