@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -72,6 +71,7 @@ public class ExercisesActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(Color.parseColor("#0B1120"));
         getWindow().getDecorView().setSystemUiVisibility(0);
         setContentView(R.layout.activity_exercises);
+
         TextView buttonBackArrow = findViewById(R.id.buttonBackArrow);
 
         buttonBackArrow.setOnClickListener(v -> finish());
@@ -128,8 +128,13 @@ public class ExercisesActivity extends AppCompatActivity {
     private void toggleAddForm() {
         boolean show = cardAddExercise.getVisibility() != View.VISIBLE;
 
-        cardAddExercise.setVisibility(show ? View.VISIBLE : View.GONE);
-        buttonToggleAdd.setText(show ? "Close" : "+  Add custom exercise");
+        cardAddExercise.setVisibility(
+                show ? View.VISIBLE : View.GONE
+        );
+
+        buttonToggleAdd.setText(
+                show ? "Close" : "+  Add custom exercise"
+        );
 
         if (show) {
             editExerciseName.requestFocus();
@@ -137,31 +142,50 @@ public class ExercisesActivity extends AppCompatActivity {
     }
 
     private void setupFilterChips() {
-        final ChipGroup chipGroup = findViewById(R.id.chipGroupMuscle);
+        final ChipGroup chipGroup =
+                findViewById(R.id.chipGroupMuscle);
 
-        // First chip is "All", then one chip per muscle group
-        // (index 0 of muscleGroups is just the spinner placeholder).
+        // First chip is "All", then one chip per muscle group.
+        // Index 0 of muscleGroups is the spinner placeholder.
         addChip(chipGroup, "All", null, true);
 
         for (int i = 1; i < muscleGroups.length; i++) {
-            addChip(chipGroup, muscleGroups[i], muscleGroups[i], false);
+            addChip(
+                    chipGroup,
+                    muscleGroups[i],
+                    muscleGroups[i],
+                    false
+            );
         }
 
-        chipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            if (checkedIds.isEmpty()) {
-                return;
-            }
+        chipGroup.setOnCheckedStateChangeListener(
+                (group, checkedIds) -> {
 
-            View checked = group.findViewById(checkedIds.get(0));
-            Object tag = checked == null ? null : checked.getTag();
+                    if (checkedIds.isEmpty()) {
+                        return;
+                    }
 
-            selectedGroup = tag instanceof String ? (String) tag : null;
-            renderExercises();
-        });
+                    View checked =
+                            group.findViewById(checkedIds.get(0));
+
+                    Object tag = checked == null
+                            ? null : checked.getTag();
+
+                    selectedGroup =
+                            tag instanceof String
+                                    ? (String) tag : null;
+
+                    renderExercises();
+                }
+        );
     }
 
-    private void addChip(ChipGroup group, String label,
-                         String tag, boolean checked) {
+    private void addChip(
+            ChipGroup group,
+            String label,
+            String tag,
+            boolean checked
+    ) {
 
         Chip chip = (Chip) getLayoutInflater()
                 .inflate(R.layout.item_chip, group, false);
@@ -175,25 +199,37 @@ public class ExercisesActivity extends AppCompatActivity {
     }
 
     private void setupSearch() {
-        editSearchExercise.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-            }
+        editSearchExercise.addTextChangedListener(
+                new TextWatcher() {
 
-            @Override
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
-                renderExercises();
-            }
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s,
+                            int start,
+                            int count,
+                            int after
+                    ) {
+                    }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+                    @Override
+                    public void onTextChanged(
+                            CharSequence s,
+                            int start,
+                            int before,
+                            int count
+                    ) {
+                        renderExercises();
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                    }
+                }
+        );
     }
 
     private void saveExercise() {
+
         String exerciseName =
                 editExerciseName.getText()
                         .toString()
@@ -211,15 +247,18 @@ public class ExercisesActivity extends AppCompatActivity {
         }
 
         if (spinnerMuscleGroup.getSelectedItemPosition() == 0) {
-            Toast.makeText(
+
+            CustomNotification.show(
                     this,
-                    "Please select a muscle group",
-                    Toast.LENGTH_SHORT
-            ).show();
+                    "Muscle Group Required",
+                    "Please select a muscle group before saving."
+            );
+
             return;
         }
 
         for (Exercise existing : allExercises) {
+
             if (existing.getExerciseName() != null
                     && existing.getExerciseName()
                     .equalsIgnoreCase(exerciseName)) {
@@ -227,13 +266,16 @@ public class ExercisesActivity extends AppCompatActivity {
                 editExerciseName.setError(
                         "This exercise is already in your library"
                 );
+
                 editExerciseName.requestFocus();
                 return;
             }
         }
 
         databaseExecutor.execute(() -> {
+
             try {
+
                 Exercise exercise = new Exercise(
                         exerciseName,
                         muscleGroup
@@ -242,6 +284,7 @@ public class ExercisesActivity extends AppCompatActivity {
                 database.exerciseDao().insertExercise(exercise);
 
                 runOnUiThread(() -> {
+
                     if (isFinishing() || isDestroyed()) {
                         return;
                     }
@@ -250,42 +293,51 @@ public class ExercisesActivity extends AppCompatActivity {
                     spinnerMuscleGroup.setSelection(0);
 
                     cardAddExercise.setVisibility(View.GONE);
-                    buttonToggleAdd.setText("+  Add custom exercise");
 
-                    Toast.makeText(
+                    buttonToggleAdd.setText(
+                            "+  Add custom exercise"
+                    );
+
+                    CustomNotification.show(
                             ExercisesActivity.this,
-                            "Exercise saved successfully!",
-                            Toast.LENGTH_SHORT
-                    ).show();
+                            "Exercise Saved!",
+                            "Your exercise has been added successfully."
+                    );
 
                     loadExercises();
                 });
 
             } catch (Exception e) {
+
                 Log.e(TAG, "Unable to save exercise", e);
 
                 runOnUiThread(() -> {
+
                     if (isFinishing() || isDestroyed()) {
                         return;
                     }
 
-                    Toast.makeText(
+                    CustomNotification.show(
                             ExercisesActivity.this,
-                            "Could not save exercise. Check Logcat.",
-                            Toast.LENGTH_LONG
-                    ).show();
+                            "Save Failed",
+                            "Could not save exercise. Check Logcat."
+                    );
                 });
             }
         });
     }
 
     private void loadExercises() {
+
         databaseExecutor.execute(() -> {
+
             try {
+
                 final List<Exercise> exercises =
                         database.exerciseDao().getAllExercises();
 
                 runOnUiThread(() -> {
+
                     if (isFinishing() || isDestroyed()) {
                         return;
                     }
@@ -300,15 +352,19 @@ public class ExercisesActivity extends AppCompatActivity {
                 });
 
             } catch (Exception e) {
+
                 Log.e(TAG, "Unable to load exercises", e);
 
                 runOnUiThread(() -> {
+
                     if (isFinishing() || isDestroyed()) {
                         return;
                     }
 
                     containerExercises.removeAllViews();
+
                     textExerciseEmpty.setVisibility(View.VISIBLE);
+
                     textExerciseEmpty.setText(
                             "Could not load exercises. Check Logcat."
                     );
@@ -319,6 +375,7 @@ public class ExercisesActivity extends AppCompatActivity {
 
     /** Applies the search text and muscle filter, then draws the cards. */
     private void renderExercises() {
+
         String query = editSearchExercise.getText()
                 .toString()
                 .trim()
@@ -327,6 +384,7 @@ public class ExercisesActivity extends AppCompatActivity {
         List<Exercise> visible = new ArrayList<>();
 
         for (Exercise exercise : allExercises) {
+
             String name = exercise.getExerciseName() == null
                     ? "" : exercise.getExerciseName();
 
@@ -344,44 +402,68 @@ public class ExercisesActivity extends AppCompatActivity {
         containerExercises.removeAllViews();
 
         for (Exercise exercise : visible) {
-            containerExercises.addView(createExerciseCard(exercise));
+            containerExercises.addView(
+                    createExerciseCard(exercise)
+            );
         }
 
         // Count + empty states
         if (visible.size() == allExercises.size()) {
-            textExerciseCount.setText(allExercises.size() + " exercises");
+
+            textExerciseCount.setText(
+                    allExercises.size() + " exercises"
+            );
+
         } else {
+
             textExerciseCount.setText(
                     visible.size() + " of " + allExercises.size()
-                            + " exercises");
+                            + " exercises"
+            );
         }
 
         if (visible.isEmpty()) {
+
             textExerciseEmpty.setVisibility(View.VISIBLE);
-            textExerciseEmpty.setText(allExercises.isEmpty()
-                    ? "No exercises yet.\nTap \"Add custom exercise\" to add your first one."
-                    : "No exercises match your search.");
+
+            textExerciseEmpty.setText(
+                    allExercises.isEmpty()
+                            ? "No exercises yet.\nTap \"Add custom exercise\" to add your first one."
+                            : "No exercises match your search."
+            );
+
         } else {
+
             textExerciseEmpty.setVisibility(View.GONE);
         }
     }
 
     private View createExerciseCard(final Exercise exercise) {
+
         View card = getLayoutInflater().inflate(
-                R.layout.item_exercise, containerExercises, false);
+                R.layout.item_exercise,
+                containerExercises,
+                false
+        );
 
         MuscleIcons.bind(
                 (ImageView) card.findViewById(R.id.imageMuscle),
-                exercise.getMuscleGroup());
+                exercise.getMuscleGroup()
+        );
 
         ((TextView) card.findViewById(R.id.textExName))
                 .setText(exercise.getExerciseName());
 
         TextView group = card.findViewById(R.id.textExGroup);
+
         group.setText(exercise.getMuscleGroup());
-        group.setTextColor(MuscleIcons.colorFor(exercise.getMuscleGroup()));
+
+        group.setTextColor(
+                MuscleIcons.colorFor(exercise.getMuscleGroup())
+        );
 
         card.setOnClickListener(v -> {
+
             android.content.Intent intent =
                     new android.content.Intent(
                             ExercisesActivity.this,
@@ -401,7 +483,6 @@ public class ExercisesActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         card.setOnLongClickListener(v -> {
             confirmDelete(exercise);
             return true;
@@ -411,44 +492,63 @@ public class ExercisesActivity extends AppCompatActivity {
     }
 
     private void confirmDelete(final Exercise exercise) {
+
         new MaterialAlertDialogBuilder(this)
                 .setTitle("Delete exercise?")
-                .setMessage("\"" + exercise.getExerciseName()
-                        + "\" will also be removed from any workouts "
-                        + "that use it.")
+                .setMessage(
+                        "\"" + exercise.getExerciseName()
+                                + "\" will also be removed from any workouts "
+                                + "that use it."
+                )
                 .setNegativeButton("Cancel", null)
-                .setPositiveButton("Delete",
-                        (dialog, which) -> deleteExercise(exercise))
+                .setPositiveButton(
+                        "Delete",
+                        (dialog, which) -> deleteExercise(exercise)
+                )
                 .show();
     }
 
     private void deleteExercise(final Exercise exercise) {
+
         databaseExecutor.execute(() -> {
+
             boolean deleted = false;
 
             try {
+
                 deleted = database.exerciseDao()
                         .deleteExercise(exercise) > 0;
+
             } catch (Exception e) {
+
                 Log.e(TAG, "Unable to delete exercise", e);
             }
 
             final boolean success = deleted;
 
             runOnUiThread(() -> {
+
                 if (isFinishing() || isDestroyed()) {
                     return;
                 }
 
-                Toast.makeText(
-                        this,
-                        success ? "Exercise deleted."
-                                : "Could not delete exercise.",
-                        Toast.LENGTH_SHORT
-                ).show();
-
                 if (success) {
+
+                    CustomNotification.show(
+                            ExercisesActivity.this,
+                            "Exercise Deleted",
+                            "The exercise has been removed from your library."
+                    );
+
                     loadExercises();
+
+                } else {
+
+                    CustomNotification.show(
+                            ExercisesActivity.this,
+                            "Delete Failed",
+                            "Could not delete exercise. Please try again."
+                    );
                 }
             });
         });
