@@ -1,7 +1,6 @@
 package com.example.gymtrackerpro;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -44,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
             textContinueOffline.setVisibility(View.GONE);
         }
 
-        authApi = ApiClient.getClient().create(AuthApi.class);
+        authApi = ApiClient.getClient(this).create(AuthApi.class);
 
         btnLogin.setOnClickListener(v -> login());
 
@@ -127,19 +126,24 @@ public class LoginActivity extends AppCompatActivity {
                                     ? ""
                                     : accountIdObject.toString();
 
-                            SharedPreferences preferences =
-                                    getSharedPreferences(
-                                            "GymTrackerSession",
-                                            MODE_PRIVATE
-                                    );
+                            try {
+                                GymTrackerSession.saveSession(
+                                        LoginActivity.this,
+                                        accessToken,
+                                        email,
+                                        accountId
+                                );
 
-                            preferences.edit()
-                                    .putString("accessToken", accessToken)
-                                    .putString("email", email)
-                                    .putString("accountId", accountId)
-                                    .apply();
+                                openDashboard();
 
-                            openDashboard();
+                            } catch (Exception e) {
+
+                                CustomNotification.show(
+                                        LoginActivity.this,
+                                        "Secure Storage Error",
+                                        "Could not securely save your login. Please try again."
+                                );
+                            }
 
                         } else {
 

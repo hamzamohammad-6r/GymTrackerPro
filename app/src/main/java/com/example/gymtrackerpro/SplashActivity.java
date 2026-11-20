@@ -1,7 +1,6 @@
 package com.example.gymtrackerpro;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,17 +21,11 @@ public class SplashActivity extends AppCompatActivity {
             return;
         }
 
-        SharedPreferences preferences =
-                getSharedPreferences(
-                        "GymTrackerSession",
-                        MODE_PRIVATE
-                );
-
         String accessToken =
-                preferences.getString("accessToken", null);
+                GymTrackerSession.getAccessToken(this);
 
         String email =
-                preferences.getString("email", null);
+                GymTrackerSession.getEmail(this);
 
         boolean isLoggedIn =
                 accessToken != null

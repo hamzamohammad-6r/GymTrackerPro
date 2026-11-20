@@ -17,7 +17,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.ColorUtils;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             "Show up. Do the work. Repeat."
     };
 
-    /**
+    /*
      * Everything the dashboard needs, gathered off the main thread.
      */
     private static class Dashboard {
@@ -146,26 +145,17 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    /**
+    /*
      * Checks whether the user has an authenticated local session.
      * Redirects to LoginActivity if the session is missing.
      */
     private boolean redirectToLoginIfNeeded() {
 
-        SharedPreferences preferences = getSharedPreferences(
-                "GymTrackerSession",
-                MODE_PRIVATE
-        );
+        String accessToken =
+                GymTrackerSession.getAccessToken(this);
 
-        String accessToken = preferences.getString(
-                "accessToken",
-                null
-        );
-
-        String email = preferences.getString(
-                "email",
-                null
-        );
+        String email =
+                GymTrackerSession.getEmail(this);
 
         boolean isAuthenticated =
                 accessToken != null
@@ -432,8 +422,6 @@ public class MainActivity extends AppCompatActivity {
         // Apply the premium electric-blue tile background.
         view.setBackgroundResource(R.drawable.bg_home_tile_neon);
 
-        int color = Color.parseColor(tile.color);
-
         ImageView photo = view.findViewById(R.id.imageTilePhoto);
 
         photo.setImageResource(tile.photo);
@@ -469,12 +457,8 @@ public class MainActivity extends AppCompatActivity {
 
             String photoKey = "profile_image_uri";
 
-            SharedPreferences session = getSharedPreferences(
-                    "GymTrackerSession",
-                    MODE_PRIVATE
-            );
-
-            String loggedInEmail = session.getString("email", null);
+            String loggedInEmail =
+                    GymTrackerSession.getEmail(this);
 
             if (loggedInEmail != null
                     && !loggedInEmail.trim().isEmpty()) {
@@ -576,12 +560,8 @@ public class MainActivity extends AppCompatActivity {
 
             try {
 
-                SharedPreferences session = getSharedPreferences(
-                        "GymTrackerSession",
-                        MODE_PRIVATE
-                );
-
-                String loggedInEmail = session.getString("email", null);
+                String loggedInEmail =
+                        GymTrackerSession.getEmail(this);
 
                 List<Workout> workouts;
 
@@ -681,7 +661,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /**
+    /*
      * Consecutive days with a completed workout,
      * ending today or yesterday.
      */
@@ -804,7 +784,7 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
 
-            textTodayLabel.setText("REST DAY?");
+            textTodayLabel.setText("REST DAY");
 
             textTodayTitle.setText("Nothing planned today");
 
@@ -864,20 +844,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateAuthenticationButtons() {
 
-        SharedPreferences preferences = getSharedPreferences(
-                "GymTrackerSession",
-                MODE_PRIVATE
-        );
+        String accessToken =
+                GymTrackerSession.getAccessToken(this);
 
-        String accessToken = preferences.getString(
-                "accessToken",
-                null
-        );
-
-        String email = preferences.getString(
-                "email",
-                null
-        );
+        String email =
+                GymTrackerSession.getEmail(this);
 
         boolean isLoggedIn =
                 accessToken != null

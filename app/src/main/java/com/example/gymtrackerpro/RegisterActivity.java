@@ -48,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
                 getApplicationContext()
         );
 
-        authApi = ApiClient.getClient().create(AuthApi.class);
+        authApi = ApiClient.getClient(this).create(AuthApi.class);
 
         etName = findViewById(R.id.etRegisterName);
         etEmail = findViewById(R.id.etRegisterEmail);

@@ -56,7 +56,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         btnResetPassword.setEnabled(false);
 
-        AuthApi authApi = ApiClient.getClient().create(AuthApi.class);
+        AuthApi authApi = ApiClient.getClient(this).create(AuthApi.class);
 
         authApi.resetPassword(request).enqueue(
                 new Callback<Map<String, String>>() {

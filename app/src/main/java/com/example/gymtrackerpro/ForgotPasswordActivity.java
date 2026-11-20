@@ -54,7 +54,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         btnSendResetRequest.setEnabled(false);
 
-        AuthApi authApi = ApiClient.getClient()
+        AuthApi authApi = ApiClient.getClient(this)
                 .create(AuthApi.class);
 
         authApi.forgotPassword(request).enqueue(
