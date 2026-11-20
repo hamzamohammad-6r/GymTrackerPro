@@ -3,6 +3,8 @@ package com.example.gymtrackerpro;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +12,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -43,13 +44,18 @@ public class ProgramDetailActivity extends AppCompatActivity {
         );
 
         if (program == null) {
-            Toast.makeText(
-                    this,
-                    "Program not found.",
-                    Toast.LENGTH_SHORT
-            ).show();
 
-            finish();
+            CustomNotification.show(
+                    this,
+                    "Programme Not Found",
+                    "The selected programme could not be found."
+            );
+
+            new Handler(Looper.getMainLooper()).postDelayed(
+                    this::finish,
+                    1800
+            );
+
             return;
         }
 
@@ -107,7 +113,8 @@ public class ProgramDetailActivity extends AppCompatActivity {
 
     private void bindDays() {
 
-        LinearLayout containerDays = findViewById(R.id.containerDays);
+        LinearLayout containerDays =
+                findViewById(R.id.containerDays);
 
         LayoutInflater inflater = LayoutInflater.from(this);
 
@@ -285,31 +292,39 @@ public class ProgramDetailActivity extends AppCompatActivity {
 
                 if (!saved) {
 
-                    Toast.makeText(
+                    CustomNotification.show(
                             this,
-                            error != null
+                            "Programme Save Failed",
+                            error != null && !error.trim().isEmpty()
                                     ? error
-                                    : "Could not save your programme.",
-                            Toast.LENGTH_LONG
-                    ).show();
+                                    : "Could not save your programme. Please try again."
+                    );
 
                     return;
                 }
 
-                Toast.makeText(
+                CustomNotification.show(
                         this,
-                        "Your programme has been saved!",
-                        Toast.LENGTH_SHORT
-                ).show();
-
-                startActivity(
-                        new Intent(
-                                ProgramDetailActivity.this,
-                                WorkoutsActivity.class
-                        )
+                        "Programme Saved!",
+                        "Your programme has been saved successfully."
                 );
 
-                finish();
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+
+                    if (isFinishing() || isDestroyed()) {
+                        return;
+                    }
+
+                    startActivity(
+                            new Intent(
+                                    ProgramDetailActivity.this,
+                                    WorkoutsActivity.class
+                            )
+                    );
+
+                    finish();
+
+                }, 1800);
             });
         });
     }
