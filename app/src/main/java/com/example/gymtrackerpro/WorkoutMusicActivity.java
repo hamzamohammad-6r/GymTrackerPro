@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -63,16 +62,20 @@ public class WorkoutMusicActivity extends AppCompatActivity {
     private final Runnable playbackUpdater = new Runnable() {
         @Override
         public void run() {
+
             if (mediaPlayer == null) {
                 return;
             }
 
             try {
+
                 if (mediaPlayer.isPlaying()) {
+
                     int position = mediaPlayer.getCurrentPosition();
                     int duration = mediaPlayer.getDuration();
 
                     if (duration > 0) {
+
                         seekBarPlayback.setProgress(
                                 (int) ((position * 1000L) / duration)
                         );
@@ -93,6 +96,7 @@ public class WorkoutMusicActivity extends AppCompatActivity {
     };
 
     private String formatTime(int milliseconds) {
+
         int totalSeconds = milliseconds / 1000;
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
@@ -108,10 +112,12 @@ public class WorkoutMusicActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_workout_music);
-        TextView buttonBackArrow = findViewById(R.id.buttonBackArrow);
 
+        setContentView(R.layout.activity_workout_music);
+
+        TextView buttonBackArrow = findViewById(R.id.buttonBackArrow);
         buttonBackArrow.setOnClickListener(v -> finish());
+
         UiFx.applyEdgeToEdge(this);
 
         // Connect XML views.
@@ -120,8 +126,10 @@ public class WorkoutMusicActivity extends AppCompatActivity {
 
         buttonChooseSong = findViewById(R.id.buttonChooseSong);
         buttonPlaySong = findViewById(R.id.buttonPlaySong);
+
         buttonPauseResumeSong =
                 findViewById(R.id.buttonPauseResumeSong);
+
         buttonStopSong = findViewById(R.id.buttonStopSong);
         buttonDeleteSong = findViewById(R.id.buttonDeleteSong);
         buttonRefreshSongs = findViewById(R.id.buttonRefreshSongs);
@@ -140,6 +148,7 @@ public class WorkoutMusicActivity extends AppCompatActivity {
         // Initial playback display.
         textPlaybackStatus.setText("Playback status: Stopped");
         textPlaybackTime.setText("00:00 / 00:00");
+
         seekBarPlayback.setProgress(0);
         seekBarPlayback.setEnabled(false);
 
@@ -185,6 +194,7 @@ public class WorkoutMusicActivity extends AppCompatActivity {
         // Reload songs when the selected workout changes.
         spinnerWorkouts.setOnItemSelectedListener(
                 new AdapterView.OnItemSelectedListener() {
+
                     @Override
                     public void onItemSelected(
                             AdapterView<?> parent,
@@ -208,17 +218,22 @@ public class WorkoutMusicActivity extends AppCompatActivity {
         // Allow seeking through a song.
         seekBarPlayback.setOnSeekBarChangeListener(
                 new SeekBar.OnSeekBarChangeListener() {
+
                     @Override
                     public void onProgressChanged(
                             SeekBar seekBar,
                             int progress,
                             boolean fromUser
                     ) {
+
                         if (fromUser && mediaPlayer != null) {
+
                             try {
+
                                 int duration = mediaPlayer.getDuration();
 
                                 if (duration > 0) {
+
                                     int position = (int) (
                                             duration * (progress / 1000.0)
                                     );
@@ -228,6 +243,7 @@ public class WorkoutMusicActivity extends AppCompatActivity {
                                                     + formatTime(duration)
                                     );
                                 }
+
                             } catch (IllegalStateException ignored) {
                                 // Player may no longer be available.
                             }
@@ -241,11 +257,15 @@ public class WorkoutMusicActivity extends AppCompatActivity {
 
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
+
                         if (mediaPlayer != null) {
+
                             try {
+
                                 int duration = mediaPlayer.getDuration();
 
                                 if (duration > 0) {
+
                                     int position = (int) (
                                             duration
                                                     * (seekBar.getProgress()
@@ -254,6 +274,7 @@ public class WorkoutMusicActivity extends AppCompatActivity {
 
                                     mediaPlayer.seekTo(position);
                                 }
+
                             } catch (IllegalStateException ignored) {
                                 // Player may no longer be available.
                             }
@@ -270,63 +291,92 @@ public class WorkoutMusicActivity extends AppCompatActivity {
     // ---------------------------------------------------------
 
     private void loadWorkouts() {
+
         new Thread(() -> {
-            List<Workout> result =
-                    database.workoutDao().getAllWorkouts();
 
-            runOnUiThread(() -> {
-                workouts.clear();
-                workoutLabels.clear();
-                workouts.addAll(result);
+            try {
 
-                for (Workout workout : workouts) {
-                    workoutLabels.add(
-                            workout.getWorkoutName()
-                                    + " - "
-                                    + workout.getWorkoutDate()
-                    );
-                }
+                List<Workout> result =
+                        database.workoutDao().getAllWorkouts();
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                        WorkoutMusicActivity.this,
-                        android.R.layout.simple_spinner_item,
-                        workoutLabels
-                );
+                runOnUiThread(() -> {
 
-                adapter.setDropDownViewResource(
-                        android.R.layout.simple_spinner_dropdown_item
-                );
+                    if (isFinishing() || isDestroyed()) {
+                        return;
+                    }
 
-                spinnerWorkouts.setAdapter(adapter);
+                    workouts.clear();
+                    workoutLabels.clear();
 
-                boolean hasWorkouts = !workouts.isEmpty();
+                    workouts.addAll(result);
 
-                buttonChooseSong.setEnabled(hasWorkouts);
-                buttonRefreshSongs.setEnabled(hasWorkouts);
+                    for (Workout workout : workouts) {
 
-                if (!hasWorkouts) {
-                    assignedMusic.clear();
-                    songLabels.clear();
+                        workoutLabels.add(
+                                workout.getWorkoutName()
+                                        + " - "
+                                        + workout.getWorkoutDate()
+                        );
+                    }
 
-                    spinnerSongs.setAdapter(new ArrayAdapter<>(
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
                             WorkoutMusicActivity.this,
                             android.R.layout.simple_spinner_item,
-                            songLabels
-                    ));
-
-                    textAssignedSongs.setText(
-                            "No workouts found. Create a workout first."
+                            workoutLabels
                     );
 
-                    buttonPlaySong.setEnabled(false);
-                    buttonPauseResumeSong.setEnabled(false);
-                    buttonStopSong.setEnabled(false);
-                    buttonDeleteSong.setEnabled(false);
+                    adapter.setDropDownViewResource(
+                            android.R.layout.simple_spinner_dropdown_item
+                    );
 
-                } else {
-                    loadAssignedSongs();
-                }
-            });
+                    spinnerWorkouts.setAdapter(adapter);
+
+                    boolean hasWorkouts = !workouts.isEmpty();
+
+                    buttonChooseSong.setEnabled(hasWorkouts);
+                    buttonRefreshSongs.setEnabled(hasWorkouts);
+
+                    if (!hasWorkouts) {
+
+                        assignedMusic.clear();
+                        songLabels.clear();
+
+                        spinnerSongs.setAdapter(new ArrayAdapter<>(
+                                WorkoutMusicActivity.this,
+                                android.R.layout.simple_spinner_item,
+                                songLabels
+                        ));
+
+                        textAssignedSongs.setText(
+                                "No workouts found. Create a workout first."
+                        );
+
+                        buttonPlaySong.setEnabled(false);
+                        buttonPauseResumeSong.setEnabled(false);
+                        buttonStopSong.setEnabled(false);
+                        buttonDeleteSong.setEnabled(false);
+
+                    } else {
+
+                        loadAssignedSongs();
+                    }
+                });
+
+            } catch (Exception e) {
+
+                runOnUiThread(() -> {
+
+                    if (!isFinishing() && !isDestroyed()) {
+
+                        CustomNotification.show(
+                                this,
+                                "Loading Failed",
+                                "Could not load your workouts. Please try again."
+                        );
+                    }
+                });
+            }
+
         }).start();
     }
 
@@ -335,11 +385,14 @@ public class WorkoutMusicActivity extends AppCompatActivity {
     // ---------------------------------------------------------
 
     private void saveSelectedSong(Uri uri) {
+
         try {
+
             getContentResolver().takePersistableUriPermission(
                     uri,
                     Intent.FLAG_GRANT_READ_URI_PERMISSION
             );
+
         } catch (SecurityException ignored) {
             // Continue if the provider does not support persistence.
         }
@@ -348,15 +401,18 @@ public class WorkoutMusicActivity extends AppCompatActivity {
                 spinnerWorkouts.getSelectedItemPosition();
 
         if (workoutPosition < 0 || workoutPosition >= workouts.size()) {
-            Toast.makeText(
+
+            CustomNotification.show(
                     this,
-                    "Please select a workout first.",
-                    Toast.LENGTH_SHORT
-            ).show();
+                    "Workout Required",
+                    "Please select a workout before assigning music."
+            );
+
             return;
         }
 
         Workout selectedWorkout = workouts.get(workoutPosition);
+
         String songTitle = getFileName(uri);
 
         if (songTitle == null || songTitle.trim().isEmpty()) {
@@ -366,33 +422,58 @@ public class WorkoutMusicActivity extends AppCompatActivity {
         String finalSongTitle = songTitle;
 
         new Thread(() -> {
-            WorkoutMusic music = new WorkoutMusic(
-                    selectedWorkout.getWorkoutId(),
-                    finalSongTitle,
-                    "Unknown artist",
-                    uri.toString()
-            );
 
-            database.workoutMusicDao().insertMusic(music);
+            try {
 
-            runOnUiThread(() -> {
-                textSelectedSong.setText(
-                        "Selected song: " + finalSongTitle
+                WorkoutMusic music = new WorkoutMusic(
+                        selectedWorkout.getWorkoutId(),
+                        finalSongTitle,
+                        "Unknown artist",
+                        uri.toString()
                 );
 
-                Toast.makeText(
-                        WorkoutMusicActivity.this,
-                        "Song assigned to "
-                                + selectedWorkout.getWorkoutName(),
-                        Toast.LENGTH_SHORT
-                ).show();
+                database.workoutMusicDao().insertMusic(music);
 
-                loadAssignedSongs();
-            });
+                runOnUiThread(() -> {
+
+                    if (isFinishing() || isDestroyed()) {
+                        return;
+                    }
+
+                    textSelectedSong.setText(
+                            "Selected song: " + finalSongTitle
+                    );
+
+                    CustomNotification.show(
+                            this,
+                            "Song Assigned!",
+                            "Your song has been assigned to "
+                                    + selectedWorkout.getWorkoutName() + "."
+                    );
+
+                    loadAssignedSongs();
+                });
+
+            } catch (Exception e) {
+
+                runOnUiThread(() -> {
+
+                    if (!isFinishing() && !isDestroyed()) {
+
+                        CustomNotification.show(
+                                this,
+                                "Assignment Failed",
+                                "Could not assign this song. Please try again."
+                        );
+                    }
+                });
+            }
+
         }).start();
     }
 
     private String getFileName(Uri uri) {
+
         String fileName = null;
 
         try (Cursor cursor = getContentResolver().query(
@@ -402,7 +483,9 @@ public class WorkoutMusicActivity extends AppCompatActivity {
                 null,
                 null
         )) {
+
             if (cursor != null && cursor.moveToFirst()) {
+
                 int nameIndex = cursor.getColumnIndex(
                         OpenableColumns.DISPLAY_NAME
                 );
@@ -411,6 +494,7 @@ public class WorkoutMusicActivity extends AppCompatActivity {
                     fileName = cursor.getString(nameIndex);
                 }
             }
+
         } catch (Exception ignored) {
             // Use a fallback title if the filename is unavailable.
         }
@@ -423,6 +507,7 @@ public class WorkoutMusicActivity extends AppCompatActivity {
     // ---------------------------------------------------------
 
     private void loadAssignedSongs() {
+
         int workoutPosition =
                 spinnerWorkouts.getSelectedItemPosition();
 
@@ -433,58 +518,85 @@ public class WorkoutMusicActivity extends AppCompatActivity {
         Workout selectedWorkout = workouts.get(workoutPosition);
 
         new Thread(() -> {
-            List<WorkoutMusic> result =
-                    database.workoutMusicDao().getMusicForWorkout(
-                            selectedWorkout.getWorkoutId()
+
+            try {
+
+                List<WorkoutMusic> result =
+                        database.workoutMusicDao().getMusicForWorkout(
+                                selectedWorkout.getWorkoutId()
+                        );
+
+                runOnUiThread(() -> {
+
+                    if (isFinishing() || isDestroyed()) {
+                        return;
+                    }
+
+                    assignedMusic.clear();
+                    songLabels.clear();
+
+                    assignedMusic.addAll(result);
+
+                    for (WorkoutMusic music : assignedMusic) {
+                        songLabels.add(music.getSongTitle());
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                            WorkoutMusicActivity.this,
+                            android.R.layout.simple_spinner_item,
+                            songLabels
                     );
 
-            runOnUiThread(() -> {
-                assignedMusic.clear();
-                songLabels.clear();
-                assignedMusic.addAll(result);
-
-                for (WorkoutMusic music : assignedMusic) {
-                    songLabels.add(music.getSongTitle());
-                }
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                        WorkoutMusicActivity.this,
-                        android.R.layout.simple_spinner_item,
-                        songLabels
-                );
-
-                adapter.setDropDownViewResource(
-                        android.R.layout.simple_spinner_dropdown_item
-                );
-
-                spinnerSongs.setAdapter(adapter);
-
-                if (assignedMusic.isEmpty()) {
-                    textAssignedSongs.setText(
-                            "No songs assigned to "
-                                    + selectedWorkout.getWorkoutName()
-                                    + "."
+                    adapter.setDropDownViewResource(
+                            android.R.layout.simple_spinner_dropdown_item
                     );
 
-                    textSelectedSong.setText("Selected song: None");
+                    spinnerSongs.setAdapter(adapter);
 
-                    buttonPlaySong.setEnabled(false);
-                    buttonPauseResumeSong.setEnabled(false);
-                    buttonDeleteSong.setEnabled(false);
+                    if (assignedMusic.isEmpty()) {
 
-                } else {
-                    textAssignedSongs.setText(
-                            "Songs assigned to "
-                                    + selectedWorkout.getWorkoutName()
-                                    + ": " + assignedMusic.size()
-                    );
+                        textAssignedSongs.setText(
+                                "No songs assigned to "
+                                        + selectedWorkout.getWorkoutName()
+                                        + "."
+                        );
 
-                    buttonPlaySong.setEnabled(true);
-                    buttonDeleteSong.setEnabled(true);
-                }
+                        textSelectedSong.setText("Selected song: None");
 
-                buttonStopSong.setEnabled(mediaPlayer != null);
-            });
+                        buttonPlaySong.setEnabled(false);
+                        buttonPauseResumeSong.setEnabled(false);
+                        buttonDeleteSong.setEnabled(false);
+
+                    } else {
+
+                        textAssignedSongs.setText(
+                                "Songs assigned to "
+                                        + selectedWorkout.getWorkoutName()
+                                        + ": " + assignedMusic.size()
+                        );
+
+                        buttonPlaySong.setEnabled(true);
+                        buttonDeleteSong.setEnabled(true);
+                    }
+
+                    buttonStopSong.setEnabled(mediaPlayer != null);
+                });
+
+            } catch (Exception e) {
+
+                runOnUiThread(() -> {
+
+                    if (!isFinishing() && !isDestroyed()) {
+
+                        CustomNotification.show(
+                                this,
+                                "Loading Failed",
+                                "Could not load the assigned songs. Please refresh and try again."
+                        );
+                    }
+                });
+            }
+
         }).start();
     }
 
@@ -493,15 +605,18 @@ public class WorkoutMusicActivity extends AppCompatActivity {
     // ---------------------------------------------------------
 
     private void playSelectedSong() {
+
         int songPosition =
                 spinnerSongs.getSelectedItemPosition();
 
         if (songPosition < 0 || songPosition >= assignedMusic.size()) {
-            Toast.makeText(
+
+            CustomNotification.show(
                     this,
-                    "Please select a song first.",
-                    Toast.LENGTH_SHORT
-            ).show();
+                    "Song Required",
+                    "Please select a song to continue."
+            );
+
             return;
         }
 
@@ -510,6 +625,7 @@ public class WorkoutMusicActivity extends AppCompatActivity {
         stopMusic();
 
         try {
+
             mediaPlayer = new MediaPlayer();
 
             mediaPlayer.setDataSource(
@@ -518,6 +634,7 @@ public class WorkoutMusicActivity extends AppCompatActivity {
             );
 
             mediaPlayer.setOnPreparedListener(player -> {
+
                 if (mediaPlayer != player) {
                     player.release();
                     return;
@@ -547,7 +664,10 @@ public class WorkoutMusicActivity extends AppCompatActivity {
             });
 
             mediaPlayer.setOnCompletionListener(player -> {
+
                 playbackHandler.removeCallbacks(playbackUpdater);
+
+                int duration = player.getDuration();
 
                 if (mediaPlayer == player) {
                     player.release();
@@ -558,8 +678,8 @@ public class WorkoutMusicActivity extends AppCompatActivity {
                 seekBarPlayback.setEnabled(false);
 
                 textPlaybackTime.setText(
-                        formatTime(player.getDuration()) + " / "
-                                + formatTime(player.getDuration())
+                        formatTime(duration) + " / "
+                                + formatTime(duration)
                 );
 
                 textPlaybackStatus.setText(
@@ -572,35 +692,38 @@ public class WorkoutMusicActivity extends AppCompatActivity {
             });
 
             mediaPlayer.setOnErrorListener((player, what, extra) -> {
+
                 stopMusic();
 
                 textPlaybackStatus.setText(
                         "Playback status: Error"
                 );
 
-                Toast.makeText(
+                CustomNotification.show(
                         WorkoutMusicActivity.this,
-                        "Unable to play this audio file. Try selecting it again.",
-                        Toast.LENGTH_LONG
-                ).show();
+                        "Playback Error",
+                        "Unable to play this audio file. Try selecting it again."
+                );
 
                 return true;
             });
 
             textPlaybackStatus.setText("Loading song...");
+
             mediaPlayer.prepareAsync();
 
         } catch (IOException | IllegalArgumentException
                  | SecurityException e) {
+
             stopMusic();
 
             textPlaybackStatus.setText("Playback status: Error");
 
-            Toast.makeText(
+            CustomNotification.show(
                     this,
-                    "Could not open this audio file. Please select it again.",
-                    Toast.LENGTH_LONG
-            ).show();
+                    "File Error",
+                    "Could not open this audio file. Please select it again."
+            );
         }
     }
 
@@ -609,17 +732,22 @@ public class WorkoutMusicActivity extends AppCompatActivity {
     // ---------------------------------------------------------
 
     private void togglePauseResume() {
+
         if (mediaPlayer == null) {
-            Toast.makeText(
+
+            CustomNotification.show(
                     this,
-                    "Play a song first.",
-                    Toast.LENGTH_SHORT
-            ).show();
+                    "No Song Playing",
+                    "Select and play a song first."
+            );
+
             return;
         }
 
         try {
+
             if (mediaPlayer.isPlaying()) {
+
                 mediaPlayer.pause();
 
                 buttonPauseResumeSong.setText("Resume Song");
@@ -631,6 +759,7 @@ public class WorkoutMusicActivity extends AppCompatActivity {
                 playbackHandler.removeCallbacks(playbackUpdater);
 
             } else {
+
                 mediaPlayer.start();
 
                 buttonPauseResumeSong.setText("Pause Song");
@@ -644,11 +773,12 @@ public class WorkoutMusicActivity extends AppCompatActivity {
             }
 
         } catch (IllegalStateException e) {
-            Toast.makeText(
+
+            CustomNotification.show(
                     this,
-                    "Unable to pause or resume this song.",
-                    Toast.LENGTH_SHORT
-            ).show();
+                    "Playback Error",
+                    "Unable to pause or resume this song."
+            );
         }
     }
 
@@ -657,14 +787,19 @@ public class WorkoutMusicActivity extends AppCompatActivity {
     // ---------------------------------------------------------
 
     private void stopMusic() {
+
         playbackHandler.removeCallbacks(playbackUpdater);
 
         if (mediaPlayer != null) {
+
             try {
+
                 mediaPlayer.setOnPreparedListener(null);
                 mediaPlayer.setOnCompletionListener(null);
                 mediaPlayer.setOnErrorListener(null);
+
                 mediaPlayer.release();
+
             } catch (Exception ignored) {
                 // The player may already have been released.
             }
@@ -682,6 +817,7 @@ public class WorkoutMusicActivity extends AppCompatActivity {
         }
 
         if (textPlaybackStatus != null) {
+
             textPlaybackStatus.setText(
                     "Playback status: Stopped"
             );
@@ -692,6 +828,7 @@ public class WorkoutMusicActivity extends AppCompatActivity {
         }
 
         if (buttonPauseResumeSong != null) {
+
             buttonPauseResumeSong.setEnabled(false);
             buttonPauseResumeSong.setText("Pause Song");
         }
@@ -702,15 +839,18 @@ public class WorkoutMusicActivity extends AppCompatActivity {
     // ---------------------------------------------------------
 
     private void deleteSelectedSong() {
+
         int songPosition =
                 spinnerSongs.getSelectedItemPosition();
 
         if (songPosition < 0 || songPosition >= assignedMusic.size()) {
-            Toast.makeText(
+
+            CustomNotification.show(
                     this,
-                    "Please select a song to delete.",
-                    Toast.LENGTH_SHORT
-            ).show();
+                    "Song Required",
+                    "Please select a song to delete."
+            );
+
             return;
         }
 
@@ -726,20 +866,45 @@ public class WorkoutMusicActivity extends AppCompatActivity {
                         dialog.dismiss()
                 )
                 .setPositiveButton("Delete", (dialog, which) -> {
+
                     stopMusic();
 
                     new Thread(() -> {
-                        database.workoutMusicDao().deleteMusic(music);
 
-                        runOnUiThread(() -> {
-                            Toast.makeText(
-                                    WorkoutMusicActivity.this,
-                                    "Song deleted.",
-                                    Toast.LENGTH_SHORT
-                            ).show();
+                        try {
 
-                            loadAssignedSongs();
-                        });
+                            database.workoutMusicDao().deleteMusic(music);
+
+                            runOnUiThread(() -> {
+
+                                if (isFinishing() || isDestroyed()) {
+                                    return;
+                                }
+
+                                CustomNotification.show(
+                                        this,
+                                        "Song Deleted!",
+                                        "The song was successfully removed from this workout."
+                                );
+
+                                loadAssignedSongs();
+                            });
+
+                        } catch (Exception e) {
+
+                            runOnUiThread(() -> {
+
+                                if (!isFinishing() && !isDestroyed()) {
+
+                                    CustomNotification.show(
+                                            this,
+                                            "Delete Failed",
+                                            "Could not delete this song. Please try again."
+                                    );
+                                }
+                            });
+                        }
+
                     }).start();
                 })
                 .show();
@@ -757,8 +922,11 @@ public class WorkoutMusicActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+
         playbackHandler.removeCallbacks(playbackUpdater);
+
         stopMusic();
+
         super.onDestroy();
     }
 }
