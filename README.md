@@ -141,7 +141,7 @@ The application follows a layered Android architecture:
 **1. Clone the repository**
 
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_URL
+git clone (https://github.com/hamzamohammad-6r/GymTrackerPro.git)
 ```
 
 **2. Open the project**
