@@ -1,22 +1,21 @@
 package com.example.gymtrackerpro;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.InsetDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.app.AlertDialog;
-import android.widget.Toast;
-import android.content.SharedPreferences;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.activity.OnBackPressedCallback;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.InsetDrawable;
-import android.graphics.drawable.LayerDrawable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -39,7 +38,9 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
 
         getWindow().setStatusBarColor(Color.parseColor("#0B1120"));
         getWindow().getDecorView().setSystemUiVisibility(0);
+
         setContentView(R.layout.activity_workout_history);
+
         TextView buttonBackArrow = findViewById(R.id.buttonBackArrow);
 
         buttonBackArrow.setOnClickListener(v ->
@@ -60,7 +61,8 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
         UiFx.applyEdgeToEdge(this);
 
         database = GymTrackerDatabase.getDatabase(
-                getApplicationContext());
+                getApplicationContext()
+        );
 
         databaseExecutor = Executors.newSingleThreadExecutor();
 
@@ -93,6 +95,7 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
     }
 
     private void openScreen(Class<?> activityClass) {
+
         Intent intent = new Intent(
                 WorkoutHistoryActivity.this,
                 activityClass
@@ -101,11 +104,12 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
         UiFx.startActivityWithTransition(this, intent);
     }
 
-
-
     private void loadWorkoutHistory() {
+
         databaseExecutor.execute(() -> {
+
             try {
+
                 SharedPreferences session = getSharedPreferences(
                         "GymTrackerSession",
                         MODE_PRIVATE
@@ -123,13 +127,17 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                     );
 
                     if (currentUser != null) {
+
                         workouts = database.workoutDao()
                                 .getWorkoutsForUser(currentUser.getUserId());
+
                     } else {
+
                         workouts = new java.util.ArrayList<>();
                     }
 
                 } else {
+
                     int guestUserId = LocalUser.getOrCreateId(database);
 
                     workouts = database.workoutDao()
@@ -145,6 +153,7 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                 int planned = 0;
 
                 for (Workout workout : historyWorkouts) {
+
                     if (workout.isCompleted()) {
                         completed++;
                     } else {
@@ -157,6 +166,7 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                 final int finalPlanned = planned;
 
                 runOnUiThread(() -> {
+
                     if (isFinishing() || isDestroyed()) return;
 
                     textHistorySummary.setText(
@@ -168,11 +178,14 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                     textWorkoutHistory.removeAllViews();
 
                     if (historyWorkouts.isEmpty()) {
+
                         TextView empty = new TextView(this);
+
                         empty.setText(
                                 "No completed or planned workouts yet.\n"
                                         + "Start your training programme to begin your history."
                         );
+
                         empty.setTextColor(Color.parseColor("#94A3B8"));
                         empty.setTextSize(14);
                         empty.setGravity(android.view.Gravity.CENTER);
@@ -181,7 +194,9 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                         textWorkoutHistory.addView(empty);
 
                     } else {
+
                         for (Workout workout : historyWorkouts) {
+
                             textWorkoutHistory.addView(
                                     createSessionCard(workout)
                             );
@@ -190,14 +205,17 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                 });
 
             } catch (Exception e) {
+
                 Log.e(TAG, "Unable to load workout history", e);
 
                 runOnUiThread(() -> {
+
                     if (isFinishing() || isDestroyed()) return;
 
                     textWorkoutHistory.removeAllViews();
 
                     TextView error = new TextView(this);
+
                     error.setText("Unable to load workout history.");
                     error.setTextColor(Color.parseColor("#F87171"));
                     error.setTextSize(14);
@@ -207,8 +225,6 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private View createSessionCard(Workout workout) {
 
@@ -255,13 +271,16 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
         card.setLayoutParams(cardParams);
 
         TextView status = new TextView(this);
+
         status.setText(completed ? "✓  COMPLETED" : "○  PLANNED");
         status.setTextColor(accentColor);
         status.setTextSize(12);
         status.setTypeface(null, android.graphics.Typeface.BOLD);
+
         card.addView(status);
 
         TextView name = new TextView(this);
+
         name.setText(workout.getWorkoutName());
         name.setTextColor(Color.parseColor("#F8FAFC"));
         name.setTextSize(17);
@@ -277,6 +296,7 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
         card.addView(name, nameParams);
 
         TextView date = new TextView(this);
+
         date.setText("Date: " + workout.getWorkoutDate());
         date.setTextColor(Color.parseColor("#CBD5E1"));
         date.setTextSize(13);
@@ -293,7 +313,9 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
         String day = workout.getDayOfWeek();
 
         if (day != null && !day.trim().isEmpty()) {
+
             TextView dayText = new TextView(this);
+
             dayText.setText("Day: " + day);
             dayText.setTextColor(Color.parseColor("#94A3B8"));
             dayText.setTextSize(13);
@@ -311,20 +333,22 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
         return card;
     }
 
-
     private int dp(float value) {
+
         return (int) (value * getResources()
                 .getDisplayMetrics().density + 0.5f);
     }
 
-
     private void markWorkoutCompleted(Workout workout) {
+
         if (workout.isCompleted()) {
-            Toast.makeText(
+
+            CustomNotification.show(
                     this,
-                    "This workout is already completed.",
-                    Toast.LENGTH_SHORT
-            ).show();
+                    "Already Completed",
+                    "This workout has already been marked as completed."
+            );
+
             return;
         }
 
@@ -338,8 +362,11 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                     dialog.dismiss();
                 })
                 .setPositiveButton("Complete", (dialog, which) -> {
+
                     databaseExecutor.execute(() -> {
+
                         try {
+
                             int updated = database.workoutDao()
                                     .updateWorkoutCompletion(
                                             workout.getWorkoutId(),
@@ -347,33 +374,43 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                                     );
 
                             runOnUiThread(() -> {
+
+                                if (isFinishing() || isDestroyed()) return;
+
                                 if (updated > 0) {
-                                    Toast.makeText(
+
+                                    CustomNotification.show(
                                             this,
-                                            "Workout marked as completed!",
-                                            Toast.LENGTH_SHORT
-                                    ).show();
+                                            "Workout Completed!",
+                                            "Your workout has been marked as completed."
+                                    );
 
                                     loadWorkoutHistory();
+
                                 } else {
-                                    Toast.makeText(
+
+                                    CustomNotification.show(
                                             this,
-                                            "Workout could not be updated.",
-                                            Toast.LENGTH_SHORT
-                                    ).show();
+                                            "Update Failed",
+                                            "Your workout could not be updated. Please try again."
+                                    );
                                 }
                             });
 
                         } catch (Exception e) {
+
                             Log.e(TAG, "Unable to complete workout", e);
 
-                            runOnUiThread(() ->
-                                    Toast.makeText(
-                                            this,
-                                            "Error updating workout.",
-                                            Toast.LENGTH_SHORT
-                                    ).show()
-                            );
+                            runOnUiThread(() -> {
+
+                                if (isFinishing() || isDestroyed()) return;
+
+                                CustomNotification.show(
+                                        this,
+                                        "Error",
+                                        "An error occurred while updating your workout."
+                                );
+                            });
                         }
                     });
                 })
@@ -382,6 +419,7 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
 
         if (databaseExecutor != null) {
