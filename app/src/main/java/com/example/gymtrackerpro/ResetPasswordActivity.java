@@ -3,7 +3,6 @@ package com.example.gymtrackerpro;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -35,6 +34,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     }
 
     private void resetPassword() {
+
         String token = etResetToken.getText().toString().trim();
         String newPassword = etNewPassword.getText().toString();
 
@@ -44,7 +44,9 @@ public class ResetPasswordActivity extends AppCompatActivity {
         }
 
         if (newPassword.length() < 8) {
-            etNewPassword.setError("Password must be at least 8 characters");
+            etNewPassword.setError(
+                    "Password must be at least 8 characters"
+            );
             return;
         }
 
@@ -56,31 +58,64 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         AuthApi authApi = ApiClient.getClient().create(AuthApi.class);
 
-        authApi.resetPassword(request).enqueue(new Callback<Map<String, String>>() {
-            @Override
-            public void onResponse(Call<Map<String, String>> call,
-                                   Response<Map<String, String>> response) {
-                btnResetPassword.setEnabled(true);
+        authApi.resetPassword(request).enqueue(
+                new Callback<Map<String, String>>() {
 
-                if (response.isSuccessful()) {
-                    Toast.makeText(ResetPasswordActivity.this,
-                            "Password reset successfully! You can now log in.",
-                            Toast.LENGTH_LONG).show();
-                    finish();
-                } else {
-                    Toast.makeText(ResetPasswordActivity.this,
-                            "Invalid or expired reset token.",
-                            Toast.LENGTH_LONG).show();
+                    @Override
+                    public void onResponse(
+                            Call<Map<String, String>> call,
+                            Response<Map<String, String>> response
+                    ) {
+
+                        if (isFinishing() || isDestroyed()) return;
+
+                        btnResetPassword.setEnabled(true);
+
+                        if (response.isSuccessful()) {
+
+                            CustomNotification.show(
+                                    ResetPasswordActivity.this,
+                                    "Password Reset Successful",
+                                    "Your password has been changed. You can now log in."
+                            );
+
+                            finish();
+
+                        } else {
+
+                            CustomNotification.show(
+                                    ResetPasswordActivity.this,
+                                    "Reset Failed",
+                                    "Your reset token is invalid or has expired."
+                            );
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(
+                            Call<Map<String, String>> call,
+                            Throwable t
+                    ) {
+
+                        if (isFinishing() || isDestroyed()) return;
+
+                        btnResetPassword.setEnabled(true);
+
+                        String errorMessage = t.getMessage();
+
+                        if (errorMessage == null || errorMessage.trim().isEmpty()) {
+                            errorMessage = "Please check your internet connection and try again.";
+                        } else {
+                            errorMessage = "Connection failed: " + errorMessage;
+                        }
+
+                        CustomNotification.show(
+                                ResetPasswordActivity.this,
+                                "Connection Error",
+                                errorMessage
+                        );
+                    }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<Map<String, String>> call, Throwable t) {
-                btnResetPassword.setEnabled(true);
-                Toast.makeText(ResetPasswordActivity.this,
-                        "Connection failed: " + t.getMessage(),
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+        );
     }
 }
